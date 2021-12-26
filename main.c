@@ -38,7 +38,7 @@ int main(){
                     printf("Errore creazione processo nave nemica\n");
                     return 2;
                 } else{
-                    if (pidEnemyShip == 0){
+                    if (pidEnemyShip[i] == 0){
                         close(fd[0]);       // Chiudiamo descrittore in lettura
                         enemyShip(fd[1]);   // Gestiamo movimento nemici passano descrittore in scrittura
                     } else{
@@ -50,7 +50,6 @@ int main(){
         }
     }
     
-
     endwin();               // Ripristino del terminale
 
     return 0;
