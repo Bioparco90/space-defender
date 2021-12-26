@@ -13,7 +13,7 @@ space-defender-2
     il descrittore aperto in scrittura
 
 
-4) Prototipo: **void controllo(int fd);**
+4) Prototipo: **void gameArea(int fd);**
     Creare funzione controllo per gestire la rappresentazione grafica degli oggetti in gioco
 
 

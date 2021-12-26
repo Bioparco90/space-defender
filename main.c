@@ -43,14 +43,14 @@ int main(){
                         enemyShip(fd[1]);   // Gestiamo movimento nemici passano descrittore in scrittura
                     } else{
                         close(fd[1]);       // Chiudiamo descrittore in scrittura 
-                        controllo(fd[0]);   // Gestiamo rappresentazione area di gioco passando descrittore in lettura
+                        gameArea(fd[0]);   // Gestiamo rappresentazione area di gioco passando descrittore in lettura
                     }
                 }
             }
         }
     }
     
-    endwin();               // Ripristino del terminale
+    endwin();   // Ripristino del terminale
 
     return 0;
 }
