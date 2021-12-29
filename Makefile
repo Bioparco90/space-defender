@@ -1,5 +1,5 @@
 a.out:	main.o global.o player.o enemies.o gameplay.o
-	cc main.o global.o player.o enemies.o gameplay.o -o spacedefender.exe
+	cc main.o global.o player.o enemies.o gameplay.o -o spacedefender.exe -lncurses
 
 main.o:	main.c global.h
 	cc -c main.c
