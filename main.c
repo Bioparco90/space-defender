@@ -1,14 +1,4 @@
-#include <curses.h>
-#include <unistd.h>
-
-#define ENEMIES 25
-
-/* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
-struct Object {
-    char identifier;    // Carattere dell'oggetto. Es: "-" come proiettile.
-    int x;              // Posizione dell'oggetto nell'asse x
-    int y;              // Posizione dell'oggetto nell'asse y
-};
+#include "global.h"
 
 int main(){
     pid_t pidPlayerShip;         // Pid processo figlio "nave giocatore" 
@@ -51,7 +41,7 @@ int main(){
 
                     default:
                         close(fd[1]);       // Chiudiamo descrittore in scrittura 
-                        gameArea(fd[0]);   // Gestiamo rappresentazione area di gioco passando descrittore in lettura
+                        gameArea(fd[0]);    // Gestiamo rappresentazione area di gioco passando descrittore in lettura
                         break;
                 }
             }
