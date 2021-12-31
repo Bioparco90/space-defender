@@ -24,7 +24,7 @@ int main(){
             break;
 
         case 0:
-            mvprintw(MAX_Y / 2, 1, "+");
+            mvprintw(MAX_Y / 2, 1, "+"); // Prima rappresenzazione nave giocatore
             close(fd[0]);       // Chiudiamo descrittore in lettura
             playerShip(fd[1]);  // Gestiamo movimento giocatore passando descrittore in scrittura
             break;
