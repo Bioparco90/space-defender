@@ -1,6 +1,4 @@
 #include "global.h"
-#include <curses.h>
-#include <stdbool.h>
 
 void playerShip(int fd){
     struct Object ship;
