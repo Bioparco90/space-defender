@@ -24,10 +24,25 @@ void playerShip(int fd){
                 break;
             
             case ' ':
-                mvprintw(ship.y, ship.x+1, "-");
+                
+                rocket(fd);
+                // mvprintw(ship.y, ship.x+1, "o");
+                break;
+
+            default:
+                break;
         }
         
         mvprintw(ship.y, ship.x, &ship.identifier);
         write(fd, &ship, sizeof(ship));
     }
+}
+
+void rocket(int fd){
+    struct Object rocketUp;
+    struct Object rocketDown;
+
+    write(fd, &rocketUp, sizeof(rocketUp));
+
+
 }

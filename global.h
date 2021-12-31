@@ -7,11 +7,16 @@
 #define MAX_X 80
 #define MAX_Y 20
 
+// Funzioni libreria player.c
 void playerShip(int fd);
-void enemyShip(int fd);
-void gameArea(int fd);
+void rocket(int fd);
 
+// Funzioni libreria enemies.c
 void enemiesGenerator(int *fd);
+void enemyShip(int fd);
+
+// Funzioni libreria gameplay.c
+void gameArea(int fd);
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {
