@@ -14,10 +14,10 @@ void enemiesGenerator(int *fd){
             printf("Errore creazione processo nemico\n");
             exit(2);
         } else{
-            if (!pidEnemy[i])
+            if (!pidEnemy[i]){
                 close(fd[0]);       // Chiudiamo descrittore in lettura
                 enemyShip(fd[1]);   // Gestiamo movimento nemici passano descrittore in scrittura
-            else{
+            } else{
                 close(fd[1]);       // Chiudiamo descrittore in scrittura 
                 gameArea(fd[0]);    // Gestiamo rappresentazione area di gioco passando descrittore in lettura
                 break;
