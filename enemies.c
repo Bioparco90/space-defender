@@ -64,11 +64,34 @@ void enemyShipMovement(int fd){
             direzioneAlto=true; 
         }
               
-        mvprintw(enemy.y, enemy.x, &enemy.identifier);
+        // mvprintw(enemy.y, enemy.x, &enemy.identifier); // di debug
         write(fd, &enemy, sizeof(enemy));
     }
 }
 
+// Versione 2
+void enemyShip(int fd){
+    struct Object enemy;
+    int passo;
+
+    // Coordinate debug
+    enemy.x = MAX_X - 1;
+    enemy.y = MAX_Y / 2;
+    enemy.identifier = '<';
+
+    write(fd, &enemy, sizeof(enemy));
+
+    passo = 1;
+    while (true){
+        if(enemy.y <= 2 || enemy.y > MAX_Y - 1) {
+            enemy.x -= 1;
+            passo *= -1;
+        } else 
+            enemy.y += passo;
+
+        write(fd, &enemy, sizeof(enemy));
+    }
+}
 
 
 
