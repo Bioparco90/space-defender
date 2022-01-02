@@ -5,25 +5,9 @@
    Si è reso necessario optare per un if-else in modo da poter sfruttare la break 
    nei processi padre, al fine di evitare la creazione di ^n processi nel ciclo. 
  */
-/*void enemiesGenerator(int *fd){
-    
-    int i,j;
-    pid_t pidEnemy[ENEMIES];
-    for (i=0;i<ENEMIES; i++){
-        pidEnemy[i]=fork();
-        if(pidEnemy[i]==-1){
-            mvprintw(0,0,"Errore con la creazione dei nemici");
-            return 2;
-        }
-        if(pids[i]==0){
+void enemiesGenerator(int *fd){
 
-            return 0;
-        }
-    }
-    
-    
-    
-    /*int i;
+    int i;
     int pidEnemy[ENEMIES];
     for(i=0; i<ENEMIES; i++){
         pidEnemy[i] = fork();
@@ -32,7 +16,7 @@
             exit(2);
         } else{
             if (!pidEnemy[i]){
-                close(fd[0]);       // Chiudiamo descrittore in lettura
+                close(fd[0]);               // Chiudiamo descrittore in lettura
                 enemyShipMovement(fd[1]);   // Gestiamo movimento nemici passano descrittore in scrittura
             } else{
                 close(fd[1]);       // Chiudiamo descrittore in scrittura 
@@ -41,7 +25,7 @@
             }
         }
     }
-}*/
+}
 
 void enemyShipMovement(int fd){
     struct Object enemy;
@@ -49,7 +33,8 @@ void enemyShipMovement(int fd){
     enemy.y = MAX_Y / 2;
     enemy.x = MAX_X / 1.5;
     enemy.identifier = '<';
-    int direzioneAlto=true;//un flag che controlla la direzione del gruppo di navicelle se deve andare verso l'alto o verso il basso e cambia al primo rimbalzo contro i bordi della finestra di gioco di una nave nemica.
+    //un flag che controlla la direzione del gruppo di navicelle se deve andare verso l'alto o verso il basso e cambia al primo rimbalzo contro i bordi della finestra di gioco di una nave nemica.
+    int direzioneAlto=true;
 
     write(fd, &enemy, sizeof(enemy));
 
