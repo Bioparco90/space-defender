@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 25
+#define ENEMIES 8 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
 #define MAX_X 80
 #define MAX_Y 20
 
@@ -25,3 +25,4 @@ struct Object {
     int y;              // Posizione dell'oggetto nell'asse y
     int lives;          // Numero di vite disponibii dell'oggetto
 };
+
