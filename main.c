@@ -31,7 +31,7 @@ int main(){
 
         default:
             wait(NULL); // di debug, valutare successiva rimozione (impedisce l'uscita prematura dal programma)
-            //enemiesGenerator(fd); // Generiamo processi multipli relativi alle navi nemiche
+            enemiesGenerator(fd); // Generiamo processi multipli relativi alle navi nemiche
             break;
     }
   
