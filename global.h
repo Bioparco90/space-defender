@@ -23,6 +23,7 @@ struct Object {
     char identifier;    // Carattere dell'oggetto. Es: "-" come proiettile.
     int x;              // Posizione dell'oggetto nell'asse x
     int y;              // Posizione dell'oggetto nell'asse y
-    int lives;          // Numero di vite disponibii dell'oggetto
+    int lives;   
+    pid_t pid;       // Numero di vite disponibii dell'oggetto
 };
 
