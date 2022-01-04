@@ -45,6 +45,7 @@ void enemyShip(int fd){
         if(enemy.y <= 2 || enemy.y > MAX_Y - 1) {
             enemy.x -= 1;
             passo *= -1;
+            mvprintw(enemy.y, enemy.x, &enemy.identifier);
             mvaddch(enemy.y, enemy.x, ' ');
         }   
         enemy.y += passo;
