@@ -8,6 +8,8 @@ void playerShip(int fd){
     ship.y = MAX_Y / 2;
     ship.x = 1;
     ship.identifier = '+';
+    ship.lives = 3;
+    ship.pid = getpid();
 
     write(fd, &ship, sizeof(ship));
 
@@ -41,7 +43,7 @@ void playerShip(int fd){
                             if(!pidShotDown){
                                 shot(fd, DIR_DOWN);
                             } else{
-                                wait(NULL);
+                                wait(ship.pid);
                                 exit(1);
                             }
                         }
