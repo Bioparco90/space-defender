@@ -4,13 +4,12 @@ void gameArea(int fd){
     
     struct Object datoRead;
     struct Object player;
-    struct Object enemies[ENEMIES];
-    int i, j, k, collision;
+    struct Object enemy;
+    int collision;
+	int firstEnemyRead =-1;
 	//Il valore -1 segnala che si tratta della prima lettura 
 	player.x = -1;
-    for(i=0; i<ENEMIES; i++){
-        enemies[i].y=-1;
-    }
+   
 
     do
 	{
@@ -32,47 +31,28 @@ void gameArea(int fd){
 		}
 		//Tutta quetsa parte è la parte dei nemici
 		else
-		{	
-			//Stampa a schermo dei nemici (Completare)
-    		for(i=0;i<ENEMIES;i++){   
+		{
+    			//Controlla che sia la prima lettura, fosse così fa lo spawn dei nemici stampadoli con le coordinate iniziali assegnotale.
+               if (firstEnemyRead ==-1){
 
-         		for(j=0;j<i; j++){    
-
-        	      	if(i==ENEMIES-1 ){
-                        
-                		  for(k=0;k<ENEMIES;k++){
-                			
-							printw("<");
-                			printw("\n\n");
-
-                		}
-                		break;
-                    }		
+				   mvaddch(datoRead.y,datoRead.x,datoRead.identifier);
+				   
+			   }
+			   else
+			   {
 					
-            	}    
-
-        	}   
-			
-			// Verifica se non si tratta della prima lettura 
-			for(i=0;i< ENEMIES; i++){
-
-				
-                if (enemies[i].y >= 0)
-			    {
-					
-					mvaddch(enemies[i].y, enemies[i].x, ' ');  
+					mvaddch(enemy.y, enemy.x, ' ');  
 
 			    }   
-                enemies[i] = datoRead;
+				
+				//aggiorno le coordinate
+                enemy = datoRead;
 
-            }
         }
         
 			
-			
-		
 		// Visualizzo il carattere dell'entità sulle nuove coordinate 
-		if (player.x != 1 || player.y != 1)
+		if (enemy.x != 1 || enemy.y != 1)
 			mvaddch(datoRead.y, datoRead.x, datoRead.identifier);
 		
 	
