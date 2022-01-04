@@ -51,7 +51,7 @@ int main(){
 //    }
 
 
-    int c = getch(); // di debug, da rimuovere poi
+    // int c = getch(); // di debug, da rimuovere poi
     endwin();   // Ripristino del terminale
 
     return 0;
