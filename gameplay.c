@@ -81,36 +81,26 @@ void gameAreaV2(int fd){
 	struct Object data, player, enemy, rocket;
 	int collision = 0;
 
-	data.firstShow = 1;
+	player.x = -1;
+	enemy.x = -1;
+	rocket.x = -1;
 
 	do{
 		read(fd, &data, sizeof(data));
 		if (data.identifier == PLAYER){
-			if(!data.firstShow)
+			if(player.x >= 0)
 				mvaddch(player.y, player.x, ' ');
-			else{
-				if (data.firstShow)
-					data.firstShow--;
-				player = data;
-			}
+			player = data;
 		} else{
 			if (data.identifier == ENEMY){
-				if(!data.firstShow)
+				if(enemy.x >= 0)
 					mvaddch(enemy.y, enemy.x, ' ');
-				else{
-					if (data.firstShow)
-						data.firstShow--;
-					enemy = data;
-				}
+				enemy = data;
 			} else{
 				if (data.identifier == ROCKET){
-					if(!data.firstShow)
+					if(rocket.x >= 0)
 						mvaddch(rocket.y, rocket.x, ' ');
-				} else{
-					if (data.firstShow)
-						data.firstShow--;
-					rocket = data;
-				}
+				rocket = data;
 			}
 		}
 		mvaddch(data.y, data.x, data.identifier);
