@@ -7,7 +7,7 @@ void playerShip(int fd){
     
     ship.y = MAX_Y / 2;
     ship.x = 1;
-    ship.identifier = '+';
+    ship.identifier = PLAYER;
     ship.lives = 3;
     ship.pid = getpid();
 
@@ -15,7 +15,6 @@ void playerShip(int fd){
 
     while(true){
         int c = getch();
-        //mvaddch(ship.y, ship.x, ' ');
         switch (c){
             case KEY_UP:
                 if(ship.y > 2) 
@@ -49,14 +48,13 @@ void playerShip(int fd){
                         }
                     }
                 }
-                // mvprintw(ship.y, ship.x+1, "o");
                 break;
 
             default:
                 break;
         }
         
-        mvprintw(ship.y, ship.x, &ship.identifier);
+        // mvprintw(ship.y, ship.x, &ship.identifier);
         write(fd, &ship, sizeof(ship));
     }
 }
