@@ -15,9 +15,9 @@
 #define DIR_DOWN -1
 
 // Macro per la rappresentazione degli oggetti
-#define PLAYER "+"
-#define ENEMY "<"
-#define ROCKET "o"
+#define PLAYER '+'
+#define ENEMY '<'
+#define ROCKET 'o'
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {

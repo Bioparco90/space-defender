@@ -81,7 +81,7 @@ void gameAreaV2(int fd){
 	struct Object data, player, enemy, rocket;
 	int collision = 0;
 
-	data.firstShow = 1
+	data.firstShow = 1;
 
 	do{
 		read(fd, &data, sizeof(data));
