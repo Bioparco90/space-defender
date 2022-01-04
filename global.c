@@ -8,6 +8,7 @@ int spawnY = 2;
 void generatore(int fd, struct Object *enemy){
     enemy->x = spawnX;
     enemy->y = spawnY;
+    enemy->identifier = ROCKET;
     enemy->lives = 2; // o quante sono
     enemy->pid = getpid(); // siamo nel for delle fork in teoria
     // ora possiamo modificare i valori
