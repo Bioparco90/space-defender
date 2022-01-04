@@ -42,6 +42,7 @@ void gameArea(int fd);
 
 // funzioni prova
 void generatore(int fd, struct Object *enemy);
+void gameAreaV2(int fd);
 
 
 #endif /* GLOBAL_H */
