@@ -32,4 +32,4 @@ void enemyShip(int fd, struct Object enemy);
 void gameArea(int fd);
 
 // funzioni prova
-void generatore(int fd, struct Object *nemico);
+void generatore(int fd, struct Object *enemy);

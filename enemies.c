@@ -31,7 +31,7 @@ void enemiesGenerator(int *fd){
 
 // Versione 2
 void enemyShip(int fd, struct Object enemy){
-    int passo=1;
+    int direction=1;
 
     // Coordinate debug
     // enemy.x = MAX_X - 1;
@@ -44,11 +44,11 @@ void enemyShip(int fd, struct Object enemy){
         //mvaddch(enemy.y, enemy.x, ' ');        
         if(enemy.y <= 2 || enemy.y > MAX_Y - 1) {
             enemy.x -= 1;
-            passo *= -1;
+            direction *= -1;
             //mvprintw(enemy.y, enemy.x, &enemy.identifier);
             // mvaddch(enemy.y, enemy.x, ' ');
         }   
-        enemy.y += passo;
+        enemy.y += direction;
 
         //mvprintw(enemy.y, enemy.x, &enemy.identifier);
         write(fd, &enemy, sizeof(enemy));
