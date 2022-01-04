@@ -5,12 +5,11 @@ void gameArea(int fd){
     struct Object datoRead;
     struct Object player;
     struct Object enemies[ENEMIES];
-    int i, collision = 0;
-
+    int i, j, collision;
 	//Il valore -1 segnala che si tratta della prima lettura 
 	player.x = -1;
     for(i=0; i<ENEMIES; i++){
-        enemies[i].x=-1;
+        enemies[i].y=-1;
     }
 
     do
@@ -28,19 +27,37 @@ void gameArea(int fd){
 				mvaddch(player.y, player.x, ' ');
 			}
 
-			/* Aggiorno le coordinate relative alla nuova posizione */
+			// Aggiorno le coordinate relative alla nuova posizione 
 			player = datoRead;
 		}
+		//Tutta quetsa parte è la parte dei nemici
 		else
-		{
-			
-			/* Verifica se non si tratta della prima lettura */
-			for(i=0;i< ENEMIES; i++){
+		{	
+			//Stampa a schermo dei nemici (Completare)
+    		for(i=0;i<ENEMIES;i++){   
 
-                if (enemies[i].x >= 0)
+         		for(j=0;j<i; j++){    
+
+        	      	if(i==ENEMIES-1 ){
+                        //mvprintw(datoRead.y-1,datoRead.x-1,"\n");
+                		mvprintw(datoRead.y,datoRead.x,"<");
+                		//smvprintw(datoRead.y+1,datoRead.x+1,"\n");
+                        break;
+                    }		
+
+            	}    
+
+        	}   
+        }
+        
+			// Verifica se non si tratta della prima lettura 
+			/*for(i=0;i< ENEMIES; i++){
+
+				
+                if (enemies[i].y >= 0)
 			    {
-				/* Cancello il precedente carattere visualizzato */
-				mvaddch(enemies[i].y, enemies[i].x, ' ');
+					
+					if((enemies[i].y+1)==0){}
 
 			    }   
                 enemies[i] = datoRead;
@@ -49,11 +66,11 @@ void gameArea(int fd){
 			
 			
 		}
-		/* Visualizzo il carattere dell'entità sulle nuove coordinate */
+		// Visualizzo il carattere dell'entità sulle nuove coordinate 
 		if (player.x != 1 || player.y != 1)
 			mvaddch(datoRead.y, datoRead.x, datoRead.identifier);
-
-		/* Ogni 100 cicli genero 3 trappole in posizione casuale */
+		*/
+		
 
 
 
