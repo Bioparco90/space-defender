@@ -30,12 +30,10 @@ void enemiesGenerator(int *fd){
 
 // Versione 2
 void enemyShip(int fd){
-
     struct Object enemy;
     int passo=1;
 
-     // Coordinate debug
-
+    // Coordinate debug
     enemy.x = MAX_X - 1;
     enemy.y = MAX_Y / 2;
     enemy.identifier = '<';
@@ -43,30 +41,18 @@ void enemyShip(int fd){
     write(fd, &enemy, sizeof(enemy));
 
     while (true){
-
-        //mvprintw(enemy.y, enemy.x, &enemy.identifier);
-         mvaddch(enemy.y, enemy.x, ' ');
-
+        mvaddch(enemy.y, enemy.x, ' ');        
         if(enemy.y <= 2 || enemy.y > MAX_Y - 1) {
- 
             enemy.x -= 1;
-            passo = passo * (-1);
-            //mvprintw(enemy.y, enemy.x, &enemy.identifier);
+            passo *= -1;
             mvaddch(enemy.y, enemy.x, ' ');
-
         }   
-
         enemy.y += passo;
 
         mvprintw(enemy.y, enemy.x, &enemy.identifier);
         write(fd, &enemy, sizeof(enemy));
 
         usleep(100000);
-
         refresh();
-
     }
-
 }
-
-
