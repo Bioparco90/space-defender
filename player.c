@@ -12,7 +12,7 @@ void playerShip(int fd){
 
     while(true){
         int c = getch();
-        mvaddch(ship.y, ship.x, ' ');
+        //mvaddch(ship.y, ship.x, ' ');
         switch (c){
             case KEY_UP:
                 if(ship.y > 2) 

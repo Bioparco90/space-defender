@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 8 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
+#define ENEMIES 5 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
 #define MAX_X 80
 #define MAX_Y 20
 
