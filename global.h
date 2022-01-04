@@ -1,3 +1,6 @@
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
 #include <curses.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -33,3 +36,6 @@ void gameArea(int fd);
 
 // funzioni prova
 void generatore(int fd, struct Object *enemy);
+
+
+#endif /* GLOBAL_H */
