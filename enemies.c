@@ -6,7 +6,7 @@
    nei processi padre, al fine di evitare la creazione di ^n processi nel ciclo. 
  */
 void enemiesGenerator(int *fd){
-
+    struct Object enemy;
     int i;
     int pidEnemy[ENEMIES];
     for(i=0; i<ENEMIES; i++){
@@ -17,6 +17,7 @@ void enemiesGenerator(int *fd){
         } else{
             if (!pidEnemy[i]){
                 close(fd[0]);       // Chiudiamo descrittore in lettura
+                generatore(fd[0], &enemy);
                 enemyShip(fd[1]);   // Gestiamo movimento nemici passano descrittore in scrittura
             } else{
                 close(fd[1]);       // Chiudiamo descrittore in scrittura 
@@ -29,14 +30,13 @@ void enemiesGenerator(int *fd){
 
 
 // Versione 2
-void enemyShip(int fd){
-    struct Object enemy;
+void enemyShip(int fd, struct Object enemy){
     int passo=1;
 
     // Coordinate debug
-    enemy.x = MAX_X - 1;
-    enemy.y = MAX_Y / 2;
-    enemy.identifier = '<';
+    // enemy.x = MAX_X - 1;
+    // enemy.y = MAX_Y / 2;
+    // enemy.identifier = '<';
 
     write(fd, &enemy, sizeof(enemy));
 
