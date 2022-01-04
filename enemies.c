@@ -33,26 +33,14 @@ void enemiesGenerator(int *fd){
 void enemyShip(int fd, struct Object enemy){
     int direction=1;
 
-    // Coordinate debug
-    // enemy.x = MAX_X - 1;
-    // enemy.y = MAX_Y / 2;
-    // enemy.identifier = '<';
-
     write(fd, &enemy, sizeof(enemy));
-
     while (true){
-        //mvaddch(enemy.y, enemy.x, ' ');        
         if(enemy.y <= 2 || enemy.y > MAX_Y - 1) {
             enemy.x -= 1;
             direction *= -1;
-            //mvprintw(enemy.y, enemy.x, &enemy.identifier);
-            // mvaddch(enemy.y, enemy.x, ' ');
         }   
         enemy.y += direction;
-
-        //mvprintw(enemy.y, enemy.x, &enemy.identifier);
         write(fd, &enemy, sizeof(enemy));
-
         usleep(500000);
         refresh();
     }
