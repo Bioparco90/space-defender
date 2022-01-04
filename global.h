@@ -26,7 +26,6 @@ struct Object {
     int y;              // Posizione dell'oggetto nell'asse y
     int lives;          // Numero di vite disponibii dell'oggetto
     pid_t pid;          // Pid del processo di riferimento dell'oggetto
-    int firstShow;
 };
 
 // Funzioni libreria player.c
