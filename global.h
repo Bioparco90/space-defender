@@ -11,20 +11,6 @@
 #define DIR_UP 1
 #define DIR_DOWN -1
 
-// Funzioni libreria player.c
-void playerShip(int fd);
-void shot(int fd, int direction);
-
-// Funzioni libreria enemies.c
-void enemiesGenerator(int *fd);
-void enemyShip(int fd);
-
-// Funzioni libreria gameplay.c
-void gameArea(int fd);
-
-// funzioni prova
-void generatore(int fd);
-
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {
     char identifier;    // Carattere dell'oggetto. Es: "-" come proiettile.
@@ -34,3 +20,16 @@ struct Object {
     pid_t pid;          // Pid del processo di riferimento dell'oggetto
 };
 
+// Funzioni libreria player.c
+void playerShip(int fd);
+void shot(int fd, int direction);
+
+// Funzioni libreria enemies.c
+void enemiesGenerator(int *fd);
+void enemyShip(int fd, struct Object enemy);
+
+// Funzioni libreria gameplay.c
+void gameArea(int fd);
+
+// funzioni prova
+void generatore(int fd, struct Object *nemico);

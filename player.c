@@ -43,7 +43,7 @@ void playerShip(int fd){
                             if(!pidShotDown){
                                 shot(fd, DIR_DOWN);
                             } else{
-                                wait(ship.pid);
+                                wait(NULL);
                                 exit(1);
                             }
                         }

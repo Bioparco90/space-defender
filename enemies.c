@@ -18,7 +18,7 @@ void enemiesGenerator(int *fd){
             if (!pidEnemy[i]){
                 close(fd[0]);       // Chiudiamo descrittore in lettura
                 generatore(fd[0], &enemy);
-                enemyShip(fd[1]);   // Gestiamo movimento nemici passano descrittore in scrittura
+                enemyShip(fd[1], enemy);   // Gestiamo movimento nemici passano descrittore in scrittura
             } else{
                 close(fd[1]);       // Chiudiamo descrittore in scrittura 
                 gameArea(fd[0]);    // Gestiamo rappresentazione area di gioco passando descrittore in lettura
