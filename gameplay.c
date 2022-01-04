@@ -5,7 +5,7 @@ void gameArea(int fd){
     struct Object datoRead;
     struct Object player;
     struct Object enemies[ENEMIES];
-    int i, j, collision;
+    int i, j, k, collision;
 	//Il valore -1 segnala che si tratta della prima lettura 
 	player.x = -1;
     for(i=0; i<ENEMIES; i++){
@@ -39,38 +39,43 @@ void gameArea(int fd){
          		for(j=0;j<i; j++){    
 
         	      	if(i==ENEMIES-1 ){
-                        //mvprintw(datoRead.y-1,datoRead.x-1,"\n");
-                		mvprintw(datoRead.y,datoRead.x,"<");
-                		//smvprintw(datoRead.y+1,datoRead.x+1,"\n");
-                        break;
-                    }		
+                        
+                		  for(k=0;k<ENEMIES;k++){
+                			
+							printw("<");
+                			printw("\n\n");
 
+                		}
+                		break;
+                    }		
+					
             	}    
 
         	}   
-        }
-        
+			
 			// Verifica se non si tratta della prima lettura 
-			/*for(i=0;i< ENEMIES; i++){
+			for(i=0;i< ENEMIES; i++){
 
 				
                 if (enemies[i].y >= 0)
 			    {
 					
-					if((enemies[i].y+1)==0){}
+					mvaddch(enemies[i].y, enemies[i].x, ' ');  
 
 			    }   
                 enemies[i] = datoRead;
 
             }
+        }
+        
 			
 			
-		}
+		
 		// Visualizzo il carattere dell'entità sulle nuove coordinate 
 		if (player.x != 1 || player.y != 1)
 			mvaddch(datoRead.y, datoRead.x, datoRead.identifier);
-		*/
 		
+	
 
 
 

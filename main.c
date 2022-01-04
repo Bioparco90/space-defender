@@ -21,7 +21,7 @@ int main(){
 
     switch (pidPlayerShip){
         case -1:
-            printf("Errore creazione processo nave giocatore\n");
+            printw("Errore creazione processo nave giocatore\n");
             return 1;
             break;
 
@@ -30,9 +30,8 @@ int main(){
             close(fd[0]);       // Chiudiamo descrittore in lettura
             playerShip(fd[1]);  // Gestiamo movimento giocatore passando descrittore in scrittura
             break;
-
         default:
-            wait(NULL); // di debug, valutare successiva rimozione (impedisce l'uscita prematura dal programma)
+            //wait(NULL); // di debug, valutare successiva rimozione (impedisce l'uscita prematura dal programma)
             enemiesGenerator(fd); // Generiamo processi multipli relativi alle navi nemiche
             break;
     }

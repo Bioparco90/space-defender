@@ -41,19 +41,19 @@ void enemyShip(int fd){
     write(fd, &enemy, sizeof(enemy));
 
     while (true){
-        mvaddch(enemy.y, enemy.x, ' ');        
+        //mvaddch(enemy.y, enemy.x, ' ');        
         if(enemy.y <= 2 || enemy.y > MAX_Y - 1) {
             enemy.x -= 1;
             passo *= -1;
-            mvprintw(enemy.y, enemy.x, &enemy.identifier);
+            //mvprintw(enemy.y, enemy.x, &enemy.identifier);
             mvaddch(enemy.y, enemy.x, ' ');
         }   
         enemy.y += passo;
 
-        mvprintw(enemy.y, enemy.x, &enemy.identifier);
+        //mvprintw(enemy.y, enemy.x, &enemy.identifier);
         write(fd, &enemy, sizeof(enemy));
 
-        usleep(100000);
+        usleep(500000);
         refresh();
     }
 }
