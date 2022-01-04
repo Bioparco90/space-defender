@@ -16,7 +16,7 @@ void enemiesGenerator(int *fd){
             exit(2);
         } else{
             if (!pidEnemy[i]){
-                close(fd[0]);               // Chiudiamo descrittore in lettura
+                close(fd[0]);       // Chiudiamo descrittore in lettura
                 enemyShip(fd[1]);   // Gestiamo movimento nemici passano descrittore in scrittura
             } else{
                 close(fd[1]);       // Chiudiamo descrittore in scrittura 
@@ -46,7 +46,7 @@ void enemyShip(int fd){
             enemy.x -= 1;
             passo *= -1;
             //mvprintw(enemy.y, enemy.x, &enemy.identifier);
-            mvaddch(enemy.y, enemy.x, ' ');
+            // mvaddch(enemy.y, enemy.x, ' ');
         }   
         enemy.y += passo;
 
