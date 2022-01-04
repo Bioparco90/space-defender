@@ -22,6 +22,9 @@ void enemyShip(int fd);
 // Funzioni libreria gameplay.c
 void gameArea(int fd);
 
+// funzioni prova
+void generatore(int fd);
+
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {
     char identifier;    // Carattere dell'oggetto. Es: "-" come proiettile.
