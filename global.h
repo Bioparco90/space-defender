@@ -7,9 +7,13 @@
 #define MAX_X 80
 #define MAX_Y 20
 
+// Macro per la direzione degli spari diagonali
+#define DIR_UP 1
+#define DIR_DOWN -1
+
 // Funzioni libreria player.c
 void playerShip(int fd);
-void rocket(int fd);
+void shot(int fd, int direction);
 
 // Funzioni libreria enemies.c
 void enemiesGenerator(int *fd);
@@ -24,6 +28,6 @@ struct Object {
     int x;              // Posizione dell'oggetto nell'asse x
     int y;              // Posizione dell'oggetto nell'asse y
     int lives;          // Numero di vite disponibii dell'oggetto
-    pid_t pid;          // Pid del processo ri riferimento dell'oggetto
+    pid_t pid;          // Pid del processo di riferimento dell'oggetto
 };
 

@@ -2,7 +2,8 @@
 
 void playerShip(int fd){
     struct Object ship;
-    pid_t pidShot;
+    pid_t pidShotUp;
+    pid_t pidShotDown;
     
     ship.y = MAX_Y / 2;
     ship.x = 1;
@@ -25,14 +26,25 @@ void playerShip(int fd){
                 break;
             
             case ' ':                
-                pidShot = fork();
-                if(pidShot == -1){
+                pidShotUp = fork();
+                if(pidShotUp == -1){
                     printf("errore sparo");
+                    exit(1);
                 } else{
-                    if (!pidShot){
-                        rocket(fd);
+                    if (!pidShotUp){
+                        shot(fd, DIR_UP);
                     } else{
-                        wait(NULL);
+                        pidShotDown = fork();
+                        if(pidShotDown == -1){
+                            printf("errore sparo");
+                        } else{
+                            if(!pidShotDown){
+                                shot(fd, DIR_DOWN);
+                            } else{
+                                wait(NULL);
+                                exit(1);
+                            }
+                        }
                     }
                 }
                 // mvprintw(ship.y, ship.x+1, "o");
@@ -47,20 +59,24 @@ void playerShip(int fd){
     }
 }
 
-void rocket(int fd){
-    struct Object rocketUp;
-    struct Object rocketDown;
+void shot(int fd, int direction){
+    struct Object rocket;
 
-	rocketUp.x = 2;
-	rocketUp.y = MAX_Y / 2;
+	rocket.x = 2;
+	rocket.y = MAX_Y / 2;
+    rocket.identifier = 'o';
+    rocket.lives = 1;
+    rocket.pid = getpid();
 
-    write(fd, &rocketUp, sizeof(rocketUp));
+    write(fd, &rocket, sizeof(rocket));
 
-    while(rocketUp.x < MAX_X){
-		rocketUp.x++;
-		mvaddch(rocketUp.y, rocketUp.x-1, ' ');
-        mvprintw(rocketUp.y, rocketUp.x, "o");
-		refresh();
-		usleep(15000);
+    while(true){
+		rocket.x++;
+        rocket.y += direction;
+		// mvaddch(rocket.y, rocket.x-1, ' ');
+        // mvprintw(rocket.y, rocket.x, "o");
+		// refresh();
+		// usleep(15000);
+        write(fd, &rocket, sizeof(rocket));
     }
 }
