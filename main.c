@@ -3,8 +3,10 @@
 
 int main(){
     pid_t pidPlayerShip;         // Pid processo figlio "nave giocatore" 
-    pid_t pidEnemyShip[ENEMIES]; // Pid processo figlio "nave nemica"
+    pid_t pidEnemyShip[ENEMIES];
+    struct Object datoRead ;              // Pid processo figlio "nave nemica"
     int fd[2];                   // Descrittore pipe
+    int i,j;
 
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti
@@ -34,7 +36,23 @@ int main(){
             enemiesGenerator(fd); // Generiamo processi multipli relativi alle navi nemiche
             break;
     }
+    
+
+    //ALGORITMO PROTOTIPO SPAWN INIZIALE NEMICI
+       /* for(i=0;i<ENEMIES;i++){    
+         for(j=0;j<i; j++){ 
+            if(i==ENEMIES-1){
+                for(k=0;k<ENEMIES;k++){
+                printw("<");
+                printw("\n\n");
+                }
+                break;
+            }          
+        }
+        printw("\n");
+   }*/
   
+
     int c = getch(); // di debug, da rimuovere poi
     endwin();   // Ripristino del terminale
 
