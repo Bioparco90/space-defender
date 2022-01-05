@@ -6,28 +6,45 @@
    nei processi padre, al fine di evitare la creazione di ^n processi nel ciclo. 
  */
 void enemiesGenerator(int *fd){
-    int i;
     int pidEnemy[ENEMIES];
-    for(i=0; i<ENEMIES; i++){
-        pidEnemy[i] = fork();
-        if (pidEnemy[i] == -1){
+    int enemyCounter;
+
+
+    for(enemyCounter=0; enemyCounter<ENEMIES; enemyCounter++){
+        pidEnemy[enemyCounter] = fork();
+        if (pidEnemy[enemyCounter] == -1){
             printf("Errore creazione processo nemico\n");
             exit(2);
         } else{
-            if (!pidEnemy[i]){
-                struct Object enemy;
+            if (!pidEnemy[enemyCounter]){
+                struct Object enemy=generatore2(enemy,enemyCounter+1);
                 close(fd[0]);       // Chiudiamo descrittore in lettura
-                generatore(fd[1], &enemy);
                 enemyShip(fd[1], enemy);   // Gestiamo movimento nemici passano descrittore in scrittura
-            } else{
-                close(fd[1]);       // Chiudiamo descrittore in scrittura 
-                // gameArea(fd[0]);    // Gestiamo rappresentazione area di gioco passando descrittore in lettura
+                close(fd[1]);
                 gameAreaV2(fd[0]);
-                break;
-            }
+                _exit(0);
+            } //else{
+                //close(fd[1]);       // Chiudiamo descrittore in scrittura 
+                // gameArea(fd[0]);    // Gestiamo rappresentazione area di gioco passando descrittore in lettura
+                //gameAreaV2(fd[0]);
+               // break;
+            //}
         }
     }
 }
+
+
+struct Object generatore2(struct Object enemy, int enemyCounter){
+
+    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL));//2 è il numero di spazi tra una nave e l'altra
+    enemy.x= MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))*2);//2 è il numero di spazi tra una colonna di navi e l'altra
+    enemy.identifier = ENEMY;
+    enemy.lives = 2; // o quante sono
+    enemy.pid = getpid();
+
+    return enemy;
+}
+
 
 void enemyShip(int fd, struct Object enemy){
     int direction=1;
