@@ -9,6 +9,7 @@
 #define ENEMIES 5 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
 #define MAX_X 80
 #define MAX_Y 20
+#define MAX_ENEMY_COL (MAX_Y/3)
 
 // Macro per la direzione degli spari diagonali
 #define DIR_UP 1
@@ -41,6 +42,7 @@ void gameArea(int fd);
 
 // funzioni prova
 void generatore(struct Object *enemy);
+struct Object generatore2( struct Object enemy,  int enemyCounter);
 void gameAreaV2(int fd);
 
 
