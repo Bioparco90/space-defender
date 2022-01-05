@@ -26,29 +26,29 @@ void playerShip(int fd){
                     ship.y += 1;
                 break;
             
-            case ' ':                
-                pidShotUp = fork();
-                if(pidShotUp == -1){
-                    printf("errore sparo");
-                    exit(1);
-                } else{
-                    if (!pidShotUp){
-                        shot(fd, DIR_UP);
-                    } else{
-                        pidShotDown = fork();
-                        if(pidShotDown == -1){
-                            printf("errore sparo");
-                        } else{
-                            if(!pidShotDown){
-                                shot(fd, DIR_DOWN);
-                            } else{
-                                wait(NULL);
-                                exit(1);
-                            }
-                        }
-                    }
-                }
-                break;
+            // case ' ':                
+            //     pidShotUp = fork();
+            //     if(pidShotUp == -1){
+            //         printf("errore sparo");
+            //         exit(1);
+            //     } else{
+            //         if (!pidShotUp){
+            //             shot(fd, DIR_UP);
+            //         } else{
+            //             pidShotDown = fork();
+            //             if(pidShotDown == -1){
+            //                 printf("errore sparo");
+            //             } else{
+            //                 if(!pidShotDown){
+            //                     shot(fd, DIR_DOWN);
+            //                 } else{
+            //                     wait(NULL);
+            //                     exit(1);
+            //                 }
+            //             }
+            //         }
+            //     }
+            //     break;
 
             default:
                 break;
