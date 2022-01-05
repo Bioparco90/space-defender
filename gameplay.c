@@ -101,7 +101,8 @@ void gameAreaV2(int fd){
 					if(rocket.x >= 0)
 						mvaddch(rocket.y, rocket.x, ' ');
 				rocket = data;
-			}
+				}
+			}	
 		}
 		mvaddch(data.y, data.x, data.identifier);
 		mvprintw(0, 1, "Vite: %d", player.lives);
