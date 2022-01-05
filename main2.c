@@ -34,8 +34,9 @@ int main(){
                 _exit(-1);
 
             case 0:
+                enemy = generatore2(enemy, i+1);
                 close(fd[0]);
-                generatore(&enemy);
+                //generatore(&enemy);
                 enemyShip(fd[1], enemy);
                 _exit(0);
         }
