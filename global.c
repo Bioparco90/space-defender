@@ -5,7 +5,7 @@ int spawnX = MAX_X;
 int spawnY = 2;
 
 // codice non globale
-void generatore(int fd, struct Object *enemy){
+void generatore(struct Object *enemy){
     enemy->x = spawnX;
     enemy->y = spawnY;
     enemy->identifier = ENEMY;
