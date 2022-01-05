@@ -36,14 +36,14 @@ int main(){
             case 0:
                 enemy = generatore2(enemy, i+1);
                 close(fd[0]);
-                //generatore(&enemy);
+                // generatore(&enemy);
                 enemyShip(fd[1], enemy);
                 _exit(0);
         }
     }
 
     close(fd[1]);
-    gameArea(fd[0]);
+    gameAreaV2(fd[0]);
 
     // int c = getch(); // di debug, da rimuovere poi
     endwin();   // Ripristino del terminale
