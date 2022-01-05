@@ -34,13 +34,12 @@ void enemyShip(int fd, struct Object enemy){
 
     write(fd, &enemy, sizeof(enemy));
     while (true){
-        if(enemy.y <= 2 || enemy.y > MAX_Y - 1) {
+        if(enemy.y < 2 || enemy.y > MAX_Y - 1) {
             enemy.x -= 1;
             direction *= -1;
         }   
         enemy.y += direction;
         write(fd, &enemy, sizeof(enemy));
         usleep(500000);
-        refresh();
     }
 }
