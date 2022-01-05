@@ -82,7 +82,7 @@ void gameAreaV2(int fd){
 	int collision = 0;
 
 	player.x = -1;
-	enemy.x = -1;
+	enemy.y = -1;
 	rocket.x = -1;
 
 	do{
@@ -93,7 +93,7 @@ void gameAreaV2(int fd){
 			player = data;
 		} else{
 			if (data.identifier == ENEMY){
-				if(enemy.x >= 0)
+				if(enemy.y >= 0)
 					mvaddch(enemy.y, enemy.x, ' ');
 				enemy = data;
 			} else{

@@ -17,7 +17,7 @@ void enemiesGenerator(int *fd){
             if (!pidEnemy[i]){
                 struct Object enemy;
                 close(fd[0]);       // Chiudiamo descrittore in lettura
-                generatore(fd[0], &enemy);
+                generatore(fd[1], &enemy);
                 enemyShip(fd[1], enemy);   // Gestiamo movimento nemici passano descrittore in scrittura
             } else{
                 close(fd[1]);       // Chiudiamo descrittore in scrittura 
