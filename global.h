@@ -11,6 +11,10 @@
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
 
+// Macro gestione pipe
+#define READ 0
+#define WRITE 1
+
 // Macro per la direzione degli spari diagonali
 #define DIR_UP 1
 #define DIR_DOWN -1
