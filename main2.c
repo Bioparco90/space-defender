@@ -41,7 +41,8 @@ int main(){
             case 0:
                 // enemy = generatore2(enemy, i+1);
                 close(enemyPipe[i][0]);
-                generatore(&enemy);
+                enemy = generatore();
+                enemy.serial = i;
                 enemyShip(enemyPipe[i][1], enemy);
                 _exit(0);
         }
@@ -51,7 +52,7 @@ int main(){
     for (i=0; i<ENEMIES; i++){
         close(enemyPipe[i][1]);
     }
-    gameAreaV2(fd[0]);
+    gameAreaV2(fd[0], enemyPipe);
 
     // int c = getch(); // di debug, da rimuovere poi
     endwin();   // Ripristino del terminale
