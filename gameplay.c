@@ -41,8 +41,3 @@ void gameAreaV2(int fd, int enemyPipe[][2]){
 
 	
 }
-
-/* Tentativo da fare:
-	usare unica pipe assegnando ad ogni nave un numero di serie.
-	Es: Nave gioatore = 0, nave nemici 1->ENEMIES
-*/
