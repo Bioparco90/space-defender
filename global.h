@@ -47,5 +47,6 @@ void gameAreaV2(int fd, int enemyPipe[][2]);
 // funzioni prova
 struct Object generatore();
 struct Object generatore2( struct Object enemy,  int enemyCounter);
+void gameAreaV3(int pipe[][2]);
 
 #endif /* GLOBAL_H */
