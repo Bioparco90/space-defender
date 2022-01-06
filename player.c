@@ -1,7 +1,7 @@
 #include "global.h"
 
-void playerShip(int fd){
-    struct Object ship;
+void playerShip(int fdShip, int fdMain){
+    struct Object ship, dataMain;
     pid_t pidShotUp;
     pid_t pidShotDown;
     
@@ -10,10 +10,12 @@ void playerShip(int fd){
     ship.identifier = PLAYER;
     ship.lives = 3;
     ship.pid = getpid();
+    ship.serial = 777;
 
-    write(fd, &ship, sizeof(ship));
+    write(fdMain, &ship, sizeof(ship));
 
     while(true){
+        read(fdShip, &dataMain, sizeof(dataMain));
         int c = getch();
         switch (c){
             case KEY_UP:
@@ -55,7 +57,7 @@ void playerShip(int fd){
         }
         
         // mvprintw(ship.y, ship.x, &ship.identifier);
-        write(fd, &ship, sizeof(ship));
+        write(fdMain, &ship, sizeof(ship));
     }
 }
 

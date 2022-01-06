@@ -5,11 +5,13 @@ int spawnX = MAX_X-1;
 int spawnY = 2;
 
 // codice non globale
-struct Object generatore(){
+struct Object generatore(int i){
     struct Object enemy;
     enemy.x = spawnX;
-    enemy.y = spawnY;
-    enemy.identifier = ENEMY;
+    // enemy.y = spawnY;
+    enemy.y = i;
+    // enemy.identifier = ENEMY;
+    enemy.identifier = i-2+97;
     enemy.lives = 2; // o quante sono
     enemy.pid = getpid(); // siamo nel for delle fork in teoria
     // ora possiamo modificare i valori
@@ -32,17 +34,18 @@ struct Object generatore2(struct Object enemy, int enemyCounter){
 }
 
 
-void enemyShip(int fd, struct Object enemy){
+void enemyShip(int mainPipe, int enemyPipe, struct Object enemy){
     int direction=1;
 
-    write(fd, &enemy, sizeof(enemy));
+    write(mainPipe, &enemy, sizeof(enemy));
     while (true){
+        read(enemyPipe, &enemy, sizeof(enemy));
         if(enemy.y < 2 || enemy.y > MAX_Y - 1) {
             enemy.x -= 1;
             direction *= -1;
         }   
         enemy.y += direction;
-        write(fd, &enemy, sizeof(enemy));
+        write(mainPipe, &enemy, sizeof(enemy));
         usleep(500000);
     }
 }
