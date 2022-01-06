@@ -5,6 +5,7 @@ int main(){
     pid_t pidPlayerShip;         // Pid processo figlio "nave giocatore" 
     pid_t pidEnemyShip[ENEMIES]; // Pid processo figlio "nave nemica"
     int fd[2];                   // Descrittore pipe
+    int enemyPipe[ENEMIES][2];
     int i;
 
     initscr();         // Inizializza schermo di gioco
@@ -13,7 +14,11 @@ int main(){
     curs_set(0);       // Disabilita visualizzazione cursore
 
     // Creazione della pipe per la comunicazione tra i processi
-    pipe(fd);   
+    pipe(fd);
+
+    // Pipe dei nemici
+    for(i=0; i<ENEMIES; i++)
+        pipe(enemyPipe[i]);   
 
     // Creazione primo processo figlio - Nave giocatore
     switch (pidPlayerShip = fork()){
@@ -35,14 +40,17 @@ int main(){
 
             case 0:
                 // enemy = generatore2(enemy, i+1);
-                close(fd[0]);
+                close(enemyPipe[i][0]);
                 generatore(&enemy);
-                enemyShip(fd[1], enemy);
+                enemyShip(enemyPipe[i][1], enemy);
                 _exit(0);
         }
     }
 
     close(fd[1]);
+    for (i=0; i<ENEMIES; i++){
+        close(enemyPipe[i][1]);
+    }
     gameAreaV2(fd[0]);
 
     // int c = getch(); // di debug, da rimuovere poi
