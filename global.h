@@ -31,6 +31,7 @@ struct Object {
     int y;              // Posizione dell'oggetto nell'asse y
     int lives;          // Numero di vite disponibii dell'oggetto
     pid_t pid;          // Pid del processo di riferimento dell'oggetto
+    int serial;
 };
 
 // Funzioni libreria player.c
@@ -38,16 +39,13 @@ void playerShip(int fd);
 void shot(int fd, int direction);
 
 // Funzioni libreria enemies.c
-void enemiesGenerator(int *fd);
 void enemyShip(int fd, struct Object enemy);
 
 // Funzioni libreria gameplay.c
-void gameArea(int fd);
+void gameAreaV2(int fd, int enemyPipe[][2]);
 
 // funzioni prova
-void generatore(struct Object *enemy);
+struct Object generatore();
 struct Object generatore2( struct Object enemy,  int enemyCounter);
-void gameAreaV2(int fd);
-
 
 #endif /* GLOBAL_H */
