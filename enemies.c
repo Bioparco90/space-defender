@@ -3,6 +3,7 @@
 //globali
 int spawnX = MAX_X-1;
 int spawnY = 2;
+int flagAvanzata=0;
 
 // codice non globale
 struct Object generatore(int i){
@@ -25,8 +26,8 @@ struct Object generatore(int i){
 struct Object generatore2(int enemyCounter){
     struct Object enemy;
 
-    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL))+2;//2 è il numero di spazi tra una nave e l'altra
-    enemy.x= MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))*2);//2 è il numero di spazi tra una colonna di navi e l'altra
+    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL))+2;//1 è il numero di spazi tra una nave e l'altra
+    enemy.x= MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))*2)-2;//1 è il numero di spazi tra una colonna di navi e l'altra
     enemy.identifier = ENEMY;
     enemy.lives = 2; // o quante sono
     enemy.pid = getpid();
@@ -37,6 +38,7 @@ struct Object generatore2(int enemyCounter){
 
 void enemyShip(int mainPipe, int enemyPipe, struct Object enemy){
     int direction=1;
+    char controlCharater;
 
     write(mainPipe, &enemy, sizeof(enemy));
     while (true){

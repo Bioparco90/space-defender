@@ -6,6 +6,7 @@ void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]){
 	int collision = 0;
     int i;
 
+
 	player.x = -1;
 	enemy.y = -1;
 	rocket.x = -1;
@@ -37,6 +38,7 @@ void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]){
         mvaddch(player.y, player.x, player.identifier);
         for(i=0;i<ENEMIES; i++)
             mvaddch(dataEnemy[i].y, dataEnemy[i].x, dataEnemy[i].identifier);
+        mvaddch(rocket.y,rocket.x,rocket.identifier);
         mvprintw(0, 1, "Vite: %d", player.lives);
         refresh();
     
