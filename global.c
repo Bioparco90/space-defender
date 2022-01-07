@@ -2,7 +2,7 @@
 
 
 void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]){
-	struct Object data, dataEnemy[ENEMIES], player, enemy, rocket;
+	struct Object data, dataEnemy[ENEMIES], dataEnemyPrev[ENEMIES], player, enemy, rocket;
 	int collision = 0;
     int i;
 
@@ -23,6 +23,7 @@ void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]){
                     mvaddch(enemy.y, enemy.x, ' ');
                 enemy = data;
                 write(enemyPipe[enemy.serial][WRITE], &enemy, sizeof(enemy)); // VERIFICARE
+                dataEnemy[enemy.serial] = enemy; //test
             } else{
                 if (data.identifier == ROCKET){
                     if(rocket.x >= 0)
@@ -31,7 +32,11 @@ void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]){
                 }
             }	
         }
-        mvaddch(data.y, data.x, data.identifier);
+        clear();
+        // mvaddch(data.y, data.x, data.identifier);
+        mvaddch(player.y, player.x, player.identifier);
+        for(i=0;i<ENEMIES; i++)
+            mvaddch(dataEnemy[i].y, dataEnemy[i].x, dataEnemy[i].identifier);
         mvprintw(0, 1, "Vite: %d", player.lives);
         refresh();
     
