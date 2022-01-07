@@ -11,7 +11,7 @@ struct Object generatore(int i){
     // enemy.y = spawnY;
     enemy.y = i;
     // enemy.identifier = ENEMY;
-    enemy.identifier = i-2+97;
+    enemy.identifier = '<';//i-2+97;
     enemy.lives = 2; // o quante sono
     enemy.pid = getpid(); // siamo nel for delle fork in teoria
     // ora possiamo modificare i valori
@@ -22,9 +22,10 @@ struct Object generatore(int i){
     return enemy;
 }
 
-struct Object generatore2(struct Object enemy, int enemyCounter){
+struct Object generatore2(int enemyCounter){
+    struct Object enemy;
 
-    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL));//2 è il numero di spazi tra una nave e l'altra
+    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL))+2;//2 è il numero di spazi tra una nave e l'altra
     enemy.x= MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))*2);//2 è il numero di spazi tra una colonna di navi e l'altra
     enemy.identifier = ENEMY;
     enemy.lives = 2; // o quante sono
