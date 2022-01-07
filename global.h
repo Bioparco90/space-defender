@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 5 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
+#define ENEMIES 6 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
@@ -46,7 +46,7 @@ void gameAreaV2(int fd, int enemyPipe[][2]);
 
 // funzioni prova
 struct Object generatore(int i);
-struct Object generatore2( struct Object enemy,  int enemyCounter);
+struct Object generatore2( int enemyCounter);
 void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]);
 
 #endif /* GLOBAL_H */
