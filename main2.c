@@ -35,8 +35,8 @@ int main(){
                 close(enemyShipsPipe[i][READ]);
                 close(enemyShipsPipe[i][WRITE]);
             }
-            close(playerShipPipe[WRITE]);       // Chiudiamo descrittore in lettura
-            close(mainPipe[READ]);              // Chiudiamo descrittore in lettura
+            close(playerShipPipe[WRITE]);       // Chiudiamo descrittore per il player in scrittura
+            close(mainPipe[READ]);              // Chiudiamo descrittore per il main loop in lettura
             playerShip(playerShipPipe[READ], mainPipe[WRITE]);  // Gestore movimento nave giocatore
             _exit(0);
     }
@@ -49,25 +49,31 @@ int main(){
 
             case 0:
                 // enemy = generatore2(enemy, i+1);
-                close(mainPipe[READ]);
-                close(playerShipPipe[READ]);
-                close(playerShipPipe[WRITE]);
-                close(enemyShipsPipe[i][WRITE]);
+                close(mainPipe[READ]); //Chiudiamo descrittore per il main loop in lettura
+                close(playerShipPipe[READ]); //Chiudiamo descrittore per il player in lettura
+                close(playerShipPipe[WRITE]); //Chiudiamo descrittore per il player in scrittura
+                close(enemyShipsPipe[i][WRITE]);// chiudiamo il nemico attualo in scrittura
+
+                //Chiudiamo in lettura gli altri descrittori nemici per non andare in conflitto con quello in uso
                 for(j=0; j<ENEMIES; j++){
                     if(j!=i) close(enemyShipsPipe[j][READ]);
                 }
-                enemy = generatore(i+2);
+                enemy = generatore2(i+1);
                 enemy.serial = i;
                 enemyShip(mainPipe[WRITE], enemyShipsPipe[i][READ], enemy);
                 _exit(0);
         }
     }
 
-    close(mainPipe[WRITE]);
+
+    close(mainPipe[WRITE]);//Chiudiamo il descrittore per il main loop di gioco in scrittura
+
+    //Chiudiamo in lettura tutti i descrittori dei nemici preventivamente utilizzati prima dagli altri processi
     for (i=0; i<ENEMIES; i++){
         close(enemyShipsPipe[i][READ]);
     }
-    gameAreaV3(mainPipe[READ], playerShipPipe[WRITE], enemyShipsPipe);
+
+    gameAreaV3(mainPipe[READ], playerShipPipe[WRITE], enemyShipsPipe);//Facciamo partire la gamearea
 
     endwin();   // Ripristino del terminale
 
