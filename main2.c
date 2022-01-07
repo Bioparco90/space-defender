@@ -14,7 +14,7 @@ int main(){
     noecho();          // Disabilita visualizzazione tasti premuti
     keypad(stdscr, 1); // Abilita tasti funzione (frecce)
     curs_set(0);       // Disabilita visualizzazione cursore
-
+  
     // Creazione delle pipe per la comunicazione tra i processi
     if (pipe(mainPipe) < 0) return 1;
     if (pipe(playerShipPipe) < 0) return 2;

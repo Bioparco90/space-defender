@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 6 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
+#define ENEMIES 8 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
@@ -36,7 +36,7 @@ struct Object {
 
 // Funzioni libreria player.c
 void playerShip(int fdShip, int fdMain);
-void shot(int fd, int direction);
+void shot(int fdMain, int direction);
 
 // Funzioni libreria enemies.c
 void enemyShip(int mainPipe, int enemyPipe, struct Object enemy);
