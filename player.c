@@ -2,8 +2,9 @@
 
 void playerShip(int fdShip, int fdMain){
     struct Object ship, dataMain;
-    pid_t pidShotUp;
-    pid_t pidShotDown;
+    pid_t pidShot;
+    //pid_t pidShotUp;
+    //pid_t pidShotDown;
     
     ship.y = MAX_Y / 2;
     ship.x = 1;
@@ -27,6 +28,47 @@ void playerShip(int fdShip, int fdMain){
                 if (ship.y < MAX_Y-1)
                     ship.y += 1;
                 break;
+
+
+            //Questa versione spara un proiettile verso il basso ma poi la nave si blocca e non si può muovere, era un test per vedere se bastava usare una fork con il processo padre e il figlio senza usarne due.
+            //Da riprovare.
+            
+             case ' ':      
+                pidShot=fork();
+                
+                if(pidShot==-1){
+                    printw("Errore Sparo");
+                }
+                else if(pidShot==0){
+                      shot(fdMain, DIR_UP);
+                      
+                }
+                else{
+                    shot(fdMain, DIR_DOWN);
+                   
+                }
+                break;     
+
+
+
+                //Questo è una prova per gli shot, questo li spara senza bloccare la nave ma flickerano nello schermo quando vengono stampati e sopratutto ne parte uno a caso tra i due spammando.
+                //Probabilmente ha a che fare col fatto che non vi sia un delay tra i due processi e si intervallino tra loro
+                
+               /* pidShotUp=fork();
+                pidShotDown=fork();
+                
+                if(pidShotUp==-1 || pidShotDown==-1){
+                    printf("Errore Sparo");
+                }
+                else if(pidShotUp==0){
+                      shot(fdMain, DIR_UP);
+                        _exit(0);
+                }
+                else if(pidShotDown==0){
+                    shot(fdMain, DIR_DOWN);
+                    _exit(0);
+                }
+                break;*/
             
             // case ' ':                
             //     pidShotUp = fork();
@@ -61,24 +103,25 @@ void playerShip(int fdShip, int fdMain){
     }
 }
 
-void shot(int fd, int direction){
+void shot(int fdMain, int direction){
     struct Object rocket;
 
 	rocket.x = 2;
 	rocket.y = MAX_Y / 2;
-    rocket.identifier = 'o';
+    rocket.identifier = ROCKET;
     rocket.lives = 1;
     rocket.pid = getpid();
 
-    write(fd, &rocket, sizeof(rocket));
+    write(fdMain, &rocket, sizeof(rocket));
 
     while(true){
-		rocket.x++;
+		rocket.x +=8;
         rocket.y += direction;
 		// mvaddch(rocket.y, rocket.x-1, ' ');
         // mvprintw(rocket.y, rocket.x, "o");
 		// refresh();
-		// usleep(15000);
-        write(fd, &rocket, sizeof(rocket));
+         write(fdMain, &rocket, sizeof(rocket));
+	    usleep(100000);
+       
     }
 }
