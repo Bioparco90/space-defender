@@ -2,6 +2,7 @@
 #include <unistd.h>
 
 int main(){
+     srand(time(NULL));
     struct Object enemy;
     pid_t pidPlayerShip;            // Pid processo figlio "nave giocatore" 
     pid_t pidEnemyShip[ENEMIES];    // Pid processo figlio "nave nemica"
@@ -9,6 +10,7 @@ int main(){
     int playerShipPipe[2];          // Pipe giocatore
     int enemyShipsPipe[ENEMIES][2]; // Pipe nemici
     int i, j;
+   
 
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti

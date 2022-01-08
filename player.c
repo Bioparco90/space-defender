@@ -37,7 +37,7 @@ void playerShip(int fdShip, int fdMain){
                 pidShot=fork();
                 
                 if(pidShot==-1){
-                    printf("Errore Sparo");
+                    printw("Errore Sparo");
                 }
                 else if(pidShot==0){
                       shot(fdMain, DIR_UP);
