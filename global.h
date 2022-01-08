@@ -5,11 +5,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #define ENEMIES 8 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
+
 
 // Macro gestione pipe
 #define READ 0
@@ -23,6 +25,7 @@
 #define PLAYER '+'
 #define ENEMY '<'
 #define ROCKET 'o'
+#define ENEMY_ROCKET '-'
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {
@@ -48,5 +51,6 @@ void gameAreaV2(int fd, int enemyPipe[][2]);
 struct Object generatore(int i);
 struct Object generatore2( int enemyCounter);
 void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]);
+void enemyRocket(int mainPipe, int enemyPipe);
 
 #endif /* GLOBAL_H */
