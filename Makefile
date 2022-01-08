@@ -1,8 +1,8 @@
-a.out:	main2.o global.o player.o enemies.o gameplay.o
-	cc main2.o global.o player.o enemies.o gameplay.o -o spacedefender.exe -lncurses
+a.out:	main.o global.o player.o enemies.o gameplay.o
+	cc main.o global.o player.o enemies.o gameplay.o -o spacedefender.exe -lncurses
 
-main2.o:	main2.c global.h
-	cc -c main2.c
+main.o:	main.c global.h
+	cc -c main.c
 
 global.o: global.c global.h
 	cc -c global.c

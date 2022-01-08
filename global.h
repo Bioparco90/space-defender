@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 5 //Il valore che avevi messo era 25 ma l'ho rimpiazzato per semplicità momentaneamente
+#define ENEMIES 5 
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
@@ -31,7 +31,7 @@ struct Object {
     int y;              // Posizione dell'oggetto nell'asse y
     int lives;          // Numero di vite disponibii dell'oggetto
     pid_t pid;          // Pid del processo di riferimento dell'oggetto
-    int serial;
+    int serial;         // Numero univoco della nave
 };
 
 // Funzioni libreria player.c
@@ -42,11 +42,9 @@ void shot(int fd, int direction);
 void enemyShip(int mainPipe, int enemyPipe, struct Object enemy);
 
 // Funzioni libreria gameplay.c
-void gameAreaV2(int fd, int enemyPipe[][2]);
+void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]);
 
 // funzioni prova
-struct Object generatore(int i);
-struct Object generatore2(int enemyCounter);
-void gameAreaV3(int mainPipe, int playerPipe, int enemyPipe[][2]);
+struct Object generator(int enemyCounter);
 
 #endif /* GLOBAL_H */

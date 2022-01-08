@@ -1,42 +1,22 @@
 #include "global.h"
 
-//globali
-int spawnX = MAX_X-1;
-int spawnY = 2;
-
-// codice non globale
-struct Object generatore(int i){
-    struct Object enemy;
-    enemy.x = spawnX;
-    // enemy.y = spawnY;
-    enemy.y = i;
-    // enemy.identifier = ENEMY;
-    enemy.identifier = '<'; //i-2+97 per debug;
-    enemy.lives = 2; // o quante sono
-    enemy.pid = getpid(); // siamo nel for delle fork in teoria
-    // ora possiamo modificare i valori
-    spawnY += 2; //spazio vuoto
-    if(enemy.y == MAX_Y - 1 || spawnY >= MAX_Y - 1)
-        spawnX -= 2; // spazio vuoto
-
-    return enemy;
-}
-
-struct Object generatore2(int enemyCounter){
+// Funzione per la generazione delle navi.
+// Si occupa della posizione iniziale di spawn e di settare tutti i valori iniziali
+// di ogni singola nave. 
+struct Object generator(int enemyCounter){
     struct Object enemy;
 
-    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL))+2;//1 è il numero di spazi tra una nave e l'altra
-    enemy.x= MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))-2);//1 è il numero di spazi tra una colonna di navi e l'altra
+    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL))+2;      // 1 è il numero di spazi tra una nave e l'altra
+    enemy.x= MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))-2); // 1 è il numero di spazi tra una colonna di navi e l'altra
     enemy.identifier = ENEMY;
-    enemy.lives = 2; // o quante sono
+    enemy.lives = 3; // lives = 3: nave di primo livello, lives < 3: nave di secondo livello
     enemy.pid = getpid();
 
     return enemy;
 }
 
-
 void enemyShip(int mainPipe, int enemyPipe, struct Object enemy){
-    int direction=1;
+    int direction=1; 
 
     write(mainPipe, &enemy, sizeof(enemy));
     while (true){
