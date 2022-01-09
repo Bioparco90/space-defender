@@ -22,7 +22,7 @@ void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]){
                     mvaddch(enemy.y, enemy.x, ' ');
                 enemy = data;
                 write(enemyPipe[enemy.serial][WRITE], &enemy, sizeof(enemy)); 
-                dataEnemy[enemy.serial] = enemy; //test
+                dataEnemy[enemy.serial] = enemy;
             } else{
                 if (data.identifier == ROCKET){
                     if(rocket.x >= 0)
