@@ -24,6 +24,9 @@
 #define ENEMY '<'
 #define ROCKET 'o'
 
+// Macro per i ritardi
+#define ENEMY_DELAY 100000
+
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {
     char identifier;    // Carattere dell'oggetto. Es: "-" come proiettile.
