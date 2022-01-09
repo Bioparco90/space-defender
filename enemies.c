@@ -3,11 +3,13 @@
 // Funzione per la generazione delle navi.
 // Si occupa della posizione iniziale di spawn e di settare tutti i valori iniziali
 // di ogni singola nave. 
+// PROMEMORIA: spiegare la logica del posizionamento x e y, che attualmente inizializza
+// le navi oltre il limite dello schermo
 struct Object generator(int enemyCounter){
     struct Object enemy;
 
-    enemy.y= 2* ((enemyCounter-1) % (MAX_ENEMY_COL))+2;      // 1 è il numero di spazi tra una nave e l'altra
-    enemy.x= MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))-2); // 1 è il numero di spazi tra una colonna di navi e l'altra
+    enemy.y = 2* ((enemyCounter-1) % (MAX_ENEMY_COL))+2;      // 1 è il numero di spazi tra una nave e l'altra
+    enemy.x = MAX_X - (((enemyCounter-1)/(MAX_ENEMY_COL))-2); // 1 è il numero di spazi tra una colonna di navi e l'altra
     enemy.identifier = ENEMY;
     enemy.lives = 3; // lives = 3: nave di primo livello, lives < 3: nave di secondo livello
     enemy.pid = getpid();
