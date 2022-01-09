@@ -2,65 +2,36 @@
 
 void playerShip(int fdShip, int fdMain){
     struct Object ship, dataMain;
-    pid_t pidShotUp;
-    pid_t pidShotDown;
     
-    ship.y = MAX_Y / 2;
+    // Inizializzazione nave giocatore
     ship.x = 1;
+    ship.y = MAX_Y / 2;
     ship.identifier = PLAYER;
     ship.lives = 3;
     ship.pid = getpid();
     ship.serial = 777;
 
-    write(fdMain, &ship, sizeof(ship));
+    write(fdMain, &ship, sizeof(ship)); // Prima scrittura nella mainPipe
 
     while(true){
-        read(fdShip, &dataMain, sizeof(dataMain));
-        int c = getch();
+        read(fdShip, &dataMain, sizeof(dataMain)); // Lettura dei dati provenienti dal loop di gioco 
+        int c = getch();  // Input che verrà valutato nello switch case
         switch (c){
-            case KEY_UP:
-                if(ship.y > 2) 
+            case KEY_UP:  // Pressione del tasto freccia SU, movimento verso l'alto
+                if(ship.y > 2) // Il moviimento avviene solo qualora non si sia raggiunto il limite alto dello schermo
                     ship.y -= 1;
                 break;
             
-            case KEY_DOWN:
-                if (ship.y < MAX_Y-1)
+            case KEY_DOWN:  // Pressione del tasto freccia GIU, movimento verso il basso
+                if (ship.y < MAX_Y-1) // Il moviimento avviene solo se non è stato raggiunto il limite basso dello schermo
                     ship.y += 1;
                 break;
-            
-            // case ' ':                
-            //     pidShotUp = fork();
-            //     if(pidShotUp == -1){
-            //         printf("errore sparo");
-            //         exit(1);
-            //     } else{
-            //         if (!pidShotUp){
-            //             shot(fd, DIR_UP);
-            //         } else{
-            //             pidShotDown = fork();
-            //             if(pidShotDown == -1){
-            //                 printf("errore sparo");
-            //             } else{
-            //                 if(!pidShotDown){
-            //                     shot(fd, DIR_DOWN);
-            //                 } else{
-            //                     wait(NULL);
-            //                     exit(1);
-            //                 }
-            //             }
-            //         }
-            //     }
-            //     break;
-
-            default:
-                break;
         }
-        
-        // mvprintw(ship.y, ship.x, &ship.identifier);
-        write(fdMain, &ship, sizeof(ship));
+        write(fdMain, &ship, sizeof(ship)); // Scrittura ciclica sulla mainPipe passata al loop di gioco
     }
 }
 
+// Funzione da rivedere. Prossimo compito
 void shot(int fd, int direction){
     struct Object rocket;
 
