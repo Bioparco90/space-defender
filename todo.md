@@ -1,1 +1,0 @@
-- funzione doppio sparo diagonale
