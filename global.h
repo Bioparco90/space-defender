@@ -25,7 +25,7 @@
 #define ROCKET 'o'
 
 // Macro per i ritardi
-#define ENEMY_DELAY 100000
+#define ENEMY_DELAY 200000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {
@@ -49,5 +49,6 @@ void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]);
 
 // funzioni prova
 struct Object generator(int enemyCounter);
+void printSprite(int posX, int posY, char sprite[3][3]);
 
 #endif /* GLOBAL_H */
