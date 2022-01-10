@@ -1,6 +1,27 @@
 #include "global.h"
 #include <unistd.h>
 
+
+char playerSprite[3][3]={
+        {"/\\ "},
+        {"[]>"},
+        {"\\/ "}
+};
+
+char enemySpriteLv1[3][3]={
+        {" S "},
+        {"<o>"},
+        {" S "}
+};
+
+char enemySpriteLv2[3][3]={
+        {"[\\ "},
+        {"[@>"},
+        {"[/ "}
+};
+
+
+
 void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]){
 	struct Object data, dataEnemy[ENEMIES], player, enemy;
 	int collision = 0;
@@ -27,9 +48,11 @@ void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]){
         }
 
         clear(); // Pulizia schermo delle vecchie posizioni per ristampa
-        mvaddch(player.y, player.x, player.identifier); // Stampa nave nemica nella nuova posizione
+        printSprite(player.x, player.y, playerSprite); // Stampa nave giocatore nella nuova posizione
         for(i=0;i<ENEMIES; i++) // Ciclo per la stampa delle navi nemiche nelle nuove posizioni
             mvaddch(dataEnemy[i].y, dataEnemy[i].x, dataEnemy[i].identifier);
+            // printSprite(dataEnemy[i].y, dataEnemy[i].x, enemySpriteLv1);
+
         mvprintw(0, 1, "Vite: %d", player.lives); // Stampa vite rimanenti
         refresh(); 
 	} while (!collision);
