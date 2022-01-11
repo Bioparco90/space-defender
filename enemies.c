@@ -17,18 +17,49 @@ struct Object generator(int enemyCounter){
     return enemy;
 }
 
-void enemyShip(int mainPipe, int enemyPipe, struct Object enemy){
-    int direction=1; // Direzione nave: 1 -> basso, -1 -> alto
+// void enemyShip(int mainPipe, int enemyPipe, struct Object enemy){
+//     int direction=1; // Direzione nave: 1 -> basso, -1 -> alto
+//     int flag = 0;
 
-    write(mainPipe, &enemy, sizeof(enemy));         // Prima scrittura nella mainPipe
-    while (true){                                   // Loop movimento nave
-        read(enemyPipe, &enemy, sizeof(enemy));     // Lettura dei dati provenienti dal loop di gioco
-        if(enemy.y < 2 || enemy.y > MAX_Y - 1) {    // Controllo bordi
-            enemy.x -= 1;       // Avanzamento di una colonna verso la nave del giocatore
-            direction *= -1;    // Cambio direzione 
-        }   
-        enemy.y += direction;   // Nuova coordinata Y sfruttando la direzione
-        write(mainPipe, &enemy, sizeof(enemy)); // Scrittura ciclica nella mainPipe
-        usleep(ENEMY_DELAY); // Ritardo nel movimento
+//     write(mainPipe, &enemy, sizeof(enemy));         // Prima scrittura nella mainPipe
+//     while (true){                                   // Loop movimento nave
+//         read(enemyPipe, &enemy, sizeof(enemy));     // Lettura dei dati provenienti dal loop di gioco
+//         if (flag) goto label1;
+//         if(enemy.y < 2 || enemy.y > MAX_Y - 1) {    // Controllo bordi
+//             enemy.x -= 1;       // Avanzamento di una colonna verso la nave del giocatore
+//             direction *= -1;    // Cambio direzione 
+//             flag = 1;
+//             goto label2;
+//         }   
+// label1:        enemy.y += direction;   // Nuova coordinata Y sfruttando la direzione
+//         flag = 0;
+// label2:        write(mainPipe, &enemy, sizeof(enemy)); // Scrittura ciclica nella mainPipe
+//         usleep(ENEMY_DELAY); // Ritardo nel movimento
+//     }
+// }
+
+void enemyShip(int mainPipe, int enemyPipe, struct Object enemy){
+    int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
+    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
+
+    write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
+    while(true){                                        // Loop movimento nave nemica
+        read(enemyPipe, &enemy, sizeof(enemy));         // Lettura dei dati provenienti dal loop di gioco
+        switch (flag){
+            case VERTICAL:                              // Movimento verticale
+                enemy.y += direction;                   // Aggiornamento coordinata Y
+                if (enemy.y < 2 || enemy.y > MAX_Y - 1) // Verifica collisione bordi
+                    flag = HORIZONTAL;  // Eventuale modifica del valore flag, che ci manderà al movimento orizzontale
+                break;
+
+            case HORIZONTAL:        // Movimento orizzontale
+                enemy.x -= 1;       // Aggiornamento coordinata X
+                direction *= -1;    // Rimbalzo sul bordo
+                flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
+                break;
+        }
+
+        write(mainPipe, &enemy, sizeof(enemy));
+        usleep(ENEMY_DELAY);
     }
 }
