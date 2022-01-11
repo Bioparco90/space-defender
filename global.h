@@ -24,6 +24,10 @@
 #define ENEMY '<'
 #define ROCKET 'o'
 
+// Macro movimento nemici
+#define HORIZONTAL 1
+#define VERTICAL 0
+
 // Macro per i ritardi
 #define ENEMY_DELAY 500000
 
