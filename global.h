@@ -43,7 +43,8 @@ struct Object {
 
 // Funzioni libreria player.c
 void playerShip(int fdShip, int fdMain);
-void shot(int fd, int direction);
+void playerShotInit(int mainPipe, int x, int y);
+void shot(int mainPipe, int x, int y, int direction);
 
 // Funzioni libreria enemies.c
 void enemyShip(int mainPipe, int enemyPipe, struct Object enemy);
