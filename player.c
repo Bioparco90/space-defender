@@ -1,4 +1,6 @@
 #include "global.h"
+#include <sys/types.h>
+#include <unistd.h>
 
 void playerShip(int fdShip, int fdMain){
     struct Object ship, dataMain;
@@ -23,8 +25,12 @@ void playerShip(int fdShip, int fdMain){
                 break;
             
             case KEY_DOWN:  // Pressione del tasto freccia GIU, movimento verso il basso
-                if (ship.y < MAX_Y-1) // Il moviimento avviene solo se non è stato raggiunto il limite basso dello schermo
+                if (ship.y < MAX_Y-1) // Il movimento avviene solo se non è stato raggiunto il limite basso dello schermo
                     ship.y += 1;
+                break;
+
+            case ' ':
+                playerShotInit(fdMain, ship.x, ship.y);
                 break;
         }
         write(fdMain, &ship, sizeof(ship)); // Scrittura ciclica sulla mainPipe passata al loop di gioco
@@ -32,24 +38,46 @@ void playerShip(int fdShip, int fdMain){
 }
 
 // Funzione da rivedere. Prossimo compito
-void shot(int fd, int direction){
+void shot(int mainPipe, int x, int y, int direction){
     struct Object rocket;
 
-	rocket.x = 2;
-	rocket.y = MAX_Y / 2;
-    rocket.identifier = 'o';
+	rocket.x = x + 1;
+	rocket.y = y + direction;
+    rocket.identifier = ROCKET;
     rocket.lives = 1;
     rocket.pid = getpid();
 
-    write(fd, &rocket, sizeof(rocket));
-
-    while(true){
-		rocket.x++;
+    write(mainPipe, &rocket, sizeof(rocket));
+    while(rocket.x < MAX_X - 1 && (rocket.y >= 2 && rocket.y <= MAX_Y - 1)){
+		rocket.x += 9;
         rocket.y += direction;
-		// mvaddch(rocket.y, rocket.x-1, ' ');
-        // mvprintw(rocket.y, rocket.x, "o");
-		// refresh();
-		// usleep(15000);
-        write(fd, &rocket, sizeof(rocket));
+        write(mainPipe, &rocket, sizeof(rocket));
+		usleep(100000);
+    }
+}
+
+void playerShotInit(int mainPipe, int x, int y){
+    pid_t pidRocketUp, pidRocketDown;
+
+    switch (pidRocketUp = fork()){
+        case -1:
+            _exit(-1);
+            break;
+
+        case 0:
+            shot(mainPipe, x, y, DIR_UP);
+            _exit(0);
+            break;
+    }
+
+    switch (pidRocketDown = fork()){
+        case -1:
+            _exit(-1);
+            break;
+
+        case 0:
+            shot(mainPipe, x, y, DIR_DOWN);
+            _exit(0);
+            break;
     }
 }

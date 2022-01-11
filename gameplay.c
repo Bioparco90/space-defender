@@ -1,4 +1,5 @@
 #include "global.h"
+#include <curses.h>
 #include <unistd.h>
 
 
@@ -23,7 +24,7 @@ char enemySpriteLv2[3][3]={
 
 
 void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]){
-	struct Object data, dataEnemy[ENEMIES], player, enemy;
+	struct Object data, dataEnemy[ENEMIES], player, enemy, rocket;
 	int collision = 0;
     int i;
     
@@ -45,6 +46,10 @@ void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]){
                 write(enemyPipe[enemy.serial][WRITE], &enemy, sizeof(enemy)); // Scrittura nuovi valori nell'apposita pipe nemico
                 dataEnemy[enemy.serial] = enemy; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
                 break;
+
+            case ROCKET:
+                rocket = data;
+                break;
         }
 
         clear(); // Pulizia schermo delle vecchie posizioni per ristampa
@@ -52,7 +57,7 @@ void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]){
         for(i=0;i<ENEMIES; i++) // Ciclo per la stampa delle navi nemiche nelle nuove posizioni
             mvaddch(dataEnemy[i].y, dataEnemy[i].x, dataEnemy[i].identifier);
             // printSprite(dataEnemy[i].y, dataEnemy[i].x, enemySpriteLv1);
-
+        mvaddch(rocket.y, rocket.x, rocket.identifier);
         mvprintw(0, 1, "Vite: %d", player.lives); // Stampa vite rimanenti
         refresh(); 
 	} while (!collision);
