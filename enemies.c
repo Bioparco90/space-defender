@@ -1,4 +1,8 @@
 #include "global.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 // Funzione per la generazione delle navi.
 // Si occupa della posizione iniziale di spawn e di settare tutti i valori iniziali
@@ -26,13 +30,13 @@ void enemyShip(int mainPipe, struct Object enemy){
         // read(mainPipe, &enemy, sizeof(enemy));         // Lettura dei dati provenienti dal loop di gioco
         switch (flag){
             case VERTICAL:                              // Movimento verticale
-                enemy.y += direction + direction;                   // Aggiornamento coordinata Y
+                enemy.y += direction;                   // Aggiornamento coordinata Y
                 if (enemy.y <= 2 || enemy.y > MAX_Y - 1) // Verifica collisione bordi
                     flag = HORIZONTAL;  // Eventuale modifica del valore flag, che ci manderà al movimento orizzontale
                 break;
 
             case HORIZONTAL:        // Movimento orizzontale
-                enemy.x -= 2;       // Aggiornamento coordinata X
+                enemy.x -= 3;       // Aggiornamento coordinata X
                 direction *= -1;    // Rimbalzo sul bordo
                 flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
                 break;
@@ -40,5 +44,41 @@ void enemyShip(int mainPipe, struct Object enemy){
 
         write(mainPipe, &enemy, sizeof(enemy));
         usleep(ENEMY_DELAY);
+    }
+}
+
+
+
+//-----------------prova---------------------
+
+void fleetEnlister(int mainPipe){
+    struct Object enemy[ENEMIES];
+    pid_t pidEnemyShip[ENEMIES];
+    int posX = MAX_X - 1;
+    int posY = 2;
+    int i;
+
+    for(i=0; i<ENEMIES; i++){
+        pidEnemyShip[i] = fork();
+        switch(pidEnemyShip[i]){
+            case -1:
+                endwin();
+                printf("Errore creazione processo nemico #%d", i);
+                exit(1);
+
+            case 0:
+                if(posY >= MAX_Y -1) {
+                    posX += 3;
+                    posY = 2;
+                }
+                enemy[i].x = posX;
+                enemy[i].y = posY;
+                enemy[i].pid = getpid();
+                enemy[i].lives = 3;
+                enemy[i].serial = i;
+                enemy[i].identifier = ENEMY;
+                enemyShip(mainPipe, enemy[i]);
+        }
+        posY += 3;
     }
 }

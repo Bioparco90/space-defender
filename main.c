@@ -6,10 +6,11 @@ int main(){
     struct Object enemy[ENEMIES];
     pid_t pidPlayerShip;            // Pid processo figlio "nave giocatore" 
     pid_t pidEnemyShip[ENEMIES];    // Pid processo figlio "nave nemica"
+    pid_t pidEnemyFleet;
     int mainPipe[2];                // Pipe generale
     // int playerShipPipe[2];          // Pipe giocatore
     // int enemyShipsPipe[ENEMIES][2]; // Pipe nemici
-    int i, j;
+    int i, j, row, col = MAX_X - 1;
 
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti
@@ -40,29 +41,47 @@ int main(){
             close(mainPipe[READ]);        // Chiudiamo pipe principale in lettura
             playerShip(mainPipe[WRITE]);  // Gestore movimento nave giocatore
             _exit(0);
+
+        default:
+            pidEnemyFleet = fork();
+            switch(pidEnemyFleet){
+                case -1:
+                    endwin();
+                    printf("Errore creazione flotta nemica\n");
+                    return 3;
+
+                case 0:
+                    close(mainPipe[READ]);
+                    fleetEnlister(mainPipe[WRITE]);
+                    _exit(0);
+            }
     }
 
     // Creazione processi navi nemiche
-    for(i=0; i<ENEMIES; i++){
-        pidEnemyShip[i] = fork();
-        switch(pidEnemyShip[i]){
-            case -1:
-                endwin();
-                printf("Errore creazione processo nave nemica\n");
-                return 3;
+    // for(i=0; i<ENEMIES; i++){
+    //     row = i+3;
+         
+    //     pidEnemyShip[i] = fork();
+    //     switch(pidEnemyShip[i]){
+    //         case -1:
+    //             endwin();
+    //             printf("Errore creazione processo nave nemica\n");
+    //             return 3;
 
-            case 0:
-                close(mainPipe[READ]);              // Chiusura pipe principale in lettura
-                enemy[i] = generator(i+1);
+    //         case 0:
+    //             close(mainPipe[READ]);              // Chiusura pipe principale in lettura
+    //             // enemy[i] = generator(i+1);
+    //             enemy[i].identifier = ENEMY;
+                
+                
+    //             // Assegnazione del seriale univoco della nave (possibilità di spostarlo dentro la generatore)
+    //             enemy[i].serial = i;
 
-                // Assegnazione del seriale univoco della nave (possibilità di spostarlo dentro la generatore)
-                enemy[i].serial = i;
-
-                // Gestione movimento della nave
-                enemyShip(mainPipe[WRITE], enemy[i]); 
-                _exit(0);
-        }
-    }
+    //             // Gestione movimento della nave
+    //             enemyShip(mainPipe[WRITE], enemy[i]); 
+    //             _exit(0);
+    //     }
+    // }
 
     // Processo principale
     close(mainPipe[WRITE]);     // Chiudiamo pipe principale in scrittura

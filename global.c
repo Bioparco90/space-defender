@@ -16,3 +16,4 @@ void printSprite(int posX, int posY, char sprite[3][1]){
         y++;
     }
 }
+
