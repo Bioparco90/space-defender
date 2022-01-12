@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 18
+#define ENEMIES 50
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)

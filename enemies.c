@@ -54,7 +54,7 @@ void enemyShip(int mainPipe, struct Object enemy){
 void fleetEnlister(int mainPipe){
     struct Object enemy[ENEMIES];
     pid_t pidEnemyShip[ENEMIES];
-    int posX = MAX_X - 3;
+    int posX = MAX_X;
     int posY = 2;
     int i;
 
@@ -81,7 +81,7 @@ void fleetEnlister(int mainPipe){
         }
         posY += 2;
         if(posY >= MAX_Y -1) {
-            posX += 2;
+            posX += 7;
             posY = 2;
         }
         
