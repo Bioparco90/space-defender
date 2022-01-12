@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 15 
+#define ENEMIES 18
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
@@ -29,7 +29,7 @@
 #define VERTICAL 0
 
 // Macro per i ritardi
-#define ENEMY_DELAY 100000
+#define ENEMY_DELAY 300000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {

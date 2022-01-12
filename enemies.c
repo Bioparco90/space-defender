@@ -36,7 +36,7 @@ void enemyShip(int mainPipe, struct Object enemy){
                 break;
 
             case HORIZONTAL:        // Movimento orizzontale
-                enemy.x -= 3;       // Aggiornamento coordinata X
+                enemy.x -= 4;       // Aggiornamento coordinata X
                 direction *= -1;    // Rimbalzo sul bordo
                 flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
                 break;
@@ -54,7 +54,7 @@ void enemyShip(int mainPipe, struct Object enemy){
 void fleetEnlister(int mainPipe){
     struct Object enemy[ENEMIES];
     pid_t pidEnemyShip[ENEMIES];
-    int posX = MAX_X - 1;
+    int posX = MAX_X - 3;
     int posY = 2;
     int i;
 
@@ -67,10 +67,10 @@ void fleetEnlister(int mainPipe){
                 exit(1);
 
             case 0:
-                if(posY >= MAX_Y -1) {
-                    posX += 3;
-                    posY = 2;
-                }
+                // if(posY >= MAX_Y -1) {
+                //     posX += 3;
+                //     posY = 2;
+                // }
                 enemy[i].x = posX;
                 enemy[i].y = posY;
                 enemy[i].pid = getpid();
@@ -79,6 +79,11 @@ void fleetEnlister(int mainPipe){
                 enemy[i].identifier = ENEMY;
                 enemyShip(mainPipe, enemy[i]);
         }
-        posY += 3;
+        posY += 2;
+        if(posY >= MAX_Y -1) {
+            posX += 2;
+            posY = 2;
+        }
+        
     }
 }
