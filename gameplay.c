@@ -34,16 +34,12 @@ char enemySpriteLv2[3][3]={
         {"[/ "}
 };
 
-
-
 void gameArea(int mainPipe){
 	struct Object data, dataEnemy[ENEMIES], player, enemy, rocket;
 	int collision = 0;
     int id;
     int i;
 
-    // for (i=0; i<ENEMIES; i++) dataEnemy[i].y = -1;
-    
     // Loop di gioco
 	do{
         read(mainPipe, &data, sizeof(data)); // Lettura ciclica del dato dalla mainPipe
@@ -63,16 +59,9 @@ void gameArea(int mainPipe){
             case ENEMY:
                 if (dataEnemy[id].y >= 2 && dataEnemy[id].y <= MAX_Y) 
                     mvaddch(dataEnemy[id].y, dataEnemy[id].x, ' ');
-                // enemy = data; // Assegnamo il valore ad una variabile enemy
-                /* altre gestioni varie da definire? */
-                // write(mainPipe, &enemy, sizeof(enemy)); // Scrittura nuovi valori nell'apposita pipe nemico
                 dataEnemy[id] = data; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
                 mvaddch(data.y, data.x, data.identifier);
                 break;
-
-            // case ROCKET:
-            //     rocket = data;
-            //     break;
         }
 
         switch(data.identifier){

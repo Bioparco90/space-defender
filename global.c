@@ -1,5 +1,6 @@
 #include "global.h"
 
+// Le righe commentate servono in caso di sprite 3x3
 void printSprite(int posX, int posY, char sprite[3][1]){
 
     int row,col;
@@ -16,4 +17,3 @@ void printSprite(int posX, int posY, char sprite[3][1]){
         y++;
     }
 }
-

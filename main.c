@@ -3,13 +3,9 @@
 #include <unistd.h>
 
 int main(){
-    struct Object enemy[ENEMIES];
     pid_t pidPlayerShip;            // Pid processo figlio "nave giocatore" 
-    pid_t pidEnemyShip[ENEMIES];    // Pid processo figlio "nave nemica"
     pid_t pidEnemyFleet;
     int mainPipe[2];                // Pipe generale
-    // int playerShipPipe[2];          // Pipe giocatore
-    // int enemyShipsPipe[ENEMIES][2]; // Pipe nemici
     int i, j, row, col = MAX_X - 1;
 
     initscr();         // Inizializza schermo di gioco
@@ -32,12 +28,6 @@ int main(){
             return 2;
 
         case 0:
-            // Chiudiamo tutte le pipe nemico sia in lettura che in scrittura
-            // for(i=0; i<ENEMIES; i++){
-            //     close(enemyShipsPipe[i][READ]);
-            //     close(enemyShipsPipe[i][WRITE]);
-            // }
-            // close(playerShipPipe[WRITE]); // Chiudiamo pipe giocatore in scrittura
             close(mainPipe[READ]);        // Chiudiamo pipe principale in lettura
             playerShip(mainPipe[WRITE]);  // Gestore movimento nave giocatore
             _exit(0);

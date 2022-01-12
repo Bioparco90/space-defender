@@ -47,14 +47,16 @@ void playerShotInit(int mainPipe, int x, int y);
 void shot(int mainPipe, int x, int y, int direction);
 
 // Funzioni libreria enemies.c
+void fleetEnlister(int mainPipe);
 void enemyShip(int mainPipe, struct Object enemy);
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
 
-// funzioni prova
-struct Object generator(int enemyCounter);
+// Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, char sprite[3][1]);
-void fleetEnlister(int mainPipe);
+
+// funzioni prova
+
 
 #endif /* GLOBAL_H */
