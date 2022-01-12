@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 5 
+#define ENEMIES 50
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
@@ -29,7 +29,7 @@
 #define VERTICAL 0
 
 // Macro per i ritardi
-#define ENEMY_DELAY 500000
+#define ENEMY_DELAY 300000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 struct Object {
@@ -42,18 +42,21 @@ struct Object {
 };
 
 // Funzioni libreria player.c
-void playerShip(int fdShip, int fdMain);
+void playerShip(int fdMain);
 void playerShotInit(int mainPipe, int x, int y);
 void shot(int mainPipe, int x, int y, int direction);
 
 // Funzioni libreria enemies.c
-void enemyShip(int mainPipe, int enemyPipe, struct Object enemy);
+void fleetEnlister(int mainPipe);
+void enemyShip(int mainPipe, struct Object enemy);
 
 // Funzioni libreria gameplay.c
-void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]);
+void gameArea(int mainPipe);
+
+// Funzioni di utilità globale (global.c)
+void printSprite(int posX, int posY, char sprite[3][1]);
 
 // funzioni prova
-struct Object generator(int enemyCounter);
-void printSprite(int posX, int posY, char sprite[3][3]);
+
 
 #endif /* GLOBAL_H */

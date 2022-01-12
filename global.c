@@ -1,6 +1,7 @@
 #include "global.h"
 
-void printSprite(int posX, int posY, char sprite[3][3]){
+// Le righe commentate servono in caso di sprite 3x3
+void printSprite(int posX, int posY, char sprite[3][1]){
 
     int row,col;
     int x, y;
@@ -8,11 +9,11 @@ void printSprite(int posX, int posY, char sprite[3][3]){
     y=posY;
 
     for(row=0;row<3;row++){
-        for(col=0;col<3;col++){
+        for(col=0;col<1;col++){
             mvaddch(y,x,sprite[row][col]);
-            x++;
+            // x++;
         }
-        x=posX;
+        // x=posX;
         y++;
     }
 }

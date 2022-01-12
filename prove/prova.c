@@ -30,5 +30,15 @@ int main(){
         printf("\n");
     }
     
+    // int posY = 2, y;
+    // int ENEMIES = 5;
+    // int posX;
+    // for(i=0; i<ENEMIES; i++){
+    //     y = posY;
+    //     if(posY >= MAX_Y -1) posX += 2;
+    //     x = posX;
+    //     posY += 3;
+    // }
+
     return 0;
 }

@@ -3,13 +3,10 @@
 #include <unistd.h>
 
 int main(){
-    struct Object enemy;
     pid_t pidPlayerShip;            // Pid processo figlio "nave giocatore" 
-    pid_t pidEnemyShip[ENEMIES];    // Pid processo figlio "nave nemica"
+    pid_t pidEnemyFleet;
     int mainPipe[2];                // Pipe generale
-    int playerShipPipe[2];          // Pipe giocatore
-    int enemyShipsPipe[ENEMIES][2]; // Pipe nemici
-    int i, j;
+    int i, j, row, col = MAX_X - 1;
 
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti
@@ -21,78 +18,38 @@ int main(){
         endwin();
         return 1;
     }
-    if (pipe(playerShipPipe) < 0) {
-        endwin();
-        return 2;
-    }
-
-    // Creazione delle pipe dei nemici
-    for(i=0; i<ENEMIES; i++)
-        if (pipe(enemyShipsPipe[i]) < 0){
-            endwin();
-            return 3;
-        }
 
     // Creazione primo processo figlio - Nave giocatore
-    switch (pidPlayerShip = fork()){
+    pidPlayerShip = fork();
+    switch (pidPlayerShip){
         case -1:
             endwin();
             printf("Errore creazione processo nave giocatore\n");
-            return 4;
+            return 2;
 
         case 0:
-            // Chiudiamo tutte le pipe nemico sia in lettura che in scrittura
-            for(i=0; i<ENEMIES; i++){
-                close(enemyShipsPipe[i][READ]);
-                close(enemyShipsPipe[i][WRITE]);
-            }
-            close(playerShipPipe[WRITE]); // Chiudiamo pipe giocatore in scrittura
             close(mainPipe[READ]);        // Chiudiamo pipe principale in lettura
-            playerShip(playerShipPipe[READ], mainPipe[WRITE]);  // Gestore movimento nave giocatore
+            playerShip(mainPipe[WRITE]);  // Gestore movimento nave giocatore
             _exit(0);
-    }
 
-    // Creazione processi navi nemiche
-    for(i=0; i<ENEMIES; i++){
-        switch(pidEnemyShip[i] = fork()){
-            case -1:
-                endwin();
-                printf("Errore creazione processo nave nemica\n");
-                return 5;
+        default:
+            pidEnemyFleet = fork();
+            switch(pidEnemyFleet){
+                case -1:
+                    endwin();
+                    printf("Errore creazione flotta nemica\n");
+                    return 3;
 
-            case 0:
-                close(mainPipe[READ]);              // Chiusura pipe principale in lettura
-                close(playerShipPipe[READ]);        // Chiusura pipe giocatore in lettura
-                close(playerShipPipe[WRITE]);       // Chiusura pipe giocatore in scrittura
-                
-                // Chiusura di tutte le pipe nemici in lettura e scrittura 
-                for(j=0; j<ENEMIES; j++){
-                    close(enemyShipsPipe[i][WRITE]);
-                    if(j!=i) close(enemyShipsPipe[j][READ]); // La pipe del processo attuale rimane aperta in lettura
-                }
-
-                // Generazione e posizionamento iniziale della nave
-                // Chiedere motivo del passaggio di i+1 quando poi la funzione gestisce i-1. 
-                // Dovrebbe esser sufficiente passare i.
-                enemy = generator(i+1);
-
-                // Assegnazione del seriale univoco della nave (possibilità di spostarlo dentro la generatore)
-                enemy.serial = i;
-
-                // Gestione movimento della nave
-                enemyShip(mainPipe[WRITE], enemyShipsPipe[i][READ], enemy); 
-                _exit(0);
-        }
+                case 0:
+                    close(mainPipe[READ]);
+                    fleetEnlister(mainPipe[WRITE]);
+                    _exit(0);
+            }
     }
 
     // Processo principale
-    close(mainPipe[WRITE]);             // Chiudiamo pipe principale in scrittura
-    for (i=0; i<ENEMIES; i++){
-        close(enemyShipsPipe[i][READ]); // Chiudiamo le pipe nemici in lettura
-    }
-
-    // Gestore principale del gioco
-    gameArea(mainPipe[READ], playerShipPipe[WRITE], enemyShipsPipe);
+    close(mainPipe[WRITE]);     // Chiudiamo pipe principale in scrittura
+    gameArea(mainPipe[READ]);   // Gestore principale del gioco
 
     endwin(); // Ripristino del terminale
 
