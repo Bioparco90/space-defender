@@ -17,22 +17,22 @@ struct Object generator(int enemyCounter){
     return enemy;
 }
 
-void enemyShip(int mainPipe, int enemyPipe, struct Object enemy){
+void enemyShip(int mainPipe, struct Object enemy){
     int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
     int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
-        read(enemyPipe, &enemy, sizeof(enemy));         // Lettura dei dati provenienti dal loop di gioco
+        // read(mainPipe, &enemy, sizeof(enemy));         // Lettura dei dati provenienti dal loop di gioco
         switch (flag){
             case VERTICAL:                              // Movimento verticale
-                enemy.y += direction;                   // Aggiornamento coordinata Y
-                if (enemy.y < 2 || enemy.y > MAX_Y - 1) // Verifica collisione bordi
+                enemy.y += direction + direction;                   // Aggiornamento coordinata Y
+                if (enemy.y <= 2 || enemy.y > MAX_Y - 1) // Verifica collisione bordi
                     flag = HORIZONTAL;  // Eventuale modifica del valore flag, che ci manderà al movimento orizzontale
                 break;
 
             case HORIZONTAL:        // Movimento orizzontale
-                enemy.x -= 1;       // Aggiornamento coordinata X
+                enemy.x -= 2;       // Aggiornamento coordinata X
                 direction *= -1;    // Rimbalzo sul bordo
                 flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
                 break;

@@ -42,18 +42,18 @@ struct Object {
 };
 
 // Funzioni libreria player.c
-void playerShip(int fdShip, int fdMain);
+void playerShip(int fdMain);
 void playerShotInit(int mainPipe, int x, int y);
 void shot(int mainPipe, int x, int y, int direction);
 
 // Funzioni libreria enemies.c
-void enemyShip(int mainPipe, int enemyPipe, struct Object enemy);
+void enemyShip(int mainPipe, struct Object enemy);
 
 // Funzioni libreria gameplay.c
-void gameArea(int mainPipe, int playerPipe, int enemyPipe[][2]);
+void gameArea(int mainPipe);
 
 // funzioni prova
 struct Object generator(int enemyCounter);
-void printSprite(int posX, int posY, char sprite[3][3]);
+void printSprite(int posX, int posY, char sprite[3][1]);
 
 #endif /* GLOBAL_H */

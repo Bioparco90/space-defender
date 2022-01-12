@@ -2,8 +2,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-void playerShip(int fdShip, int fdMain){
-    struct Object ship, dataMain;
+void playerShip(int fdMain){
+    struct Object ship;
     
     // Inizializzazione nave giocatore
     ship.x = 1;
@@ -16,7 +16,7 @@ void playerShip(int fdShip, int fdMain){
     write(fdMain, &ship, sizeof(ship)); // Prima scrittura nella mainPipe
 
     while(true){
-        read(fdShip, &dataMain, sizeof(dataMain)); // Lettura dei dati provenienti dal loop di gioco 
+        // read(fdMain, &ship, sizeof(ship)); // Lettura dei dati provenienti dal loop di gioco 
         int c = getch();  // Input che verrà valutato nello switch case
         switch (c){
             case KEY_UP:  // Pressione del tasto freccia SU, movimento verso l'alto
