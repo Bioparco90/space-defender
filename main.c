@@ -57,32 +57,6 @@ int main(){
             }
     }
 
-    // Creazione processi navi nemiche
-    // for(i=0; i<ENEMIES; i++){
-    //     row = i+3;
-         
-    //     pidEnemyShip[i] = fork();
-    //     switch(pidEnemyShip[i]){
-    //         case -1:
-    //             endwin();
-    //             printf("Errore creazione processo nave nemica\n");
-    //             return 3;
-
-    //         case 0:
-    //             close(mainPipe[READ]);              // Chiusura pipe principale in lettura
-    //             // enemy[i] = generator(i+1);
-    //             enemy[i].identifier = ENEMY;
-                
-                
-    //             // Assegnazione del seriale univoco della nave (possibilità di spostarlo dentro la generatore)
-    //             enemy[i].serial = i;
-
-    //             // Gestione movimento della nave
-    //             enemyShip(mainPipe[WRITE], enemy[i]); 
-    //             _exit(0);
-    //     }
-    // }
-
     // Processo principale
     close(mainPipe[WRITE]);     // Chiudiamo pipe principale in scrittura
     gameArea(mainPipe[READ]);   // Gestore principale del gioco
