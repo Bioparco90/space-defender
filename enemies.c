@@ -8,7 +8,7 @@
 // Si occupa della posizione iniziale di spawn e di settare tutti i valori iniziali
 // di ogni singola nave. 
 void fleetEnlister(int mainPipe){
-    struct Object enemy[ENEMIES];
+    Object enemy[ENEMIES];
     pid_t pidEnemyShip[ENEMIES];
     int posX = MAX_X;
     int posY = 2;
@@ -31,16 +31,16 @@ void fleetEnlister(int mainPipe){
                 enemy[i].identifier = ENEMY;
                 enemyShip(mainPipe, enemy[i]);
         }
-        posY += 2;
+        posY += 4;
         if(posY >= MAX_Y -1) {
-            posX += 7;
+            posX += 8;
             posY = 2;
         }
         
     }
 }
 
-void enemyShip(int mainPipe, struct Object enemy){
+void enemyShip(int mainPipe,  Object enemy){
     int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
     int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
 
