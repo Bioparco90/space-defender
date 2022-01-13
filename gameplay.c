@@ -3,29 +3,29 @@
 #include <unistd.h>
 
 
-// char playerSprite[3][3]={
-//         {"/\\ "},
-//         {"[]>"},
-//         {"\\/ "}
-// };
+ char playerSprite[3][3]={
+         {"/\\ "},
+         {"[]>"},
+         {"\\/ "}
+ };
 
-char playerSprite[3][1] = {
+/*char playerSprite[3][1] = {
     {"+"},
     {">"},
     {"+"}
-};
+};*/
 
-// char enemySpriteLv1[3][3]={
-//         {" S "},
-//         {"<o>"},
-//         {" S "}
-// };
+ char enemySpriteLv1[3][3]={
+         {" S "},
+         {"<o>"},
+         {" S "}
+ };
 
-char enemySpriteLv1[3][1]={
+/*char enemySpriteLv1[3][1]={
         {"S"},
         {"<"},
         {"S"}
-};
+};*/
 
 
 char enemySpriteLv2[3][3]={
@@ -35,10 +35,18 @@ char enemySpriteLv2[3][3]={
 };
 
 void gameArea(int mainPipe){
-	struct Object data, dataEnemy[ENEMIES], player, enemy, rocket;
+	 Object data, dataEnemy[ENEMIES], player, enemy;
+     Object* dataRocket;
 	int collision = 0;
     int id;
     int i;
+    int size=1;
+    /* VARIBILI DEBUG COLLISIONI */
+    int enemyColpito;
+    int enemyNave;
+    int pepega=0, pepega2=0;
+    /* VARIBILI DEBUG COLLISIONI*/
+    dataRocket=( Object* ) malloc(size*sizeof( Object));
 
     // Loop di gioco
 	do{
@@ -48,9 +56,7 @@ void gameArea(int mainPipe){
             // Caso nave giocatore
             case PLAYER:
                 if (player.y >= 2 && player.y <= MAX_Y - 1){
-                    mvprintw(player.y, player.x, "%s", " ");
-                    mvprintw(player.y+1, player.x, "%s", " ");
-                    mvprintw(player.y+2, player.x, "%s", " ");
+                   deleteSprite(player.x,player.y);
                 }
                 player = data;  // Assegnamo il valore ad una variabile player
                 break;
@@ -58,9 +64,17 @@ void gameArea(int mainPipe){
             // Caso nemico
             case ENEMY:
                 if (dataEnemy[id].y >= 2 && dataEnemy[id].y <= MAX_Y) 
-                    mvaddch(dataEnemy[id].y, dataEnemy[id].x, ' ');
+                    deleteSprite(dataEnemy[id].x,dataEnemy[id].y);
                 dataEnemy[id] = data; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
-                mvaddch(data.y, data.x, data.identifier);
+                break;
+
+            //Caso razzo, rialloca la grandezza del vettore dinamico aggiungiendo uno spazio
+            case ROCKET:
+                size+=1;
+                dataRocket=realloc(dataRocket, size*sizeof(Object));
+                if (dataRocket[id].y >= 2 && dataRocket[id].y <= MAX_Y) 
+                    mvaddch(dataRocket[id].y, dataRocket[id].x, ' ');
+                dataRocket[id]=data;
                 break;
         }
 
@@ -68,7 +82,28 @@ void gameArea(int mainPipe){
             case PLAYER:
                 printSprite(data.x, data.y, playerSprite);
                 break;
+            case ENEMY:
+                /*Debug delle collisioni con il nemico e la nave, stampa in basso a sinistra quante volte colludono i nemici */
+                enemyNave=checkCollisonEnemy(dataEnemy[id]);
+                if(enemyNave==true){
+                    pepega2++;
+                    mvprintw(MAX_Y+20,2,"%d", pepega2);
+                }
+                printSprite(data.x, data.y, enemySpriteLv1);
+                break;
+            case ROCKET:
+                /*Debug delle collisioni con il razzo e il nemico, stampa in basso a destra quante volte colludono i razzi */
+                enemyColpito=checkCollisionRocket(dataRocket[id]);
+                if(enemyColpito==true){
+                    pepega++;
+                    mvprintw(MAX_Y+10,MAX_X,"%d",pepega);
+                    kill(dataRocket[id].pid, 10);
+                    break;
+                }
+                mvaddch(dataRocket[id].y,dataRocket[id].x,ROCKET);
+                break;
         }
+
         mvprintw(0, 0, "Vite: %d", player.lives);
         refresh(); 
 	} while (!collision);
