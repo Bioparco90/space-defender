@@ -6,7 +6,6 @@ int main(){
     pid_t pidPlayerShip;            // Pid processo figlio "nave giocatore" 
     pid_t pidEnemyFleet;
     int mainPipe[2];                // Pipe generale
-    int i, j, row, col = MAX_X - 1;
 
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti
