@@ -3,7 +3,10 @@
 #include <unistd.h>
 
 void playerShip(int fdMain){
-    struct Object ship;
+     Object ship;
+    int ammoSerialUp=-1;
+    int ammoSerialDown=0;
+ 
     
     // Inizializzazione nave giocatore
     ship.x = 1;
@@ -29,34 +32,55 @@ void playerShip(int fdMain){
                 break;
 
             case ' ':
-                playerShotInit(fdMain, ship.x, ship.y);
+                //serve per la pausa per l'input, forse non lo conta neanche o l'intervallo è troppo piccolo bisogna vedere.
+                usleep(20000);
+                //Usiamo due serial differenti per il razzo di su o di giù, potrebbe bastarne uno, rimasuglio di quando ho testato con un vettore statico
+                ammoSerialUp+=1;
+                ammoSerialDown+=1;
+                playerShotInit(fdMain, ship.x, ship.y, ammoSerialUp,ammoSerialDown);
                 break;
         }
+        
         write(fdMain, &ship, sizeof(ship)); // Scrittura ciclica sulla mainPipe passata al loop di gioco
     }
 }
 
 // Funzione da rivedere. Prossimo compito
-void shot(int mainPipe, int x, int y, int direction){
-    struct Object rocket;
+void shot(int mainPipe, int x, int y, int direction, int ammoSerialUp, int ammoSerialDown){
+     Object rocket;
+    int directionGo=0;
+   
 
-	rocket.x = x + 1;
-	rocket.y = y + direction;
+	rocket.x = x + 2;
+	rocket.y = y+ 1 + direction;
     rocket.identifier = ROCKET;
     rocket.lives = 1;
     rocket.pid = getpid();
 
+    //Da una serial differente in base se è il razzo di già o di su (rimasuglio di un test con un vettore statico, forse inutile)
+    switch(direction){
+        case DIR_UP:
+            rocket.serial=ammoSerialUp;
+            break;
+        case DIR_DOWN:
+            rocket.serial=ammoSerialDown;
+            break;
+    }
+
     write(mainPipe, &rocket, sizeof(rocket));
     while(rocket.x < MAX_X - 1 && (rocket.y >= 2 && rocket.y <= MAX_Y - 1)){
-		rocket.x += 9;
-        rocket.y += direction;
+		rocket.x += 1;
+        directionGo+=1;
+        if(directionGo%9==0)
+            rocket.y += direction;
         write(mainPipe, &rocket, sizeof(rocket));
-		usleep(100000);
+		usleep(ROCKET_DELAY);
     }
 }
 
-void playerShotInit(int mainPipe, int x, int y){
+void playerShotInit(int mainPipe, int x, int y, int ammoSerialUp, int ammoSerialDown){
     pid_t pidRocketUp, pidRocketDown;
+
 
     switch (pidRocketUp = fork()){
         case -1:
@@ -64,7 +88,7 @@ void playerShotInit(int mainPipe, int x, int y){
             break;
 
         case 0:
-            shot(mainPipe, x, y, DIR_UP);
+            shot(mainPipe, x, y, DIR_UP, ammoSerialUp, ammoSerialDown);
             _exit(0);
             break;
     }
@@ -75,7 +99,7 @@ void playerShotInit(int mainPipe, int x, int y){
             break;
 
         case 0:
-            shot(mainPipe, x, y, DIR_DOWN);
+            shot(mainPipe, x, y, DIR_DOWN, ammoSerialUp, ammoSerialDown);
             _exit(0);
             break;
     }
