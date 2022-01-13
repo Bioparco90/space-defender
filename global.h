@@ -6,10 +6,11 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 50
+#define ENEMIES 10
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
+#define AMMO_CYCLE 64
 
 // Macro gestione pipe
 #define READ 0
@@ -30,33 +31,36 @@
 
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
+#define ROCKET_DELAY 10000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
-struct Object {
+typedef struct {
     char identifier;    // Carattere dell'oggetto. Es: "-" come proiettile.
     int x;              // Posizione dell'oggetto nell'asse x
     int y;              // Posizione dell'oggetto nell'asse y
     int lives;          // Numero di vite disponibii dell'oggetto
     pid_t pid;          // Pid del processo di riferimento dell'oggetto
     int serial;         // Numero univoco della nave
-};
+} Object;
 
 // Funzioni libreria player.c
 void playerShip(int fdMain);
-void playerShotInit(int mainPipe, int x, int y);
-void shot(int mainPipe, int x, int y, int direction);
+void playerShotInit(int mainPipe, int x, int y, int ammoSerialUp, int ammoSerialDown);
+void shot(int mainPipe, int x, int y, int direction,  int ammoSerialUp, int ammoSerialDown);
 
 // Funzioni libreria enemies.c
 void fleetEnlister(int mainPipe);
-void enemyShip(int mainPipe, struct Object enemy);
+void enemyShip(int mainPipe,  Object enemy);
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
 
 // Funzioni di utilità globale (global.c)
-void printSprite(int posX, int posY, char sprite[3][1]);
-
+void printSprite(int posX, int posY, char sprite[3][3]);
+void deletSprite(int posX, int posY);
 // funzioni prova
+int checkCollisionRocket(Object rocket);
+int checkCollisonEnemy(Object entity);
 
 
 #endif /* GLOBAL_H */
