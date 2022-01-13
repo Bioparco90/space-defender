@@ -9,11 +9,11 @@
          {"\\/ "}
  };
 
-/*char playerSprite[3][1] = {
-    {"+"},
-    {">"},
-    {"+"}
-};*/
+// char playerSprite[3][1] = {
+//     {"+"},
+//     {">"},
+//     {"+"}
+// };
 
  char enemySpriteLv1[3][3]={
          {" S "},
@@ -21,11 +21,11 @@
          {" S "}
  };
 
-/*char enemySpriteLv1[3][1]={
-        {"S"},
-        {"<"},
-        {"S"}
-};*/
+// char enemySpriteLv1[3][1]={
+//         {"S"},
+//         {"<"},
+//         {"S"}
+// };
 
 
 char enemySpriteLv2[3][3]={
@@ -35,8 +35,8 @@ char enemySpriteLv2[3][3]={
 };
 
 void gameArea(int mainPipe){
-	 Object data, dataEnemy[ENEMIES], player, enemy;
-     Object* dataRocket;
+	Object data, dataEnemy[ENEMIES], player, enemy;
+    Object* dataRocket;
 	int collision = 0;
     int id;
     int i;
@@ -46,7 +46,7 @@ void gameArea(int mainPipe){
     int enemyNave;
     int pepega=0, pepega2=0;
     /* VARIBILI DEBUG COLLISIONI*/
-    dataRocket=( Object* ) malloc(size*sizeof( Object));
+    dataRocket = malloc(size * sizeof(Object));
 
     // Loop di gioco
 	do{
@@ -87,7 +87,7 @@ void gameArea(int mainPipe){
                 enemyNave=checkCollisonEnemy(dataEnemy[id]);
                 if(enemyNave==true){
                     pepega2++;
-                    mvprintw(MAX_Y+20,2,"%d", pepega2);
+                    mvprintw(0,20,"%d", pepega2);
                 }
                 printSprite(data.x, data.y, enemySpriteLv1);
                 break;
@@ -96,7 +96,7 @@ void gameArea(int mainPipe){
                 enemyColpito=checkCollisionRocket(dataRocket[id]);
                 if(enemyColpito==true){
                     pepega++;
-                    mvprintw(MAX_Y+10,MAX_X,"%d",pepega);
+                    mvprintw(0,10,"%d",pepega);
                     kill(dataRocket[id].pid, 10);
                     break;
                 }
