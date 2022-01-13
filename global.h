@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 10
+#define ENEMIES 5
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
@@ -50,14 +50,15 @@ void shot(int mainPipe, int x, int y, int direction,  int ammoSerialUp, int ammo
 
 // Funzioni libreria enemies.c
 void fleetEnlister(int mainPipe);
-void enemyShip(int mainPipe,  Object enemy);
+void enemyShip(int mainPipe, Object enemy);
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
 
 // Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, char sprite[3][3]);
-void deletSprite(int posX, int posY);
+void deleteSprite(int posX, int posY);
+
 // funzioni prova
 int checkCollisionRocket(Object rocket);
 int checkCollisonEnemy(Object entity);
