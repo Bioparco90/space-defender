@@ -72,7 +72,7 @@ void gameArea(int mainPipe){
             case ROCKET:
                 size+=1;
                 dataRocket=realloc(dataRocket, size*sizeof(Object));
-                if (dataRocket[id].y >= 2 && dataRocket[id].y <= MAX_Y) 
+                if (dataRocket[id].y >= 1 && dataRocket[id].y <= MAX_Y) 
                     mvaddch(dataRocket[id].y, dataRocket[id].x, ' ');
                 dataRocket[id]=data;
                 break;

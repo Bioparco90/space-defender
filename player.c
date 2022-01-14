@@ -68,9 +68,8 @@ void shot(int mainPipe, int x, int y, int direction, int ammoSerialUp, int ammoS
             break;
     }
 
-    write(mainPipe, &rocket, sizeof(rocket));//&& (rocket.y >= 2 && rocket.y <= MAX_Y - 1)
-    while(rocket.x < MAX_X - 1){
-
+    write(mainPipe, &rocket, sizeof(rocket));
+    while(true){
         if((rocket.y < 2 || rocket.y > MAX_Y - 1)){
             direction=(-1*direction);
         }
