@@ -31,7 +31,7 @@
 
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
-#define ROCKET_DELAY 10000
+#define ROCKET_DELAY 40000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 typedef struct {
