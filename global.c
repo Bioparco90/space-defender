@@ -1,4 +1,5 @@
 #include "global.h"
+#include <curses.h>
 
 // Le righe commentate servono in caso di sprite 3x3
 void printSprite(int posX, int posY, char sprite[3][3]){
@@ -63,4 +64,17 @@ int checkCollisonEnemy(Object entity){
         y++;
     }
     return false;
+}
+
+Object resetItem(){
+    Object item;
+
+    item.identifier = 'n';
+    item.x = MAX_X;
+    item.y = MAX_Y +1;
+    item.lives = -1;
+    item.pid = -1;
+    item.serial = -1;
+
+    return item;
 }
