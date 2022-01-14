@@ -42,7 +42,12 @@ void fleetEnlister(int mainPipe){
 
 void enemyShip(int mainPipe,  Object enemy){
     int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
-    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
+    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale    
+    int randomBomb,randomBombStart,randomBombFinish;   
+
+    randomBombStart=1;
+    randomBombFinish=10000000;
+
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
@@ -60,8 +65,47 @@ void enemyShip(int mainPipe,  Object enemy){
                 flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
                 break;
         }
-
+        
+        randomBomb=randomBombStart + (rand()%randomBombFinish);
+        if(randomBomb<randomBombFinish/20){
+             enemyBombInit(mainPipe, enemy.x,enemy.y,enemy.serial);
+        }
         write(mainPipe, &enemy, sizeof(enemy));
         usleep(ENEMY_DELAY);
     }
+}
+
+
+void bomb(int mainPipe, int x ,int y, int enemySerial){
+        Object bomb;
+        
+        bomb.y = y+1;    
+        bomb.x= x-2;    
+        bomb.identifier = BOMB;    
+        bomb.lives = 1;    
+        bomb.pid = getpid();    
+        bomb.serial=enemySerial;
+        
+        write(mainPipe, &bomb, sizeof(bomb));    
+        while(true){        
+            bomb.x-=1;        
+            write(mainPipe,&bomb,sizeof(bomb));        
+            usleep(BOMB_DELAY);    
+        }
+}
+
+void enemyBombInit(int mainPipe, int x, int y, int enemySerial){
+        pid_t pidEnemyShot;    
+        
+        switch(pidEnemyShot=fork()){   
+
+            case -1:            
+                _exit(-1);            
+                break;        
+            
+            case 0:            
+                bomb(mainPipe, x, y, enemySerial);            
+                _exit(0);            
+                break;    
+        }
 }
