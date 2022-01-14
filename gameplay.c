@@ -93,13 +93,13 @@ void gameArea(int mainPipe){
                 break;
             case ROCKET:
                 /*Debug delle collisioni con il razzo e il nemico, stampa in basso a destra quante volte colludono i razzi */
-                enemyColpito=checkCollisionRocket(dataRocket[id]);
+               /* enemyColpito=checkCollisionRocket(dataRocket[id]);
                 if(enemyColpito==true){
                     pepega++;
                     mvprintw(0,10,"%d",pepega);
                     kill(dataRocket[id].pid, 10);
                     break;
-                }
+                }*/
                 mvaddch(dataRocket[id].y,dataRocket[id].x,ROCKET);
                 break;
         }
