@@ -73,7 +73,7 @@ void gameArea(int mainPipe){
 
             //Caso razzo giocatore alto
             case ROCKET_UP:
-                if (rocketUp[id].y >= 1 && rocketUp[id].y <= MAX_Y)
+                if (rocketUp[id].y >= 1 && rocketUp[id].y <= MAX_Y+1)
                     mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
 
                 rocketUp[id] = data;
@@ -87,7 +87,7 @@ void gameArea(int mainPipe){
 
             // Caso razzo giocatore basso
             case ROCKET_DOWN:
-                if (rocketDown[id].y >= 1 && rocketDown[id].y <= MAX_Y)
+                if (rocketDown[id].y >= 1 && rocketDown[id].y <= MAX_Y+1)
                     mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
 
                 rocketDown[id] = data;

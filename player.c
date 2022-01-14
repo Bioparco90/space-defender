@@ -90,7 +90,7 @@ void shot(int mainPipe, int x, int y, int direction, int serial){
 
     write(mainPipe, &rocket, sizeof(rocket));
     while(true){
-        if((rocket.y < 2 || rocket.y > MAX_Y - 1)){
+        if((rocket.y < 2 || rocket.y > MAX_Y)){
             direction *= -1;
         }
         rocket.x += 1;
