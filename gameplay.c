@@ -35,18 +35,21 @@ char enemySpriteLv2[3][3]={
 };
 
 void gameArea(int mainPipe){
-	Object data, dataEnemy[ENEMIES], player, enemy;
-    Object* dataRocket;
+    // Variabili salvataggio oggetti
+	Object data, enemy[ENEMIES], player;
+    Object rocketUp[MAX_ROCKET];
+    Object rocketDown[MAX_ROCKET];
+
+    // Variabili di gestione gioco
 	int collision = 0;
     int id;
     int i;
     int size=1;
+
     /* VARIBILI DEBUG COLLISIONI */
     int enemyColpito;
     int enemyNave;
     int pepega=0, pepega2=0;
-    /* VARIBILI DEBUG COLLISIONI*/
-    dataRocket = malloc(size * sizeof(Object));
 
     // Loop di gioco
 	do{
@@ -63,18 +66,37 @@ void gameArea(int mainPipe){
             
             // Caso nemico
             case ENEMY:
-                if (dataEnemy[id].y >= 2 && dataEnemy[id].y <= MAX_Y) 
-                    deleteSprite(dataEnemy[id].x,dataEnemy[id].y);
-                dataEnemy[id] = data; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
+                if (enemy[id].y >= 2 && enemy[id].y <= MAX_Y) 
+                    deleteSprite(enemy[id].x,enemy[id].y);
+                enemy[id] = data; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
                 break;
 
-            //Caso razzo, rialloca la grandezza del vettore dinamico aggiungiendo uno spazio
-            case ROCKET:
-                size+=1;
-                dataRocket=realloc(dataRocket, size*sizeof(Object));
-                if (dataRocket[id].y >= 1 && dataRocket[id].y <= MAX_Y) 
-                    mvaddch(dataRocket[id].y, dataRocket[id].x, ' ');
-                dataRocket[id]=data;
+            //Caso razzo giocatore alto
+            case ROCKET_UP:
+                if (rocketUp[id].y >= 1 && rocketUp[id].y <= MAX_Y)
+                    mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
+
+                rocketUp[id] = data;
+
+                // controllo provvisorio
+                if(rocketUp[id].x >= MAX_X){
+                    kill(rocketUp[id].pid, 1);
+                    rocketUp[id] = resetItem();
+                }
+                break;
+
+            // Caso razzo giocatore basso
+            case ROCKET_DOWN:
+                if (rocketDown[id].y >= 1 && rocketDown[id].y <= MAX_Y)
+                    mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
+
+                rocketDown[id] = data;
+                
+                // controllo provvisorio
+                if (rocketDown[id].x >= MAX_X){
+                    kill(rocketDown[id].pid, 1);
+                    rocketDown[id] = resetItem();
+                }
                 break;
         }
 
@@ -83,25 +105,30 @@ void gameArea(int mainPipe){
                 printSprite(data.x, data.y, playerSprite);
                 break;
             case ENEMY:
-                /*Debug delle collisioni con il nemico e la nave, stampa in basso a sinistra quante volte colludono i nemici */
-                enemyNave=checkCollisonEnemy(dataEnemy[id]);
-                if(enemyNave==true){
-                    pepega2++;
-                    mvprintw(0,20,"%d", pepega2);
-                }
+                // Debug delle collisioni con il nemico e la nave, stampa quante volte collidono i nemici
+                // enemyNave=checkCollisonEnemy(enemy[id]);
+                // if(enemyNave==true){
+                //     pepega2++;
+                //     mvprintw(0,20,"%d", pepega2);
+                // }
                 printSprite(data.x, data.y, enemySpriteLv1);
                 break;
-            case ROCKET:
-                /*Debug delle collisioni con il razzo e il nemico, stampa in basso a destra quante volte colludono i razzi */
-               /* enemyColpito=checkCollisionRocket(dataRocket[id]);
-                if(enemyColpito==true){
-                    pepega++;
-                    mvprintw(0,10,"%d",pepega);
-                    kill(dataRocket[id].pid, 10);
-                    break;
-                }*/
-                mvaddch(dataRocket[id].y,dataRocket[id].x,ROCKET);
+            case ROCKET_UP:
+                // Debug delle collisioni con il razzo e il nemico, stampa quante volte collidono i razzi
+                // enemyColpito=checkCollisionRocket(dataRocket[id]);
+                // if(enemyColpito==true){
+                //     pepega++;
+                //     mvprintw(0,10,"%d",pepega);
+                //     kill(dataRocket[id].pid, 10);
+                //     break;
+                // }
+                mvaddch(rocketUp[id].y,rocketUp[id].x, '*');
                 break;
+            
+            case ROCKET_DOWN:
+                mvaddch(rocketDown[id].y,rocketDown[id].x, '*');
+                break;
+
         }
 
         mvprintw(0, 0, "Vite: %d", player.lives);
