@@ -48,10 +48,9 @@ void playerShip(int fdMain){
 // Funzione da rivedere. Prossimo compito
 void shot(int mainPipe, int x, int y, int direction, int ammoSerialUp, int ammoSerialDown){
      Object rocket;
-    int directionGo=0;
    
 
-	rocket.x = x + 2;
+	
 	rocket.y = y+ 1 + direction;
     rocket.identifier = ROCKET;
     rocket.lives = 1;
@@ -61,18 +60,22 @@ void shot(int mainPipe, int x, int y, int direction, int ammoSerialUp, int ammoS
     switch(direction){
         case DIR_UP:
             rocket.serial=ammoSerialUp;
+            rocket.x = x + 2;
             break;
         case DIR_DOWN:
             rocket.serial=ammoSerialDown;
+            rocket.x = x + 2;
             break;
     }
 
-    write(mainPipe, &rocket, sizeof(rocket));
-    while(rocket.x < MAX_X - 1 && (rocket.y >= 2 && rocket.y <= MAX_Y - 1)){
-		rocket.x += 1;
-        directionGo+=1;
-        if(directionGo%9==0)
-            rocket.y += direction;
+    write(mainPipe, &rocket, sizeof(rocket));//&& (rocket.y >= 2 && rocket.y <= MAX_Y - 1)
+    while(rocket.x < MAX_X - 1){
+
+        if((rocket.y < 2 || rocket.y > MAX_Y - 1)){
+            direction=(-1*direction);
+        }
+        rocket.x += 1;
+        rocket.y+=direction;
         write(mainPipe, &rocket, sizeof(rocket));
 		usleep(ROCKET_DELAY);
     }
