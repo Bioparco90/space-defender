@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #define ENEMIES 5
 #define MAX_X 80
@@ -23,7 +24,13 @@
 // Macro per la rappresentazione degli oggetti
 #define PLAYER '+'
 #define ENEMY '<'
-#define ROCKET 'o'
+#define ROCKET_PRINT '*'
+#define BOMB '='
+
+// Macro proiettili giocatore
+#define MAX_ROCKET 50
+#define ROCKET_UP 'u'
+#define ROCKET_DOWN 'd'
 
 // Macro movimento nemici
 #define HORIZONTAL 1
@@ -32,6 +39,7 @@
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
 #define ROCKET_DELAY 40000
+#define BOMB_DELAY 30000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 typedef struct {
@@ -45,12 +53,14 @@ typedef struct {
 
 // Funzioni libreria player.c
 void playerShip(int fdMain);
-void playerShotInit(int mainPipe, int x, int y, int ammoSerialUp, int ammoSerialDown);
-void shot(int mainPipe, int x, int y, int direction,  int ammoSerialUp, int ammoSerialDown);
+void playerShotInit(int mainPipe, int x, int y, int serial);
+void shot(int mainPipe, int x, int y, int direction, int serial);
 
 // Funzioni libreria enemies.c
 void fleetEnlister(int mainPipe);
 void enemyShip(int mainPipe, Object enemy);
+void enemyBombInit(int mainPipe, int x, int y, int enemySerial);
+void bomb(int mainPipe, int x, int y, int enemySerial);
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
@@ -62,6 +72,7 @@ void deleteSprite(int posX, int posY);
 // funzioni prova
 int checkCollisionRocket(Object rocket);
 int checkCollisonEnemy(Object entity);
+Object resetItem();
 
 
 #endif /* GLOBAL_H */
