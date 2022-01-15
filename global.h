@@ -25,12 +25,15 @@
 #define PLAYER '+'
 #define ENEMY '<'
 #define ROCKET_PRINT '*'
-#define BOMB '='
+#define BOMB 'o'
 
 // Macro proiettili giocatore
 #define MAX_ROCKET 50
 #define ROCKET_UP 'u'
 #define ROCKET_DOWN 'd'
+
+//Macro bombe nemiche
+#define MAX_BOMB 100
 
 // Macro movimento nemici
 #define HORIZONTAL 1
@@ -39,7 +42,11 @@
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
 #define ROCKET_DELAY 40000
-#define BOMB_DELAY 30000
+#define BOMB_DELAY 20000
+
+//Macro range numeri random
+#define RANDOM_BOMB_START 1
+#define RANDOM_BOMB_FINISH 1000000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 typedef struct {
@@ -53,14 +60,14 @@ typedef struct {
 
 // Funzioni libreria player.c
 void playerShip(int fdMain);
-void playerShotInit(int mainPipe, int x, int y, int serial);
-void shot(int mainPipe, int x, int y, int direction, int serial);
+void playerShotInit(int mainPipe, int x, int y, int rocketSerial);
+void shot(int mainPipe, int x, int y, int direction, int rocketSerial);
 
 // Funzioni libreria enemies.c
 void fleetEnlister(int mainPipe);
 void enemyShip(int mainPipe, Object enemy);
-void enemyBombInit(int mainPipe, int x, int y, int enemySerial);
-void bomb(int mainPipe, int x, int y, int enemySerial);
+void enemyBombInit(int mainPipe, int x, int y, int bombSerial);
+void bomb(int mainPipe, int x, int y, int bombSerial);
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
