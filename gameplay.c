@@ -39,7 +39,7 @@ void gameArea(int mainPipe){
 	Object data, enemy[ENEMIES], player;
     Object rocketUp[MAX_ROCKET];
     Object rocketDown[MAX_ROCKET];
-    Object bomb[ENEMIES];
+    Object bomb[MAX_BOMB];
 
     // Variabili di gestione gioco
 	int collision = 0;
@@ -99,6 +99,8 @@ void gameArea(int mainPipe){
                     rocketDown[id] = resetItem();
                 }
                 break;
+
+            // Caso bomba nemica
             case BOMB:
                 if(bomb[id].y >=1 && bomb[id].y <= MAX_Y+1)
                     mvaddch(bomb[id].y,bomb[id].x,' ');
@@ -106,15 +108,11 @@ void gameArea(int mainPipe){
 
                 bomb[id]=data;
 
+                // Controllo ricezione bordo schermo sinistro
                 if(bomb[id].x < 0 ){
                     kill(bomb[id].pid, 1);
                     bomb[id]=resetItem();
                 }
-
-                // if(bomb[id].x < 0){
-                //     kill(bomb[id].pid, 2);
-                //     bomb[id]=resetItem();
-                // }
                 break;
 
         }
