@@ -62,7 +62,7 @@ void gameArea(int mainPipe);
 
 // Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, char sprite[3][3]);
-void deleteSprite(int posX, int posY);
+void deleteSprite(Object item);
 
 // funzioni prova
 int isRocket(Object item);
