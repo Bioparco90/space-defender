@@ -43,6 +43,7 @@ void gameArea(int mainPipe){
     // Variabili di gestione gioco
 	int collision = 0;
     int id;
+    int i;
 
     // Loop di gioco
 	do{
@@ -52,7 +53,7 @@ void gameArea(int mainPipe){
             // Caso nave giocatore
             case PLAYER:
                 if (player.y >= 2 && player.y <= MAX_Y - 1){
-                   deleteSprite(player.x,player.y);
+                   deleteSprite(player);
                 }
                 player = data;  // Assegnamo il valore ad una variabile player
                 break;
@@ -60,7 +61,7 @@ void gameArea(int mainPipe){
             // Caso nemico
             case ENEMY:
                 if (enemy[id].y >= 2 && enemy[id].y <= MAX_Y) 
-                    deleteSprite(enemy[id].x,enemy[id].y);
+                    deleteSprite(enemy[id]);
                 enemy[id] = data; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
                 break;
 
@@ -103,11 +104,33 @@ void gameArea(int mainPipe){
                 break;
 
             case ROCKET_UP:
-                mvaddch(rocketUp[id].y,rocketUp[id].x, ROCKET);
+                for (i=0; i<ENEMIES; i++){
+                    if (checkCollision(rocketUp[id], enemy[i])){
+                        kill(rocketUp[id].pid, 1);
+                        kill(enemy[i].pid, 1);
+                        deleteSprite(enemy[i]);
+                        mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
+                        rocketUp[id] = resetItem();
+                        enemy[i] = resetItem();
+                    }
+                }
+                if (rocketUp[id].y > -1)
+                    mvaddch(rocketUp[id].y,rocketUp[id].x, ROCKET);
                 break;
             
             case ROCKET_DOWN:
-                mvaddch(rocketDown[id].y,rocketDown[id].x, ROCKET);
+                for (i=0; i<ENEMIES; i++){
+                    if (checkCollision(rocketDown[id], enemy[i])){
+                        kill(rocketDown[id].pid, 1);
+                        kill(enemy[i].pid, 1);
+                        deleteSprite(enemy[i]);
+                        mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
+                        rocketDown[id] = resetItem();
+                        enemy[i] = resetItem();
+                    }
+                }
+                if (rocketDown[id].y > -1)
+                    mvaddch(rocketDown[id].y,rocketDown[id].x, ROCKET);
                 break;
 
         }
