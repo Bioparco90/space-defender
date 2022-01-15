@@ -4,6 +4,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+
+
+
 // Funzione per la generazione delle navi.
 // Si occupa della posizione iniziale di spawn e di settare tutti i valori iniziali
 // di ogni singola nave. 
@@ -43,11 +46,10 @@ void fleetEnlister(int mainPipe){
 void enemyShip(int mainPipe,  Object enemy){
     int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
     int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale    
-    int randomBomb,randomBombStart,randomBombFinish;   
-
-    randomBombStart=1;
-    randomBombFinish=10000000;
-
+    int randomBomb[ENEMIES];
+    int i;
+    int bombSerial=enemy.serial;
+    int delayColpiRandom=35;
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
@@ -66,9 +68,17 @@ void enemyShip(int mainPipe,  Object enemy){
                 break;
         }
         
-        randomBomb=randomBombStart + (rand()%randomBombFinish);
-        if(randomBomb<randomBombFinish/20){
-             enemyBombInit(mainPipe, enemy.x,enemy.y,enemy.serial);
+        for(i=0;i<ENEMIES;i++){
+                randomBomb[i]=RANDOM_BOMB_START + (rand()%RANDOM_BOMB_FINISH);  
+        }
+        
+        if(randomBomb[bombSerial]<RANDOM_BOMB_FINISH/delayColpiRandom){
+            enemyBombInit(mainPipe, enemy.x,enemy.y,bombSerial);
+            bombSerial++;
+        }
+
+        if(bombSerial >=MAX_BOMB){
+            bombSerial=0;
         }
         write(mainPipe, &enemy, sizeof(enemy));
         usleep(ENEMY_DELAY);
@@ -76,7 +86,7 @@ void enemyShip(int mainPipe,  Object enemy){
 }
 
 
-void bomb(int mainPipe, int x ,int y, int enemySerial){
+void bomb(int mainPipe, int x ,int y, int bombSerial){
         Object bomb;
         
         bomb.y = y+1;    
@@ -84,27 +94,29 @@ void bomb(int mainPipe, int x ,int y, int enemySerial){
         bomb.identifier = BOMB;    
         bomb.lives = 1;    
         bomb.pid = getpid();    
-        bomb.serial=enemySerial;
-        
+        bomb.serial=bombSerial;
+
         write(mainPipe, &bomb, sizeof(bomb));    
         while(true){        
             bomb.x-=1;        
-            write(mainPipe,&bomb,sizeof(bomb));        
+            write(mainPipe,&bomb,sizeof(bomb));   
+             
             usleep(BOMB_DELAY);    
         }
+
 }
 
-void enemyBombInit(int mainPipe, int x, int y, int enemySerial){
-        pid_t pidEnemyShot;    
+void enemyBombInit(int mainPipe, int x, int y, int bombSerial){
+        pid_t pidEnemyBomb;    
         
-        switch(pidEnemyShot=fork()){   
+        switch(pidEnemyBomb=fork()){   
 
             case -1:            
                 _exit(-1);            
                 break;        
             
             case 0:            
-                bomb(mainPipe, x, y, enemySerial);            
+                bomb(mainPipe, x, y, bombSerial);            
                 _exit(0);            
                 break;    
         }
