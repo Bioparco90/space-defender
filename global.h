@@ -23,7 +23,7 @@
 // Macro per la rappresentazione degli oggetti
 #define PLAYER '+'
 #define ENEMY '<'
-#define ROCKET 'o'
+#define ROCKET '*'
 
 // Macro proiettili giocatore
 #define MAX_ROCKET 50
@@ -65,9 +65,12 @@ void printSprite(int posX, int posY, char sprite[3][3]);
 void deleteSprite(int posX, int posY);
 
 // funzioni prova
-int checkCollisionRocket(Object rocket);
-int checkCollisonEnemy(Object entity);
+int isRocket(Object item);
+int checkCollision(Object a, Object b);
 Object resetItem();
+// int checkCollisionRocket(Object rocket);
+// int checkCollisonEnemy(Object entity);
+
 
 
 #endif /* GLOBAL_H */

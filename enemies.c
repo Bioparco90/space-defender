@@ -46,7 +46,6 @@ void enemyShip(int mainPipe,  Object enemy){
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
-        // read(mainPipe, &enemy, sizeof(enemy));         // Lettura dei dati provenienti dal loop di gioco
         switch (flag){
             case VERTICAL:                              // Movimento verticale
                 enemy.y += direction;                   // Aggiornamento coordinata Y

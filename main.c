@@ -3,9 +3,9 @@
 #include <unistd.h>
 
 int main(){
-    pid_t pidPlayerShip;            // Pid processo figlio "nave giocatore" 
-    pid_t pidEnemyFleet;
-    int mainPipe[2];                // Pipe generale
+    pid_t pidPlayerShip;    // Pid processo figlio "nave giocatore" 
+    pid_t pidEnemyFleet;    // Pid processo generatore flotta nemica
+    int mainPipe[2];        // Pipe generale
 
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti
@@ -32,6 +32,8 @@ int main(){
             _exit(0);
 
         default:
+        
+            // Creazione secondo processo figlio "flotta nemica"
             pidEnemyFleet = fork();
             switch(pidEnemyFleet){
                 case -1:
@@ -40,8 +42,8 @@ int main(){
                     return 3;
 
                 case 0:
-                    close(mainPipe[READ]);
-                    fleetEnlister(mainPipe[WRITE]);
+                    close(mainPipe[READ]);          // Chiusura pipe in lettura
+                    fleetEnlister(mainPipe[WRITE]); // Generatore flotta
                     _exit(0);
             }
     }

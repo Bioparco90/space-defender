@@ -43,13 +43,6 @@ void gameArea(int mainPipe){
     // Variabili di gestione gioco
 	int collision = 0;
     int id;
-    int i;
-    int size=1;
-
-    /* VARIBILI DEBUG COLLISIONI */
-    int enemyColpito;
-    int enemyNave;
-    int pepega=0, pepega2=0;
 
     // Loop di gioco
 	do{
@@ -104,29 +97,17 @@ void gameArea(int mainPipe){
             case PLAYER:
                 printSprite(data.x, data.y, playerSprite);
                 break;
+
             case ENEMY:
-                // Debug delle collisioni con il nemico e la nave, stampa quante volte collidono i nemici
-                // enemyNave=checkCollisonEnemy(enemy[id]);
-                // if(enemyNave==true){
-                //     pepega2++;
-                //     mvprintw(0,20,"%d", pepega2);
-                // }
                 printSprite(data.x, data.y, enemySpriteLv1);
                 break;
+
             case ROCKET_UP:
-                // Debug delle collisioni con il razzo e il nemico, stampa quante volte collidono i razzi
-                // enemyColpito=checkCollisionRocket(dataRocket[id]);
-                // if(enemyColpito==true){
-                //     pepega++;
-                //     mvprintw(0,10,"%d",pepega);
-                //     kill(dataRocket[id].pid, 10);
-                //     break;
-                // }
-                mvaddch(rocketUp[id].y,rocketUp[id].x, '*');
+                mvaddch(rocketUp[id].y,rocketUp[id].x, ROCKET);
                 break;
             
             case ROCKET_DOWN:
-                mvaddch(rocketDown[id].y,rocketDown[id].x, '*');
+                mvaddch(rocketDown[id].y,rocketDown[id].x, ROCKET);
                 break;
 
         }
