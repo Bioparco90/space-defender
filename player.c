@@ -4,7 +4,7 @@
 
 void playerShip(int fdMain){
     Object ship;
-    int rocketSerial;
+    int serial;
  
     
     // Inizializzazione nave giocatore
@@ -16,7 +16,7 @@ void playerShip(int fdMain){
     ship.serial = 777;
 
     // Inizializzazione serial razzi giocatore
-    rocketSerial = 0;
+    serial = 0;
 
     write(fdMain, &ship, sizeof(ship)); // Prima scrittura nella mainPipe
 
@@ -34,17 +34,17 @@ void playerShip(int fdMain){
                 break;
 
             case ' ':
-                playerShotInit(fdMain, ship.x, ship.y, rocketSerial);
-                rocketSerial++;
+                playerShotInit(fdMain, ship.x, ship.y, serial);
+                serial++;
                 break;
         }
-        if(rocketSerial >= MAX_ROCKET)
-            rocketSerial = 0;
+        if(serial >= MAX_ROCKET)
+            serial = 0;
         write(fdMain, &ship, sizeof(ship)); // Scrittura ciclica sulla mainPipe passata al loop di gioco
     }
 }
 
-void playerShotInit(int mainPipe, int x, int y, int rocketSerial){
+void playerShotInit(int mainPipe, int x, int y, int serial){
     pid_t pidRocketUp, pidRocketDown;
 
     pidRocketUp = fork();
@@ -54,7 +54,7 @@ void playerShotInit(int mainPipe, int x, int y, int rocketSerial){
             break;
 
         case 0:
-            shot(mainPipe, x, y, DIR_UP, rocketSerial);
+            shot(mainPipe, x, y, DIR_UP, serial);
             _exit(0);
             break;
 
@@ -66,7 +66,7 @@ void playerShotInit(int mainPipe, int x, int y, int rocketSerial){
                     break;
 
                 case 0:
-                    shot(mainPipe, x, y, DIR_DOWN, rocketSerial);
+                    shot(mainPipe, x, y, DIR_DOWN, serial);
                     _exit(0);
                     break;
             }
@@ -74,7 +74,7 @@ void playerShotInit(int mainPipe, int x, int y, int rocketSerial){
 }
 
 // Funzione da rivedere. Prossimo compito
-void shot(int mainPipe, int x, int y, int direction, int rocketSerial){
+void shot(int mainPipe, int x, int y, int direction, int serial){
     Object rocket;
 
     if(direction == DIR_UP)
@@ -86,12 +86,15 @@ void shot(int mainPipe, int x, int y, int direction, int rocketSerial){
    	rocket.y = y + 1 + direction;
     rocket.lives = 1;
     rocket.pid = getpid();
-    rocket.serial = rocketSerial;
+    rocket.serial = serial;
 
     write(mainPipe, &rocket, sizeof(rocket));
     while(true){
-        if((rocket.y < 2 || rocket.y > MAX_Y)){
+        if(rocket.y < 2 || rocket.y > MAX_Y){
             direction *= -1;
+        }
+        if(rocket.x>=MAX_X/10){
+            direction =0;
         }
         rocket.x += 1;
         rocket.y += direction;
