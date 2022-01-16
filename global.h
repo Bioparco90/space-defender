@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #define ENEMIES 25
 #define MAX_X 80
