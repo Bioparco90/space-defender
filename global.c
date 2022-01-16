@@ -3,7 +3,6 @@
 
 // Le righe commentate servono in caso di sprite 3x3
 void printSprite(int posX, int posY, char sprite[3][3]){
-
     int row,col;
     int x, y;
     x=posX;
@@ -20,50 +19,50 @@ void printSprite(int posX, int posY, char sprite[3][3]){
 }
 
 
-void deleteSprite(int posX, int posY){
-
+void deleteSprite(Object item){
     int row,col;
     int x, y;
-    x=posX;
-    y=posY;
+    x = item.x;
+    y = item.y;
 
     for(row=0;row<3;row++){
         for(col=0;col<3;col++){
             mvaddch(y,x,' ');
             x++;
         }
-        x=posX;
+        x = item.x;
         y++;
     }
 }
 
-
-//Controlla le collisioni dei razzi, se c'è returna true se non c'è returna false
-int checkCollisionRocket(Object rocket){
-    
-    if(mvinch(rocket.y,rocket.x)!=' '){
-        return true;
-    }
-    return false;
+int isWeapon(Object item){
+    return (item.identifier == ROCKET_UP || item.identifier == ROCKET_DOWN || item.identifier == BOMB); //AGGIUNGERE CASO BOMBA NEMICA SUCCESSIVAMENTE
 }
 
-//controlla le collisioni di entità più complesse, sicuramente basta fare un controllo sull'identifier per incomporarle in un'unica funzione
-int checkCollisonEnemy(Object entity){
-    int row,col;
-    int x, y;
-    x=entity.x;
-    y=entity.y;
+// Per un corretto utilizzo, il parametro "a" deve essere quello che "attacca"
+// es: razzo (amico o nemico), nave nemica (collisione con nave giocatore)
+// Il parametro "b" l'oggetto che subisce l'attacco di cui sopra.
+int checkCollision(Object a, Object b){
+    int row, col;
+    int x = b.x;
+    int y = b.y;
 
-    for(row=0;row<3;row++){
-        for(col=0;col<3;col++){
-            if(mvinch(y,x)!=' ')
-                return true;
-            x++;
+    if (isWeapon(a)){
+        for(row=0; row<3; row++){
+            for(col=0; col<3; col++){
+                if(a.x == x && a.y == y)
+                    return 1;
+                x++;
+            }
+            x = b.x;
+            y++;
         }
-        x=entity.x;
-        y++;
     }
-    return false;
+    else{
+        if(a.x==b.x || a.x==0)
+            return 1;
+    }
+    return 0;
 }
 
 Object resetItem(){
