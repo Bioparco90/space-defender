@@ -43,24 +43,25 @@ void gameArea(int mainPipe){
 
     // Variabili di gestione gioco
 	int collision = 0;
+    int playerLives=3;
+    int allEnemies=ENEMIES;
+    int score=0;
     int id;
     int i;
-    int size=1;
-
-    /* VARIBILI DEBUG COLLISIONI */
-    int enemyColpito;
-    int enemyNave;
-    int pepega=0, pepega2=0;
+    
 
     // Loop di gioco
 	do{
+        if(allEnemies==0){
+            collision=1;
+        }
         read(mainPipe, &data, sizeof(data)); // Lettura ciclica del dato dalla mainPipe
         id = data.serial;   // Assegno il serial ad una variabile d'appoggio 
         switch(data.identifier){    // Valutazione del dato
             // Caso nave giocatore
             case PLAYER:
                 if (player.y >= 2 && player.y <= MAX_Y - 1){
-                   deleteSprite(player.x,player.y);
+                   deleteSprite(player);
                 }
                 player = data;  // Assegnamo il valore ad una variabile player
                 break;
@@ -68,7 +69,7 @@ void gameArea(int mainPipe){
             // Caso nemico
             case ENEMY:
                 if (enemy[id].y >= 2 && enemy[id].y <= MAX_Y) 
-                    deleteSprite(enemy[id].x,enemy[id].y);
+                    deleteSprite(enemy[id]);
                 enemy[id] = data; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
                 break;
 
@@ -100,7 +101,7 @@ void gameArea(int mainPipe){
                 }
                 break;
 
-            // Caso bomba nemica
+            // Caso bombe nemiche
             case BOMB:
                 if(bomb[id].y >=1 && bomb[id].y <= MAX_Y+1)
                     mvaddch(bomb[id].y,bomb[id].x,' ');
@@ -114,45 +115,89 @@ void gameArea(int mainPipe){
                     bomb[id]=resetItem();
                 }
                 break;
-
         }
 
         switch(data.identifier){
+
             case PLAYER:
                 printSprite(data.x, data.y, playerSprite);
                 break;
+
             case ENEMY:
-                // Debug delle collisioni con il nemico e la nave, stampa quante volte collidono i nemici
-                // enemyNave=checkCollisonEnemy(enemy[id]);
-                // if(enemyNave==true){
-                //     pepega2++;
-                //     mvprintw(0,20,"%d", pepega2);
-                // }
+                if(checkCollision(enemy[id],player)){
+                        collision=2;               
+                }   
                 printSprite(data.x, data.y, enemySpriteLv1);
                 break;
+
             case ROCKET_UP:
-                // Debug delle collisioni con il razzo e il nemico, stampa quante volte collidono i razzi
-                // enemyColpito=checkCollisionRocket(dataRocket[id]);
-                // if(enemyColpito==true){
-                //     pepega++;
-                //     mvprintw(0,10,"%d",pepega);
-                //     kill(dataRocket[id].pid, 10);
-                //     break;
-                // }
-                mvaddch(rocketUp[id].y,rocketUp[id].x, ROCKET_PRINT);
+                for (i=0; i<ENEMIES; i++){
+                    if (checkCollision(rocketUp[id], enemy[i])){
+                        kill(rocketUp[id].pid, 1);
+                        kill(enemy[i].pid, 1);
+                        deleteSprite(enemy[i]);
+                        mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
+                        rocketUp[id] = resetItem();
+                        enemy[i] = resetItem();
+                        score+=100;
+                        allEnemies--;
+                    }
+                }
+                if (rocketUp[id].y > -1)
+                    mvaddch(rocketUp[id].y,rocketUp[id].x, ROCKET);
                 break;
             
             case ROCKET_DOWN:
-                mvaddch(rocketDown[id].y,rocketDown[id].x, ROCKET_PRINT);
+                for (i=0; i<ENEMIES; i++){
+                    if (checkCollision(rocketDown[id], enemy[i])){
+                        kill(rocketDown[id].pid, 1);
+                        kill(enemy[i].pid, 1);
+                        deleteSprite(enemy[i]);
+                        mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
+                        rocketDown[id] = resetItem();
+                        enemy[i] = resetItem();
+                        score+=100;
+                        allEnemies--;
+                    }
+                }
+                if (rocketDown[id].y > -1)
+                    mvaddch(rocketDown[id].y,rocketDown[id].x, ROCKET);
                 break;
 
             case BOMB:
-                mvaddch(bomb[id].y,bomb[id].x,BOMB);
+                if(checkCollision(bomb[id], player)){            
+                    playerLives--;
+                    kill(bomb[id].pid,1);
+                    bomb[id]=resetItem();
+                    if(playerLives==0){
+                        kill(player.pid,1);
+                        deleteSprite(player);
+                        player=resetItem();
+                        collision=2;
+                    }
+                }
+                if (bomb[id].x >  -1)
+                    mvaddch(bomb[id].y,bomb[id].x,BOMB);
                 break;
 
         }
 
-        mvprintw(0, 0, "Vite: %d", player.lives);
+        mvprintw(0, 0, "Vite: %d   Score: %d", playerLives, score);
         refresh(); 
 	} while (!collision);
+
+    clear();
+    gameOver(score,collision);
+    getch();
 }
+
+void gameOver(int score, int collision){
+    if(collision==1){
+        mvprintw(MAX_Y/2,MAX_X/2-10,"V I T T O R I A");
+        mvprintw(MAX_Y/2+1,MAX_X/2-18,"Ecco il tuo punteggio finale: %d", score);
+    }
+    else if(collision==2){
+        mvprintw(MAX_Y/2,MAX_X/2-10,"S E I  M O R T O");
+        mvprintw(MAX_Y/2+1,MAX_X/2-8,"Punteggio: %d",score);
+    }
+}   
