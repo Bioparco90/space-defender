@@ -33,7 +33,7 @@ void fleetEnlister(int mainPipe){
         }
         posY += 4;
         if(posY >= MAX_Y -1) {
-            posX += 8;
+            posX -= 8;
             posY = 2;
         }
         
