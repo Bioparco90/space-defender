@@ -42,6 +42,7 @@ void gameArea(int mainPipe){
 
     // Variabili di gestione gioco
 	int collision = 0;
+    int score = 0;
     int id;
     int i;
 
@@ -112,6 +113,7 @@ void gameArea(int mainPipe){
                         mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
                         rocketUp[id] = resetItem();
                         enemy[i] = resetItem();
+                        score += 100;
                     }
                 }
                 if (rocketUp[id].y > -1)
@@ -127,6 +129,7 @@ void gameArea(int mainPipe){
                         mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
                         rocketDown[id] = resetItem();
                         enemy[i] = resetItem();
+                        score += 100;
                     }
                 }
                 if (rocketDown[id].y > -1)
@@ -136,6 +139,7 @@ void gameArea(int mainPipe){
         }
 
         mvprintw(0, 0, "Vite: %d", player.lives);
+        mvprintw(0, MAX_X - 15, "Score: %d", score);
         refresh(); 
 	} while (!collision);
 }
