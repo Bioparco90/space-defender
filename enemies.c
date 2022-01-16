@@ -4,9 +4,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-
-
-
 // Funzione per la generazione delle navi.
 // Si occupa della posizione iniziale di spawn e di settare tutti i valori iniziali
 // di ogni singola nave. 
@@ -45,15 +42,13 @@ void fleetEnlister(int mainPipe){
 
 void enemyShip(int mainPipe,  Object enemy){
     int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
-    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale    
+    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
     int randomBomb[ENEMIES];
     int i;
     int bombSerial=enemy.serial;
-    int delayColpiRandom=35;
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
-        // read(mainPipe, &enemy, sizeof(enemy));         // Lettura dei dati provenienti dal loop di gioco
         switch (flag){
             case VERTICAL:                              // Movimento verticale
                 enemy.y += direction;                   // Aggiornamento coordinata Y
@@ -67,12 +62,12 @@ void enemyShip(int mainPipe,  Object enemy){
                 flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
                 break;
         }
-        
+
         for(i=0;i<ENEMIES;i++){
                 randomBomb[i]=RANDOM_BOMB_START + (rand()%RANDOM_BOMB_FINISH);  
         }
         
-        if(randomBomb[bombSerial]<RANDOM_BOMB_FINISH/delayColpiRandom){
+        if(randomBomb[bombSerial]<RANDOM_BOMB_FINISH/DELAY_BOMB_RANDOM){
             enemyBombInit(mainPipe, enemy.x,enemy.y,bombSerial);
             bombSerial++;
         }
@@ -80,6 +75,7 @@ void enemyShip(int mainPipe,  Object enemy){
         if(bombSerial >=MAX_BOMB){
             bombSerial=0;
         }
+
         write(mainPipe, &enemy, sizeof(enemy));
         usleep(ENEMY_DELAY);
     }
