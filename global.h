@@ -10,8 +10,6 @@
 #define ENEMIES 25
 #define MAX_X 80
 #define MAX_Y 20
-#define MAX_ENEMY_COL (MAX_Y/3)
-#define AMMO_CYCLE 64
 
 // Macro gestione pipe
 #define READ 0
@@ -66,6 +64,7 @@ void printSprite(int posX, int posY, char sprite[3][3]);
 void deleteSprite(Object item);
 
 // funzioni prova
+int isShip(Object item);
 int isRocket(Object item);
 int checkCollision(Object a, Object b);
 Object resetItem();
