@@ -1,11 +1,16 @@
 #include "global.h"
 #include <sys/types.h>
+#include <bits/time.h>
 #include <unistd.h>
 
 void playerShip(int fdMain){
     Object ship;
     int serial;
  
+
+    struct timespec time,checker;
+
+    clock_gettime(CLOCK_REALTIME,&time); 
     
     // Inizializzazione nave giocatore
     ship.x = 1;
@@ -34,8 +39,18 @@ void playerShip(int fdMain){
                 break;
 
             case ' ':
-                playerShotInit(fdMain, ship.x, ship.y, serial);
-                serial++;
+                clock_gettime(CLOCK_REALTIME, &checker);
+                if(serial==0){
+                    playerShotInit(fdMain, ship.x, ship.y, serial);
+                    serial++;
+                    time=checker;
+                }
+
+                if(checker.tv_sec - time.tv_sec >=1){
+                    playerShotInit(fdMain,ship.x,ship.y,serial);
+                    serial++;
+                    time = checker;
+                }
                 break;
         }
         if(serial >= MAX_ROCKET)
@@ -93,9 +108,9 @@ void shot(int mainPipe, int x, int y, int direction, int serial){
         if(rocket.y < 2 || rocket.y > MAX_Y){
             direction *= -1;
         }
-        if(rocket.x>=MAX_X/10){
+        /*if(rocket.x>=MAX_X/10){
             direction =0;
-        }
+        }*/
         rocket.x += 1;
         rocket.y += direction;
         write(mainPipe, &rocket, sizeof(rocket));

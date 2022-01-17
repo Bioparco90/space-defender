@@ -16,9 +16,9 @@
 // };
 
  char enemySpriteLv1[3][3]={
-         {" S "},
-         {"<o>"},
-         {" S "}
+         {" / "},
+         {"(o)"},
+         {" \\ "}
  };
 
 // char enemySpriteLv1[3][1]={
@@ -29,9 +29,9 @@
 
 
 char enemySpriteLv2[3][3]={
-        {"[\\ "},
-        {"[@>"},
-        {"[/ "}
+        {"{|="},
+        {"(o)"},
+        {"{|="}
 };
 
 void gameArea(int mainPipe){
@@ -42,7 +42,7 @@ void gameArea(int mainPipe){
     Object bomb[MAX_BOMB];
 
     // Variabili di gestione gioco
-	int collision = 0;
+	int win = 0;
     int playerLives=3;
     int allEnemies=ENEMIES;
     int score=0;
@@ -50,10 +50,12 @@ void gameArea(int mainPipe){
     int i;
     
 
+
+
     // Loop di gioco
 	do{
         if(allEnemies==0){
-            collision=1;
+            win=1;
         }
         read(mainPipe, &data, sizeof(data)); // Lettura ciclica del dato dalla mainPipe
         id = data.serial;   // Assegno il serial ad una variabile d'appoggio 
@@ -70,6 +72,7 @@ void gameArea(int mainPipe){
             case ENEMY:
                 if (enemy[id].y >= 2 && enemy[id].y <= MAX_Y) 
                     deleteSprite(enemy[id]);
+
                 enemy[id] = data; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
                 break;
 
@@ -124,9 +127,10 @@ void gameArea(int mainPipe){
                 break;
 
             case ENEMY:
-                if(checkCollision(enemy[id],player)){
-                        collision=2;               
-                }   
+                if(enemy[id].x <= 1){
+                    win=2;
+                }
+            
                 printSprite(data.x, data.y, enemySpriteLv1);
                 break;
 
@@ -173,7 +177,7 @@ void gameArea(int mainPipe){
                         kill(player.pid,1);
                         deleteSprite(player);
                         player=resetItem();
-                        collision=2;
+                        win=2;
                     }
                 }
                 if (bomb[id].x >  -1)
@@ -184,19 +188,20 @@ void gameArea(int mainPipe){
 
         mvprintw(0, 0, "Vite: %d   Score: %d", playerLives, score);
         refresh(); 
-	} while (!collision);
+
+	} while (!win);
 
     clear();
-    gameOver(score,collision);
+    gameOver(score,win);
     getch();
 }
 
-void gameOver(int score, int collision){
-    if(collision==1){
+void gameOver(int score, int win){
+    if(win==1){
         mvprintw(MAX_Y/2,MAX_X/2-10,"V I T T O R I A");
         mvprintw(MAX_Y/2+1,MAX_X/2-18,"Ecco il tuo punteggio finale: %d", score);
     }
-    else if(collision==2){
+    else if(win==2){
         mvprintw(MAX_Y/2,MAX_X/2-10,"S E I  M O R T O");
         mvprintw(MAX_Y/2+1,MAX_X/2-8,"Punteggio: %d",score);
     }

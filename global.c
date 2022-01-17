@@ -1,6 +1,7 @@
 #include "global.h"
 #include <curses.h>
 
+
 // Le righe commentate servono in caso di sprite 3x3
 void printSprite(int posX, int posY, char sprite[3][3]){
     int row,col;
@@ -49,7 +50,7 @@ int checkCollision(Object a, Object b){
 
     if (isWeapon(a)){
         for(row=0; row<3; row++){
-            for(col=0; col<3; col++){
+            for(col=0; col<100; col++){
                 if(a.x == x && a.y == y)
                     return 1;
                 x++;
@@ -58,12 +59,9 @@ int checkCollision(Object a, Object b){
             y++;
         }
     }
-    else{
-        if(a.x==b.x || a.x==0)
-            return 1;
-    }
     return 0;
 }
+
 
 Object resetItem(){
     Object item;
@@ -77,3 +75,5 @@ Object resetItem(){
 
     return item;
 }
+
+

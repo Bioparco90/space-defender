@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <bits/time.h>
 #include <unistd.h>
 
 // Funzione per la generazione delle navi.
@@ -13,6 +14,7 @@ void fleetEnlister(int mainPipe){
     int posX = MAX_X;
     int posY = 2;
     int i;
+    
 
     for(i=0; i<ENEMIES; i++){
         pidEnemyShip[i] = fork();
@@ -33,7 +35,7 @@ void fleetEnlister(int mainPipe){
         }
         posY += 4;
         if(posY >= MAX_Y -1) {
-            posX += 8;
+            posX -= 8;
             posY = 2;
         }
         
@@ -46,6 +48,10 @@ void enemyShip(int mainPipe,  Object enemy){
     int randomBomb[ENEMIES];
     int i;
     int bombSerial=enemy.serial;
+
+    struct timespec time,checker;
+
+    clock_gettime(CLOCK_REALTIME,&time); 
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
@@ -68,18 +74,24 @@ void enemyShip(int mainPipe,  Object enemy){
         }
         
         if(randomBomb[bombSerial]<RANDOM_BOMB_FINISH/DELAY_BOMB_RANDOM){
-            enemyBombInit(mainPipe, enemy.x,enemy.y,bombSerial);
-            bombSerial++;
+            clock_gettime(CLOCK_REALTIME, &checker);    
+            if(checker.tv_sec - time.tv_sec >=1){
+                
+                enemyBombInit(mainPipe,enemy.x,enemy.y,bombSerial);
+                bombSerial++;
+                time = checker;
+        
+            }
         }
 
-        if(bombSerial >=MAX_BOMB){
+        if(bombSerial >=MAX_BOMB)
             bombSerial=0;
-        }
-
+        
         write(mainPipe, &enemy, sizeof(enemy));
         usleep(ENEMY_DELAY);
     }
 }
+
 
 
 void bomb(int mainPipe, int x ,int y, int bombSerial){

@@ -6,11 +6,10 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define ENEMIES 5
+#define ENEMIES 10
 #define MAX_X 80
 #define MAX_Y 20
 #define MAX_ENEMY_COL (MAX_Y/3)
-#define AMMO_CYCLE 64
 
 // Macro gestione pipe
 #define READ 0
@@ -32,10 +31,10 @@
 #define ROCKET_DOWN 'd'
 
 //Macro bombe nemiche
-#define MAX_BOMB 100
+#define MAX_BOMB 50
 #define RANDOM_BOMB_START 1
 #define RANDOM_BOMB_FINISH 1000000
-
+#define DELAY_BOMB_RANDOM 35
 
 // Macro movimento nemici
 #define HORIZONTAL 1
@@ -43,9 +42,8 @@
 
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
-#define ROCKET_DELAY 20000
-#define BOMB_DELAY 25000
-#define DELAY_BOMB_RANDOM 35
+#define ROCKET_DELAY 30000
+#define BOMB_DELAY 15000
 
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
@@ -71,7 +69,7 @@ void bomb(int mainPipe, int x, int y, int bombSerial);
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
-void gameOver(int score, int collision);
+void gameOver(int score, int win);
 
 // Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, char sprite[3][3]);
