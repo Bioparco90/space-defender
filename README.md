@@ -3,8 +3,9 @@ space-defender-2
 IDEAS:
 
 
+
 TODO:
-    - [x]    Fix bug scalino diagonale nel rimbalzo dei nemici contro i bordi
-    - [x]    Fix bug primo spawn nemici fuori schermo
-    - []    Funzione doppio sparo diagonale.
-    - []    Aggiunta sprite nemici e conseguente gestione delle coordinate
+
+PROMEMORIA:
+        Ricordarsi di gestire la dimensione dell'array degli spari quando si sceglierà 
+            la velocità definitiva dei vari oggetti, attualmente c'è un forte spreco di memoria.
