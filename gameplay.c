@@ -46,6 +46,9 @@ void gameArea(int mainPipe){
     int id;
     int i;
 
+    // variabili test sparo nemico
+    Object enemyRockets[ENEMIES];
+
     // Loop di gioco
 	do{
         read(mainPipe, &data, sizeof(data)); // Lettura ciclica del dato dalla mainPipe
@@ -93,6 +96,19 @@ void gameArea(int mainPipe){
                     rocketDown[id] = resetItem();
                 }
                 break;
+
+            // Caso sparo nemico
+            case ENEMY_ROCKET:
+                if (enemyRockets[id].x > -1)
+                    mvaddch(enemyRockets[id].y, enemyRockets[id].x, ' ');
+                
+                enemyRockets[id] = data;
+
+                if (enemyRockets[id].x <= 0){
+                    kill(enemyRockets[id].pid, 1);
+                    enemyRockets[id] = resetItem();
+                }
+                break;
         }
 
         switch(data.identifier){
@@ -136,6 +152,9 @@ void gameArea(int mainPipe){
                     mvaddch(rocketDown[id].y,rocketDown[id].x, ROCKET);
                 break;
 
+            case ENEMY_ROCKET:
+                if (enemyRockets[id].x > -1)
+                    mvaddch(enemyRockets[id].y, enemyRockets[id].x, enemyRockets[id].identifier);
         }
 
         mvprintw(0, 0, "Vite: %d", player.lives);

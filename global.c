@@ -78,3 +78,7 @@ Object resetItem(){
 
     return item;
 }
+
+int timeTravelEnemyRocket(int microSeconds){
+    return ((microSeconds * MAX_X) / 1000000);
+}

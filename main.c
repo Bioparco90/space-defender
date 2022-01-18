@@ -7,6 +7,8 @@ int main(){
     pid_t pidEnemyFleet;    // Pid processo generatore flotta nemica
     int mainPipe[2];        // Pipe generale
 
+    srand(time(NULL));
+
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti
     keypad(stdscr, 1); // Abilita tasti funzione (frecce)

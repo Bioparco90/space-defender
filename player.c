@@ -1,7 +1,4 @@
 #include "global.h"
-#include <bits/time.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 void playerShip(int fdMain){
     Object ship;
