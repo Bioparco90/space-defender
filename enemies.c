@@ -45,12 +45,15 @@ void fleetEnlister(int mainPipe){
 }
 
 void enemyShip(int mainPipe,  Object enemy){
-    int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
-    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale
-    struct timespec start, end;
+    int direction = 1;              // Direzione nave: 1 -> basso, -1 -> alto
+    int flag = VERTICAL;            // Flag da sfruttare per gestire il movimento verticale
+    struct timespec start, end;     // Utilizzate per scandire il tempo minimo tra uno sparo e l'altro
+    struct timespec start2, end2;   // Utilizzate come countdown per il cambio di velocità del movimento nemico
     int timeTravel;
+    int delay = ENEMY_DELAY;
 
     clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_REALTIME, &start2);
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
@@ -78,8 +81,13 @@ void enemyShip(int mainPipe,  Object enemy){
             }
         }
 
+        clock_gettime(CLOCK_REALTIME, &end2);
+        if (end2.tv_sec - start2.tv_sec >= 7){
+            delay *= 0.8; // navi 20% più veloci
+            start2 = end2;
+        }
         write(mainPipe, &enemy, sizeof(enemy));
-        usleep(ENEMY_DELAY);
+        usleep(delay);
     }
 }
 

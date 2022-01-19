@@ -41,7 +41,7 @@ void playerShip(int fdMain){
                     serial++;
                     time = checker;
                 }
-                if (checker.tv_sec - time.tv_sec >= 2){
+                if (checker.tv_sec - time.tv_sec >= 1){
                     playerShotInit(fdMain, ship.x, ship.y, serial);
                     serial++;
                     time = checker;

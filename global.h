@@ -26,7 +26,7 @@
 #define ENEMY_ROCKET 'o'
 
 // Macro proiettili giocatore
-#define MAX_ROCKET 10
+#define MAX_ROCKET 20
 #define ROCKET_UP 'u'
 #define ROCKET_DOWN 'd'
 
@@ -36,7 +36,7 @@
 
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
-#define ROCKET_DELAY 40000
+#define ROCKET_DELAY 30000
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 typedef struct {
@@ -69,6 +69,10 @@ int isRocket(Object item);
 int checkCollision(Object a, Object b);
 Object resetItem();
 int timeTravelEnemyRocket(int microSeconds);
+
+// Funzioni avvio e fine gioco
+void startGame();
+void gameOver(int winCondition);
 
 // funzioni prova
 

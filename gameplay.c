@@ -10,15 +10,15 @@
  };
 
  char enemySpriteLv1[3][3]={
-         {" S "},
-         {"<o>"},
-         {" S "}
+         {" / "},
+         {"(o)"},
+         {" \\ "}
  };
 
 char enemySpriteLv2[3][3]={
-        {"[\\ "},
-        {"[@>"},
-        {"[/ "}
+        {"{|="},
+        {"(o)"},
+        {"{|="}
 };
 
 void gameArea(int mainPipe){
@@ -164,7 +164,6 @@ void gameArea(int mainPipe){
                             enemy[i] = resetItem();
                             score += 100;
                             enemyCounter--;
-
                         }
                     }
                 }
