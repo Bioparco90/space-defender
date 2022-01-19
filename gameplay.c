@@ -9,24 +9,11 @@
          {"\\/ "}
  };
 
-// char playerSprite[3][1] = {
-//     {"+"},
-//     {">"},
-//     {"+"}
-// };
-
  char enemySpriteLv1[3][3]={
          {" S "},
          {"<o>"},
          {" S "}
  };
-
-// char enemySpriteLv1[3][1]={
-//         {"S"},
-//         {"<"},
-//         {"S"}
-// };
-
 
 char enemySpriteLv2[3][3]={
         {"[\\ "},
@@ -41,6 +28,7 @@ void gameArea(int mainPipe){
     Object rocketDown[MAX_ROCKET];
 
     // Variabili di gestione gioco
+    int enemyCounter = ENEMIES;
 	int collision = 0;
     int score = 0;
     int id;
@@ -133,21 +121,28 @@ void gameArea(int mainPipe){
                 break;
 
             case ENEMY:
-                printSprite(data.x, data.y, enemySpriteLv1);
+                if (enemy[id].lives == 3)
+                    printSprite(data.x, data.y, enemySpriteLv1);
+                else
+                    printSprite(data.x, data.y, enemySpriteLv2);
                 break;
 
             case ROCKET_UP:
                 for (i=0; i<ENEMIES; i++){
                     if (checkCollision(rocketUp[id], enemy[i])){
                         kill(rocketUp[id].pid, 1);
-                        if (enemyRockets[i].pid > 0)
-                            waitpid(enemyRockets[i].pid, NULL, 0);
-                        kill(enemy[i].pid, 1);
-                        deleteSprite(enemy[i]);
-                        mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
                         rocketUp[id] = resetItem();
-                        enemy[i] = resetItem();
-                        score += 100;
+                        enemy[i].lives--;
+                        if (!enemy[i].lives){
+                            if (enemyRockets[i].pid > 0)
+                                waitpid(enemyRockets[i].pid, NULL, 0);
+                            kill(enemy[i].pid, 1);
+                            deleteSprite(enemy[i]);
+                            mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
+                            enemy[i] = resetItem();
+                            score += 100;
+                            enemyCounter--;
+                        }
                     }
                 }
                 if (rocketUp[id].y > -1)
@@ -158,14 +153,19 @@ void gameArea(int mainPipe){
                 for (i=0; i<ENEMIES; i++){
                     if (checkCollision(rocketDown[id], enemy[i])){
                         kill(rocketDown[id].pid, 1);
-                        if (enemyRockets[i].pid > 0)
-                            waitpid(enemyRockets[i].pid, NULL, 0);
-                        kill(enemy[i].pid, 1);
-                        deleteSprite(enemy[i]);
-                        mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
                         rocketDown[id] = resetItem();
-                        enemy[i] = resetItem();
-                        score += 100;
+                        enemy[i].lives--;
+                        if (!enemy[i].lives){
+                            if (enemyRockets[i].pid > 0)
+                                waitpid(enemyRockets[i].pid, NULL, 0);
+                            kill(enemy[i].pid, 1);
+                            deleteSprite(enemy[i]);
+                            mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
+                            enemy[i] = resetItem();
+                            score += 100;
+                            enemyCounter--;
+
+                        }
                     }
                 }
                 if (rocketDown[id].y > -1)
@@ -188,7 +188,7 @@ void gameArea(int mainPipe){
         mvprintw(0, 0, "Vite: %d", player.lives);
         mvprintw(0, MAX_X - 15, "Score: %d", score);
         refresh(); 
-	} while (!collision && player.lives > 0);
+	} while (!collision && player.lives && enemyCounter);
 
     // Terminazione processi
     for (i=0; i<ENEMIES; i++)
