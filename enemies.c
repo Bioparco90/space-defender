@@ -40,6 +40,8 @@ void fleetEnlister(int mainPipe){
         }
         
     }
+    for (i=0; i<ENEMIES; i++)
+        waitpid(enemy[i].pid, NULL, 0);
 }
 
 void enemyShip(int mainPipe,  Object enemy){

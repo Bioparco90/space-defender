@@ -26,7 +26,7 @@
 #define ENEMY_ROCKET 'o'
 
 // Macro proiettili giocatore
-#define MAX_ROCKET 50
+#define MAX_ROCKET 10
 #define ROCKET_UP 'u'
 #define ROCKET_DOWN 'd'
 
@@ -71,7 +71,6 @@ Object resetItem();
 int timeTravelEnemyRocket(int microSeconds);
 
 // funzioni prova
-int isShip(Object item);
 
 
 #endif /* GLOBAL_H */

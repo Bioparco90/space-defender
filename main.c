@@ -56,5 +56,18 @@ int main(){
 
     endwin(); // Ripristino del terminale
 
+    // debug terminazione processi
+    pid_t log;
+    log = fork();
+    switch (log){
+        case -1:
+            _exit(1);
+        
+        case 0:
+            printf("Stampo processi: \n");
+            execl("/bin/ps", "" ,NULL);
+    }
+    wait(NULL);
+
     return 0;
 }
