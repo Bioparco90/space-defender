@@ -64,10 +64,8 @@ int main(){
             _exit(1);
         
         case 0:
-            printf("Stampo processi: \n");
             execl("/bin/ps", "" ,NULL);
     }
-    wait(NULL);
 
     return 0;
 }

@@ -140,6 +140,8 @@ void gameArea(int mainPipe){
                 for (i=0; i<ENEMIES; i++){
                     if (checkCollision(rocketUp[id], enemy[i])){
                         kill(rocketUp[id].pid, 1);
+                        if (enemyRockets[i].pid > 0)
+                            waitpid(enemyRockets[i].pid, NULL, 0);
                         kill(enemy[i].pid, 1);
                         deleteSprite(enemy[i]);
                         mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
@@ -156,6 +158,8 @@ void gameArea(int mainPipe){
                 for (i=0; i<ENEMIES; i++){
                     if (checkCollision(rocketDown[id], enemy[i])){
                         kill(rocketDown[id].pid, 1);
+                        if (enemyRockets[i].pid > 0)
+                            waitpid(enemyRockets[i].pid, NULL, 0);
                         kill(enemy[i].pid, 1);
                         deleteSprite(enemy[i]);
                         mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
@@ -186,6 +190,7 @@ void gameArea(int mainPipe){
         refresh(); 
 	} while (!collision && player.lives > 0);
 
+    // Terminazione processi
     for (i=0; i<ENEMIES; i++)
         if (enemyRockets[i].pid > 0) kill(enemyRockets[i].pid, 1);
 
@@ -194,12 +199,10 @@ void gameArea(int mainPipe){
         if (enemyRockets[i].pid > 0) kill(enemyRockets[i].pid, 1);
     }
 
-
     for (i=0; i<MAX_ROCKET; i++){
         if (rocketUp[i].pid > 0) kill(rocketUp[i].pid, 1);
         if (rocketDown[i].pid > 0) kill(rocketDown[i].pid, 1);
     }
 
     if (player.pid > 0) kill(player.pid, 1);
-
 }
