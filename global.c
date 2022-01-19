@@ -1,6 +1,7 @@
 #include "global.h"
 #include <curses.h>
 
+int rocketFrame=1;
 
 // Le righe commentate servono in caso di sprite 3x3
 void printSprite(int posX, int posY, char sprite[3][3]){
@@ -36,8 +37,8 @@ void deleteSprite(Object item){
     }
 }
 
-int isWeapon(Object item){
-    return (item.identifier == ROCKET_UP || item.identifier == ROCKET_DOWN || item.identifier == BOMB); //AGGIUNGERE CASO BOMBA NEMICA SUCCESSIVAMENTE
+int isRocket(Object item){
+    return (item.identifier == ROCKET_UP || item.identifier == ROCKET_DOWN || item.identifier == ENEMY_ROCKET); //AGGIUNGERE CASO BOMBA NEMICA SUCCESSIVAMENTE
 }
 
 // Per un corretto utilizzo, il parametro "a" deve essere quello che "attacca"
@@ -48,9 +49,9 @@ int checkCollision(Object a, Object b){
     int x = b.x;
     int y = b.y;
 
-    if (isWeapon(a)){
+    if (isRocket(a)){
         for(row=0; row<3; row++){
-            for(col=0; col<100; col++){
+            for(col=0; col<3; col++){
                 if(a.x == x && a.y == y)
                     return 1;
                 x++;
@@ -61,7 +62,6 @@ int checkCollision(Object a, Object b){
     }
     return 0;
 }
-
 
 Object resetItem(){
     Object item;
@@ -76,4 +76,59 @@ Object resetItem(){
     return item;
 }
 
+int timeTravelEnemyRocket(int microSeconds){
+    return ((microSeconds * MAX_X) / 1000000);
+}
 
+void rocketAnimation(int x, int y){
+
+    switch(rocketFrame){
+        
+        case 1:
+            mvaddch(y,x,'_');
+            rocketFrame++;
+            break;
+
+        case 2:
+            mvaddch(y,x,'\\');
+            rocketFrame++;
+            break;
+
+        case 3:
+            mvaddch(y,x,'/');
+            rocketFrame=1;
+            break;
+    }
+}
+
+void printLives(int lives){
+    int x=0, y=0;
+    mvprintw(y ,x, "Vite: ");
+
+    switch(lives){
+        
+        case 3:
+            attron(COLOR_PAIR(2));
+            mvprintw(y,x+7,"<3");
+            mvprintw(y,x+11,"<3");
+            mvprintw(y,x+15,"<3");   
+            attroff(COLOR_PAIR(2));   
+            break;
+
+        case 2:
+            attron(COLOR_PAIR(2));
+            mvprintw(y,x+7,"<3");
+            mvprintw(y,x+11,"<3");
+            attroff(COLOR_PAIR(2));
+            mvprintw(y,x+15,"  ");  
+            break;
+
+        case 1:
+            attron(COLOR_PAIR(2));
+            mvprintw(y,x+7,"<3");
+            attroff(COLOR_PAIR(2));
+            mvprintw(y,x+11,"  ");
+            mvprintw(y,x+15,"  ");  
+            break;
+    }
+}

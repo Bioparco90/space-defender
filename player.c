@@ -1,22 +1,18 @@
 #include "global.h"
-#include <sys/types.h>
-#include <bits/time.h>
-#include <unistd.h>
 
 void playerShip(int fdMain){
     Object ship;
     int serial;
- 
 
-    struct timespec time,checker;
+    // Test clock
+    struct timespec time, checker;
 
-    clock_gettime(CLOCK_REALTIME,&time); 
+    clock_gettime(CLOCK_REALTIME, &time);    
     
     // Inizializzazione nave giocatore
     ship.x = 1;
     ship.y = MAX_Y / 2;
     ship.identifier = PLAYER;
-    ship.lives = 3;
     ship.pid = getpid();
     ship.serial = 777;
 
@@ -40,14 +36,13 @@ void playerShip(int fdMain){
 
             case ' ':
                 clock_gettime(CLOCK_REALTIME, &checker);
-                if(serial==0){
+                if (serial == 0){
                     playerShotInit(fdMain, ship.x, ship.y, serial);
                     serial++;
-                    time=checker;
+                    time = checker;
                 }
-
-                if(checker.tv_sec - time.tv_sec >=1){
-                    playerShotInit(fdMain,ship.x,ship.y,serial);
+                if (checker.tv_sec - time.tv_sec >= 1){
+                    playerShotInit(fdMain, ship.x, ship.y, serial);
                     serial++;
                     time = checker;
                 }
@@ -105,12 +100,9 @@ void shot(int mainPipe, int x, int y, int direction, int serial){
 
     write(mainPipe, &rocket, sizeof(rocket));
     while(true){
-        if(rocket.y < 2 || rocket.y > MAX_Y){
+        if((rocket.y < 2 || rocket.y > MAX_Y)){
             direction *= -1;
         }
-        /*if(rocket.x>=MAX_X/10){
-            direction =0;
-        }*/
         rocket.x += 1;
         rocket.y += direction;
         write(mainPipe, &rocket, sizeof(rocket));

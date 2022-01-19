@@ -1,7 +1,6 @@
 #include "global.h"
 #include <curses.h>
 #include <unistd.h>
-#include <time.h>
 
 int main(){
     pid_t pidPlayerShip;    // Pid processo figlio "nave giocatore" 
@@ -11,9 +10,12 @@ int main(){
     srand(time(NULL));
 
     initscr();         // Inizializza schermo di gioco
+    start_color();
     noecho();          // Disabilita visualizzazione tasti premuti
     keypad(stdscr, 1); // Abilita tasti funzione (frecce)
     curs_set(0);       // Disabilita visualizzazione cursore
+
+    startGame();
 
     // Creazione delle pipe per la comunicazione tra i processi
     if (pipe(mainPipe) < 0) {
@@ -56,6 +58,17 @@ int main(){
     gameArea(mainPipe[READ]);   // Gestore principale del gioco
 
     endwin(); // Ripristino del terminale
+
+    // debug terminazione processi
+    pid_t log;
+    log = fork();
+    switch (log){
+        case -1:
+            _exit(1);
+        
+        case 0:
+            execl("/bin/ps", "" ,NULL);
+    }
 
     return 0;
 }

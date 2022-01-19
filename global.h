@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
 
-#define ENEMIES 10
+#define ENEMIES 1
 #define MAX_X 80
 #define MAX_Y 20
-#define MAX_ENEMY_COL (MAX_Y/3)
 
 // Macro gestione pipe
 #define READ 0
@@ -23,18 +23,12 @@
 #define PLAYER '+'
 #define ENEMY '<'
 #define ROCKET '*'
-#define BOMB 'o'
+#define ENEMY_ROCKET 'o'
 
 // Macro proiettili giocatore
-#define MAX_ROCKET 50
+#define MAX_ROCKET 20
 #define ROCKET_UP 'u'
 #define ROCKET_DOWN 'd'
-
-//Macro bombe nemiche
-#define MAX_BOMB 50
-#define RANDOM_BOMB_START 1
-#define RANDOM_BOMB_FINISH 1000000
-#define DELAY_BOMB_RANDOM 35
 
 // Macro movimento nemici
 #define HORIZONTAL 1
@@ -43,8 +37,6 @@
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
 #define ROCKET_DELAY 30000
-#define BOMB_DELAY 15000
-
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 typedef struct {
@@ -64,24 +56,27 @@ void shot(int mainPipe, int x, int y, int direction, int serial);
 // Funzioni libreria enemies.c
 void fleetEnlister(int mainPipe);
 void enemyShip(int mainPipe, Object enemy);
-void enemyBombInit(int mainPipe, int x, int y, int bombSerial);
-void bomb(int mainPipe, int x, int y, int bombSerial);
+void enemyShot(int mainPipe, int x, int y, int serial);
+
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
-void gameOver(int score, int win);
 
 // Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, char sprite[3][3]);
 void deleteSprite(Object item);
-
-// funzioni prova
-int isWeapon(Object item);
+int isRocket(Object item);
 int checkCollision(Object a, Object b);
 Object resetItem();
-// int checkCollisionRocket(Object rocket);
-// int checkCollisonEnemy(Object entity);
+int timeTravelEnemyRocket(int microSeconds);
+void rocketAnimation(int x, int y);
+void printLives(int lives);
 
+// Funzioni avvio e fine gioco
+void startGame();
+void gameOver(int winCondition, int score);
+
+// funzioni prova
 
 
 #endif /* GLOBAL_H */

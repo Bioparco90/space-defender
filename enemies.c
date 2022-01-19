@@ -1,8 +1,9 @@
 #include "global.h"
-#include <stdio.h>
+#include <bits/time.h>
+#include <curses.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <bits/time.h>
+#include <time.h>
 #include <unistd.h>
 
 // Funzione per la generazione delle navi.
@@ -15,7 +16,6 @@ void fleetEnlister(int mainPipe){
     int posY = 2;
     int i;
     
-
     for(i=0; i<ENEMIES; i++){
         pidEnemyShip[i] = fork();
         switch(pidEnemyShip[i]){
@@ -40,18 +40,20 @@ void fleetEnlister(int mainPipe){
         }
         
     }
+    for (i=0; i<ENEMIES; i++)
+        waitpid(enemy[i].pid, NULL, 0);
 }
 
 void enemyShip(int mainPipe,  Object enemy){
-    int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
-    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
-    int randomBomb[ENEMIES];
-    int i;
-    int bombSerial=enemy.serial;
+    int direction = 1;              // Direzione nave: 1 -> basso, -1 -> alto
+    int flag = VERTICAL;            // Flag da sfruttare per gestire il movimento verticale
+    struct timespec start, end;     // Utilizzate per scandire il tempo minimo tra uno sparo e l'altro
+    struct timespec start2, end2;   // Utilizzate come countdown per il cambio di velocità del movimento nemico
+    int timeTravel;
+    int delay = ENEMY_DELAY;
 
-    struct timespec time,checker;
-
-    clock_gettime(CLOCK_REALTIME,&time); 
+    clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_REALTIME, &start2);
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
@@ -69,63 +71,50 @@ void enemyShip(int mainPipe,  Object enemy){
                 break;
         }
 
-        for(i=0;i<ENEMIES;i++){
-                randomBomb[i]=RANDOM_BOMB_START + (rand()%RANDOM_BOMB_FINISH);  
-        }
-        
-        if(randomBomb[bombSerial]<RANDOM_BOMB_FINISH/DELAY_BOMB_RANDOM){
-            clock_gettime(CLOCK_REALTIME, &checker);    
-            if(checker.tv_sec - time.tv_sec >=1){
-                
-                enemyBombInit(mainPipe,enemy.x,enemy.y,bombSerial);
-                bombSerial++;
-                time = checker;
-        
+        // ------ sparo nemico ------ 
+        clock_gettime(CLOCK_REALTIME, &end);
+        timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1){
+            if (rand()%ENEMIES == enemy.serial){
+                enemyShot(mainPipe, enemy.x, enemy.y, enemy.serial);
+                start = end;
             }
         }
 
-        if(bombSerial >=MAX_BOMB)
-            bombSerial=0;
-        
+        clock_gettime(CLOCK_REALTIME, &end2);
+        if (end2.tv_sec - start2.tv_sec >= 7){
+            delay *= 0.8; // navi 20% più veloci
+            start2 = end2;
+        }
         write(mainPipe, &enemy, sizeof(enemy));
-        usleep(ENEMY_DELAY);
+        usleep(delay);
     }
 }
 
+void enemyShot(int mainPipe, int x, int y, int serial){
+    pid_t pidEnemyShot;
+    Object shot;
 
+    pidEnemyShot = fork();
+    switch (pidEnemyShot){
+        case -1:
+            endwin();
+            printf("Errore creazione missile nemico\n");
+            exit(1);
+    
+        case 0:
+            shot.x = x - 2;
+            shot.y = y + 1;
+            shot.identifier = ENEMY_ROCKET;
+            shot.pid = getpid();
+            shot.serial = serial;
 
-void bomb(int mainPipe, int x ,int y, int bombSerial){
-        Object bomb;
-        
-        bomb.y = y+1;    
-        bomb.x= x-2;    
-        bomb.identifier = BOMB;    
-        bomb.lives = 1;    
-        bomb.pid = getpid();    
-        bomb.serial=bombSerial;
-
-        write(mainPipe, &bomb, sizeof(bomb));    
-        while(true){        
-            bomb.x-=1;        
-            write(mainPipe,&bomb,sizeof(bomb));   
-             
-            usleep(BOMB_DELAY);    
-        }
-
-}
-
-void enemyBombInit(int mainPipe, int x, int y, int bombSerial){
-        pid_t pidEnemyBomb;    
-        
-        switch(pidEnemyBomb=fork()){   
-
-            case -1:            
-                _exit(-1);            
-                break;        
-            
-            case 0:            
-                bomb(mainPipe, x, y, bombSerial);            
-                _exit(0);            
-                break;    
-        }
+            write(mainPipe, &shot, sizeof(shot));
+            while (true){
+                shot.x -= 1;
+                write(mainPipe, &shot, sizeof(shot));
+                usleep(ROCKET_DELAY);
+            }
+            _exit(0);
+    }
 }
