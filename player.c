@@ -1,7 +1,4 @@
 #include "global.h"
-#include <bits/time.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 void playerShip(int fdMain){
     Object ship;
@@ -16,7 +13,6 @@ void playerShip(int fdMain){
     ship.x = 1;
     ship.y = MAX_Y / 2;
     ship.identifier = PLAYER;
-    ship.lives = 3;
     ship.pid = getpid();
     ship.serial = 777;
 

@@ -23,9 +23,10 @@
 #define PLAYER '+'
 #define ENEMY '<'
 #define ROCKET '*'
+#define ENEMY_ROCKET 'o'
 
 // Macro proiettili giocatore
-#define MAX_ROCKET 50
+#define MAX_ROCKET 10
 #define ROCKET_UP 'u'
 #define ROCKET_DOWN 'd'
 
@@ -55,6 +56,8 @@ void shot(int mainPipe, int x, int y, int direction, int serial);
 // Funzioni libreria enemies.c
 void fleetEnlister(int mainPipe);
 void enemyShip(int mainPipe, Object enemy);
+void enemyShot(int mainPipe, int x, int y, int serial);
+
 
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
@@ -62,15 +65,12 @@ void gameArea(int mainPipe);
 // Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, char sprite[3][3]);
 void deleteSprite(Object item);
-
-// funzioni prova
-int isShip(Object item);
 int isRocket(Object item);
 int checkCollision(Object a, Object b);
 Object resetItem();
-// int checkCollisionRocket(Object rocket);
-// int checkCollisonEnemy(Object entity);
+int timeTravelEnemyRocket(int microSeconds);
 
+// funzioni prova
 
 
 #endif /* GLOBAL_H */

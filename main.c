@@ -7,6 +7,8 @@ int main(){
     pid_t pidEnemyFleet;    // Pid processo generatore flotta nemica
     int mainPipe[2];        // Pipe generale
 
+    srand(time(NULL));
+
     initscr();         // Inizializza schermo di gioco
     noecho();          // Disabilita visualizzazione tasti premuti
     keypad(stdscr, 1); // Abilita tasti funzione (frecce)
@@ -53,6 +55,19 @@ int main(){
     gameArea(mainPipe[READ]);   // Gestore principale del gioco
 
     endwin(); // Ripristino del terminale
+
+    // debug terminazione processi
+    pid_t log;
+    log = fork();
+    switch (log){
+        case -1:
+            _exit(1);
+        
+        case 0:
+            printf("Stampo processi: \n");
+            execl("/bin/ps", "" ,NULL);
+    }
+    wait(NULL);
 
     return 0;
 }

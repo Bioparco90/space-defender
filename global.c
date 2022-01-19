@@ -36,12 +36,7 @@ void deleteSprite(Object item){
 }
 
 int isRocket(Object item){
-    return (item.identifier == ROCKET_UP || item.identifier == ROCKET_DOWN); //AGGIUNGERE CASO BOMBA NEMICA SUCCESSIVAMENTE
-}
-
-// Forse inutile
-int isShip(Object item){
-    return (item.identifier == PLAYER || item.identifier == ENEMY);
+    return (item.identifier == ROCKET_UP || item.identifier == ROCKET_DOWN || item.identifier == ENEMY_ROCKET); //AGGIUNGERE CASO BOMBA NEMICA SUCCESSIVAMENTE
 }
 
 // Per un corretto utilizzo, il parametro "a" deve essere quello che "attacca"
@@ -77,4 +72,8 @@ Object resetItem(){
     item.serial = -1;
 
     return item;
+}
+
+int timeTravelEnemyRocket(int microSeconds){
+    return ((microSeconds * MAX_X) / 1000000);
 }

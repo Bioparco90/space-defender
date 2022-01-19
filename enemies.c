@@ -1,7 +1,9 @@
 #include "global.h"
-#include <stdio.h>
+#include <bits/time.h>
+#include <curses.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 // Funzione per la generazione delle navi.
@@ -38,11 +40,17 @@ void fleetEnlister(int mainPipe){
         }
         
     }
+    for (i=0; i<ENEMIES; i++)
+        waitpid(enemy[i].pid, NULL, 0);
 }
 
 void enemyShip(int mainPipe,  Object enemy){
     int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
-    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
+    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale
+    struct timespec start, end;
+    int timeTravel;
+
+    clock_gettime(CLOCK_REALTIME, &start);
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
@@ -60,7 +68,45 @@ void enemyShip(int mainPipe,  Object enemy){
                 break;
         }
 
+        // ------ sparo nemico ------ 
+        clock_gettime(CLOCK_REALTIME, &end);
+        timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1){
+            if (rand()%ENEMIES == enemy.serial){
+                enemyShot(mainPipe, enemy.x, enemy.y, enemy.serial);
+                start = end;
+            }
+        }
+
         write(mainPipe, &enemy, sizeof(enemy));
         usleep(ENEMY_DELAY);
+    }
+}
+
+void enemyShot(int mainPipe, int x, int y, int serial){
+    pid_t pidEnemyShot;
+    Object shot;
+
+    pidEnemyShot = fork();
+    switch (pidEnemyShot){
+        case -1:
+            endwin();
+            printf("Errore creazione missile nemico\n");
+            exit(1);
+    
+        case 0:
+            shot.x = x - 2;
+            shot.y = y + 1;
+            shot.identifier = ENEMY_ROCKET;
+            shot.pid = getpid();
+            shot.serial = serial;
+
+            write(mainPipe, &shot, sizeof(shot));
+            while (true){
+                shot.x -= 1;
+                write(mainPipe, &shot, sizeof(shot));
+                usleep(ROCKET_DELAY);
+            }
+            _exit(0);
     }
 }
