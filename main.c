@@ -14,6 +14,8 @@ int main(){
     keypad(stdscr, 1); // Abilita tasti funzione (frecce)
     curs_set(0);       // Disabilita visualizzazione cursore
 
+    startGame();
+
     // Creazione delle pipe per la comunicazione tra i processi
     if (pipe(mainPipe) < 0) {
         endwin();
