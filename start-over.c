@@ -3,23 +3,144 @@
 #include <sys/types.h>
 #include <string.h>
 
+char space[6][47]={
+    {"  _____   _____                _____   ______ \n"},
+    {" / ____| |  __ \\      /\\      / ____| |  ____|\n"},
+    {"| (___   | |__) |    /  \\    | |      | |__   \n"},
+    {" \\___ \\  |  ___/    / /\\ \\   | |      |  __|  \n"},
+    {" ____) | | |       / ____ \\  | |____  | |____ \n"},
+    {"|_____/  |_|      /_/    \\_\\  \\_____| |______|\n"}
+};
+
+char star[6][9]={
+    {"    _    "},
+    {" /\\| |/\\ "},
+    {" \\ ` ' / "},
+    {"|_     _|"},
+    {" / , . \\ "},
+    {" \\/|_|\\/ "}
+};
+
+char defender[6][70]={
+    {" _____    ______   ______   ______   _   _   _____    ______   _____  "},
+    {"|  __ \\  |  ____| |  ____| |  ____| | \\ | | |  __ \\  |  ____| |  __ \\ "},
+    {"| |  | | | |__    | |__    | |__    |  \\| | | |  | | | |__    | |__) |"},
+    {"| |  | | |  __|   |  __|   |  __|   | . ` | | |  | | |  __|   |  _  / "},
+    {"| |__| | | |____  | |      | |____  | |\\  | | |__| | | |____  | | \\ \\ "},
+    {"|_____/  |______| |_|      |______| |_| \\_| |_____/  |______| |_|  \\_\\"}
+};
+
+void countdownPrint(int x, int y, int count){
+    
+    init_pair(1,COLOR_RED,COLOR_BLACK);
+    init_pair(2,COLOR_YELLOW,COLOR_BLACK);
+    init_pair(3,COLOR_GREEN,COLOR_BLACK);
+    init_pair(4,COLOR_CYAN,COLOR_BLACK);
+    init_pair(5, COLOR_MAGENTA,COLOR_BLACK);
+    init_pair(6,COLOR_BLUE, COLOR_BLACK);
+
+    init_pair(7,COLOR_BLACK,COLOR_RED);
+    init_pair(8,COLOR_BLACK,COLOR_YELLOW);
+    init_pair(9,COLOR_BLACK,COLOR_GREEN);
+
+    switch(count){
+
+        case 3:
+            attron(COLOR_PAIR(7));
+            mvprintw(y+9,x+21, "I");
+            attroff(COLOR_PAIR(7));
+
+            attron(COLOR_PAIR(7));
+            mvprintw(y+9,x+23, "I");
+            attroff(COLOR_PAIR(7));
+
+            attron(COLOR_PAIR(7));
+            mvprintw(y+9,x+25, "I");
+            attroff(COLOR_PAIR(7));
+            break;
+
+        case 2:
+            attron(COLOR_PAIR(8));
+            mvprintw(y+9,x+22, "I");
+            attroff(COLOR_PAIR(8));
+
+            attron(COLOR_PAIR(8));
+            mvprintw(y+9,x+24, "I");
+            attroff(COLOR_PAIR(8));
+            break;
+
+        case 1:
+            attron(COLOR_PAIR(9));
+            mvprintw(y+9,x+23, "I");
+            attroff(COLOR_PAIR(9));
+            break;
+
+
+    }
+
+}
+
 void startGame(){
-    char *message = "S P A C E * D E F E N D E R";
-    int countdown = 3;
+    //char *message = "S P A C E * D E F E N D E R";
     int x, y;
     int i;
-
-    x = MAX_X / 2 - (strlen(message) / 2 + 3);
-    y = MAX_Y / 2;
+    int countdown=3;
+    x = MAX_X/5;
+    y = 4;
 
     
     for (i=countdown; i>0; i--){
-        attron(A_REVERSE);
-        mvprintw(y, x, "%s", message);
-        attroff(A_REVERSE);
-        mvprintw(y + 2, MAX_X / 2 -5, "%d", i);
+
+
+        switch(i){
+            case 3:
+            attron(COLOR_PAIR(1));
+            printSprite(x+19,y+6,6,9,star);
+            attroff(COLOR_PAIR(1));
+
+            attron(COLOR_PAIR(4));
+            printSprite(x,y,6,47,space);
+            attroff(COLOR_PAIR(4));
+
+            attron(COLOR_PAIR(5));
+            printSprite(x-10,y+12,6,70,defender);
+            attroff(COLOR_PAIR(5));
+            break;
+
+        case 2:
+            attron(COLOR_PAIR(2));
+            printSprite(x+19,y+6,6,9,star);
+            attroff(COLOR_PAIR(2));
+
+            attron(COLOR_PAIR(5));
+            printSprite(x,y,6,47,space);
+            attroff(COLOR_PAIR(5));
+
+            attron(COLOR_PAIR(3));
+            printSprite(x-10,y+12,6,70,defender);
+            attroff(COLOR_PAIR(3));
+            break;
+
+        case 1:
+            attron(COLOR_PAIR(3));
+             printSprite(x+19,y+6,6,9,star);
+            attroff(COLOR_PAIR(3));
+
+            attron(COLOR_PAIR(6));
+            printSprite(x,y,6,47,space);
+            attroff(COLOR_PAIR(6));
+
+            attron(COLOR_PAIR(1));
+            printSprite(x-10,y+12,6,70,defender);
+            attroff(COLOR_PAIR(1));
+            break;
+        }
+
+    
+        //mvprintw(y, x, "%s", message);
+        countdownPrint(x, y, i);
         refresh();  
-        sleep(1);
+        sleep(2);
     }
     clear();
 }
@@ -137,3 +258,4 @@ void gameOver(int winCondition, int score){
         sleep(1);
     }
 }
+

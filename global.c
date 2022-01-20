@@ -4,14 +4,14 @@
 int rocketFrame=1;
 
 // Le righe commentate servono in caso di sprite 3x3
-void printSprite(int posX, int posY, char sprite[3][3]){
+void printSprite(int posX, int posY, int dimRow, int dimCol, char sprite[dimRow][dimCol]){
     int row,col;
     int x, y;
     x=posX;
     y=posY;
 
-    for(row=0;row<3;row++){
-        for(col=0;col<3;col++){
+    for(row=0;row<dimRow;row++){
+        for(col=0;col<dimCol;col++){
             mvaddch(y,x,sprite[row][col]);
             x++;
         }

@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 #include <time.h>
 
-#define ENEMIES 1
+#define ENEMIES 25
 #define MAX_X 80
 #define MAX_Y 20
 
@@ -38,6 +38,9 @@
 #define ENEMY_DELAY 300000
 #define ROCKET_DELAY 30000
 
+// Macro per file
+#define FILE_LENGTH MAX_X
+
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 typedef struct {
     char identifier;    // Carattere dell'oggetto. Es: "-" come proiettile.
@@ -63,7 +66,7 @@ void enemyShot(int mainPipe, int x, int y, int serial);
 void gameArea(int mainPipe);
 
 // Funzioni di utilità globale (global.c)
-void printSprite(int posX, int posY, char sprite[3][3]);
+void printSprite(int posX, int posY, int dimRow, int dimCol, char sprite[dimRow][dimCol]);
 void deleteSprite(Object item);
 int isRocket(Object item);
 int checkCollision(Object a, Object b);
@@ -75,7 +78,7 @@ void printLives(int lives);
 // Funzioni avvio e fine gioco
 void startGame();
 void gameOver(int winCondition, int score);
-
+void countdownPrint(int x, int y, int count);
 // funzioni prova
 
 

@@ -135,24 +135,24 @@ void gameArea(int mainPipe){
         switch(data.identifier){
             case PLAYER:
                 attron(COLOR_PAIR(3));
-                printSprite(data.x, data.y, playerSprite);
+                printSprite(data.x, data.y, 3,3,  playerSprite);
                 attroff(COLOR_PAIR(3));
                 break;
 
             case ENEMY:
                 if (enemy[id].lives == 3){
                     attron(COLOR_PAIR(1));
-                    printSprite(data.x, data.y, enemySpriteLv1);
+                    printSprite(data.x, data.y, 3, 3, enemySpriteLv1);
                     attroff(COLOR_PAIR(1));
                 }
                 else if(enemy[id].lives == 2){
                     attron(COLOR_PAIR(4));
-                    printSprite(data.x, data.y, enemySpriteLv2);
+                    printSprite(data.x, data.y, 3 ,3, enemySpriteLv2);
                     attroff(COLOR_PAIR(4));
                 }
                 else {
                     attron(COLOR_PAIR(4));
-                    printSprite(data.x, data.y, enemySpriteLv2Damaged);
+                    printSprite(data.x, data.y, 3,3 , enemySpriteLv2Damaged);
                     attroff(COLOR_PAIR(4));
                 }    
                 break;
