@@ -37,11 +37,13 @@ void playerShip(int fdMain){
             case ' ':
                 clock_gettime(CLOCK_REALTIME, &checker);
                 if (serial == 0){
+                    system("aplay sounds/laser.wav 2> /dev/null &");
                     playerShotInit(fdMain, ship.x, ship.y, serial);
                     serial++;
                     time = checker;
                 }
                 if (checker.tv_sec - time.tv_sec >= 1){
+                    system("aplay sounds/laser.wav 2> /dev/null &");
                     playerShotInit(fdMain, ship.x, ship.y, serial);
                     serial++;
                     time = checker;
