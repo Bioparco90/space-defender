@@ -163,15 +163,32 @@ void gameArea(int mainPipe){
                         kill(rocketUp[id].pid, 1);
                         rocketUp[id] = resetItem();
                         enemy[i].lives--;
-                        if (!enemy[i].lives){
-                            if (enemyRockets[i].pid > 0)
-                                waitpid(enemyRockets[i].pid, NULL, 0);
-                            kill(enemy[i].pid, 1);
-                            deleteSprite(enemy[i]);
-                            mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
-                            enemy[i] = resetItem();
-                            score += 100;
-                            enemyCounter--;
+
+                        switch (enemy[i].lives){
+                            case 0:
+                                if (enemyRockets[i].pid > 0)
+                                        waitpid(enemyRockets[i].pid, NULL, 0);
+                                kill(enemy[i].pid, 1);
+                                deleteSprite(enemy[i]);
+                                mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');
+                                enemy[i] = resetItem();
+                                score += 100;
+                                enemyCounter--;
+                                break;
+
+                            case 1: 
+                                deleteSprite(enemy[i]);
+                                attron(COLOR_PAIR(4));
+                                printSprite(enemy[i].x, enemy[i].y, 3, 3, enemySpriteLv2Damaged);
+                                attroff(COLOR_PAIR(4));
+                                break;
+                            
+                            case 2:
+                                deleteSprite(enemy[i]);
+                                attron(COLOR_PAIR(4));
+                                printSprite(enemy[i].x, enemy[i].y, 3, 3, enemySpriteLv2);
+                                attroff(COLOR_PAIR(4));
+                                break;
                         }
                     }
                 }
@@ -185,16 +202,33 @@ void gameArea(int mainPipe){
                         kill(rocketDown[id].pid, 1);
                         rocketDown[id] = resetItem();
                         enemy[i].lives--;
-                        if (!enemy[i].lives){
-                            if (enemyRockets[i].pid > 0)
-                                waitpid(enemyRockets[i].pid, NULL, 0);
-                            kill(enemy[i].pid, 1);
-                            deleteSprite(enemy[i]);
-                            mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
-                            enemy[i] = resetItem();
-                            score += 100;
-                            enemyCounter--;
-                        }
+                        
+                        switch (enemy[i].lives){
+                            case 0:
+                                if (enemyRockets[i].pid > 0)
+                                        waitpid(enemyRockets[i].pid, NULL, 0);
+                                kill(enemy[i].pid, 1);
+                                deleteSprite(enemy[i]);
+                                mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
+                                enemy[i] = resetItem();
+                                score += 100;
+                                enemyCounter--;
+                                break;
+
+                            case 1: 
+                                deleteSprite(enemy[i]);
+                                attron(COLOR_PAIR(4));
+                                printSprite(enemy[i].x, enemy[i].y, 3, 3, enemySpriteLv2Damaged);
+                                attroff(COLOR_PAIR(4));
+                                break;
+                            
+                            case 2:
+                                deleteSprite(enemy[i]);
+                                attron(COLOR_PAIR(4));
+                                printSprite(enemy[i].x, enemy[i].y, 3, 3, enemySpriteLv2);
+                                attroff(COLOR_PAIR(4));
+                                break;
+                        }                        
                     }
                 }
                 if (rocketDown[id].y > -1)
