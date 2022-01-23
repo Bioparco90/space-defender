@@ -165,7 +165,7 @@ void gameOver(int winCondition, int score){
         }
 
 
-        if(winCondition==1){
+        if(winCondition==WIN){
                         
             attron(COLOR_PAIR(3));
             for(i=0;i<maxStar;i++){
@@ -223,7 +223,7 @@ void gameOver(int winCondition, int score){
                 
 
         }
-        else if(winCondition==0){
+        else if(winCondition==DEFEAT){
 
             attron(COLOR_PAIR(1));
             

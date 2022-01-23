@@ -35,7 +35,7 @@ void gameArea(int mainPipe){
 
     // Variabili di gestione gioco
     int enemyCounter = ENEMIES;
-	int collision = 0;
+	int gameResult = 0;
     int score = 0;
     int id;
     int i;
@@ -60,9 +60,6 @@ void gameArea(int mainPipe){
 
     // Loop di gioco
 	do{
-        if(!enemyCounter)
-            collision=1;
-
         read(mainPipe, &data, sizeof(data)); // Lettura ciclica del dato dalla mainPipe
         id = data.serial;   // Assegno il serial ad una variabile d'appoggio 
         switch(data.identifier){    // Valutazione del dato
@@ -88,6 +85,9 @@ void gameArea(int mainPipe){
 
                 enemy[id].x = data.x; // Aggiorniamo l'array dei nemici con i valori del nemico attuale
                 enemy[id].y = data.y;
+
+                if (enemy[id].x <= player.x)
+                    gameResult = DEFEAT;
                 break;
 
             //Caso razzo giocatore alto
@@ -251,7 +251,10 @@ void gameArea(int mainPipe){
         printLives(player.lives);
         mvprintw(0, MAX_X - 15, "Score: %d", score);
         refresh(); 
-	} while (!collision && player.lives);
+
+        if (!enemyCounter)
+            gameResult = WIN;
+	} while (!gameResult && player.lives);
 
     // Terminazione processi
     for (i=0; i<ENEMIES; i++)
@@ -269,5 +272,5 @@ void gameArea(int mainPipe){
 
     if (player.pid > 0) kill(player.pid, 1);
 
-    gameOver(collision, score);
+    gameOver(gameResult, score);
 }
