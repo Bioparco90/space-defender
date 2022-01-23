@@ -35,7 +35,7 @@ void gameArea(int mainPipe){
 
     // Variabili di gestione gioco
     int enemyCounter = ENEMIES;
-	int gameResult = 0;
+	int gameResult = DEFEAT;
     int score = 0;
     int id;
     int i;

@@ -43,7 +43,7 @@
 
 // Macro condizioni di vittoria
 #define WIN 1
-#define DEFEAT 2
+#define DEFEAT 0
 
 /* Oggetto da rappresentare. Nave giocatore, nave nemica, oggetti di gioco quali siluri, proiettili, etc. */
 typedef struct {
