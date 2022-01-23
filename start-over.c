@@ -148,15 +148,16 @@ void startGame(){
 
 
 void gameOver(int winCondition, int score){
-    int i;
+    int i, j;
     int maxStar=100;
     int maxUFO=15;
     int randomXL,randomXR, randomYU, randomYD, randomStar, randomXChooser, randomYChooser;
     int countdown=15;
 
-
+    if (winCondition == DEFEAT)
+        system("aplay sounds/fail1.wav 2> /dev/null &");
  
-    for(i=countdown; i > 0; i--){
+    for(j=countdown; j > 0; j--){
         clear();
 
         for(i=0; i<MAX_X;i++){
