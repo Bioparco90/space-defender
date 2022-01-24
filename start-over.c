@@ -139,7 +139,8 @@ void startGame(){
     
         //mvprintw(y, x, "%s", message);
         countdownPrint(x, y, i);
-        refresh();  
+        refresh();
+        system("aplay sounds/bip.wav 2> /dev/null &");
         sleep(1);
     }
     clear();
