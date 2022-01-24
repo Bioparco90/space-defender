@@ -1,7 +1,4 @@
 #include "global.h"
-#include <curses.h>
-#include <sys/types.h>
-#include <string.h>
 
 char space[6][47]={
     {"  _____   _____                _____   ______ \n"},
@@ -208,13 +205,13 @@ void gameOver(int winCondition, int score){
                             
                     case 3:
                         if(randomXChooser < 500 && randomYChooser < 500)
-                            mvprintw(randomYU,randomXL,"+ ");
+                            mvprintw(randomYU,randomXL,"o ");
                         else if(randomXChooser > 500 && randomYChooser < 500)
-                            mvprintw(randomYU,randomXR,"+ ");
+                            mvprintw(randomYU,randomXR,"o ");
                         else if(randomXChooser < 500 && randomYChooser > 500)
-                            mvprintw(randomYD,randomXL,"+ ");
+                            mvprintw(randomYD,randomXL,"o ");
                         else if(randomXChooser > 500 && randomYChooser > 500)
-                            mvprintw(randomYD, randomXR,"+ ");
+                            mvprintw(randomYD, randomXR,"o ");
                         break;
 
                 }
