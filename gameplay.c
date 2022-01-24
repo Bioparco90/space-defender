@@ -58,6 +58,8 @@ void gameArea(int mainPipe){
         enemy[i].pid = -1;
     }
 
+    system("aplay sounds/gameplay.wav 2> /dev/null &");
+
     // Loop di gioco
 	do{
         read(mainPipe, &data, sizeof(data)); // Lettura ciclica del dato dalla mainPipe
@@ -271,6 +273,8 @@ void gameArea(int mainPipe){
     }
 
     if (player.pid > 0) kill(player.pid, 1);
+
+    system("killall aplay");
 
     gameOver(gameResult, score);
 }
