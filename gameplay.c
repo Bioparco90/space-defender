@@ -1,7 +1,4 @@
 #include "global.h"
-#include <curses.h>
-#include <unistd.h>
-
 
  char playerSprite[3][3]={
          {"/\\ "},
@@ -89,7 +86,7 @@ void gameArea(int mainPipe){
                 enemy[id].y = data.y;
 
                 if (enemy[id].x <= player.x)
-                    gameResult = DEFEAT;
+                    player.lives = 0;
                 break;
 
             //Caso razzo giocatore alto
