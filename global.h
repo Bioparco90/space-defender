@@ -5,7 +5,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 #include <time.h>
+#include <bits/time.h>
+#include <string.h>
 
 #define ENEMIES 25
 #define MAX_X 80
@@ -19,16 +22,16 @@
 #define DIR_UP 1
 #define DIR_DOWN -1
 
-// Macro per la rappresentazione degli oggetti
+// Macro per l'identificazione degli oggetti
 #define PLAYER '+'
 #define ENEMY '<'
 #define ROCKET '*'
 #define ENEMY_ROCKET 'o'
+#define ROCKET_UP 'u'
+#define ROCKET_DOWN 'd'
 
 // Macro proiettili giocatore
 #define MAX_ROCKET 20
-#define ROCKET_UP 'u'
-#define ROCKET_DOWN 'd'
 
 // Macro movimento nemici
 #define HORIZONTAL 1
@@ -37,9 +40,6 @@
 // Macro per i ritardi
 #define ENEMY_DELAY 300000
 #define ROCKET_DELAY 30000
-
-// Macro per file
-#define FILE_LENGTH MAX_X
 
 // Macro condizioni di vittoria
 #define WIN 1
@@ -56,7 +56,7 @@ typedef struct {
 } Object;
 
 // Funzioni libreria player.c
-void playerShip(int fdMain);
+void playerShip(int mainPipe);
 void playerShotInit(int mainPipe, int x, int y, int serial);
 void shot(int mainPipe, int x, int y, int direction, int serial);
 
@@ -65,25 +65,22 @@ void fleetEnlister(int mainPipe);
 void enemyShip(int mainPipe, Object enemy);
 void enemyShot(int mainPipe, int x, int y, int serial);
 
-
 // Funzioni libreria gameplay.c
 void gameArea(int mainPipe);
 
 // Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, int dimRow, int dimCol, char sprite[dimRow][dimCol]);
 void deleteSprite(Object item);
-int isRocket(Object item);
-int checkCollision(Object a, Object b);
-Object resetItem();
-int timeTravelEnemyRocket(int microSeconds);
 void rocketAnimation(int x, int y);
 void printLives(int lives);
+int timeTravelEnemyRocket(int microSeconds);
+int checkCollision(Object a, Object b);
+int isRocket(Object item);
+Object resetItem();
 
 // Funzioni avvio e fine gioco
 void startGame();
 void gameOver(int winCondition, int score);
 void countdownPrint(int x, int y, int count);
-// funzioni prova
-
 
 #endif /* GLOBAL_H */

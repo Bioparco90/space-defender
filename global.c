@@ -1,35 +1,34 @@
 #include "global.h"
-#include <curses.h>
 
-int rocketFrame=1;
+int rocketFrame = 1;
 
-// Le righe commentate servono in caso di sprite 3x3
+// Funzione per la stampa su schermo della sprite
 void printSprite(int posX, int posY, int dimRow, int dimCol, char sprite[dimRow][dimCol]){
-    int row,col;
+    int row, col;
     int x, y;
-    x=posX;
-    y=posY;
+    x = posX;
+    y = posY;
 
-    for(row=0;row<dimRow;row++){
-        for(col=0;col<dimCol;col++){
-            mvaddch(y,x,sprite[row][col]);
+    for(row=0; row<dimRow; row++){
+        for(col=0; col<dimCol; col++){
+            mvaddch(y, x, sprite[row][col]);
             x++;
         }
-        x=posX;
+        x = posX;
         y++;
     }
 }
 
-
+// Funzione per la cancellazione dallo schermo della sprite
 void deleteSprite(Object item){
     int row,col;
     int x, y;
     x = item.x;
     y = item.y;
 
-    for(row=0;row<3;row++){
-        for(col=0;col<3;col++){
-            mvaddch(y,x,' ');
+    for(row=0; row<3; row++){
+        for(col=0; col<3; col++){
+            mvaddch(y, x, ' ');
             x++;
         }
         x = item.x;
@@ -37,10 +36,13 @@ void deleteSprite(Object item){
     }
 }
 
+
+// Funzione per il riconoscimento di razzi amici e nemici
 int isRocket(Object item){
-    return (item.identifier == ROCKET_UP || item.identifier == ROCKET_DOWN || item.identifier == ENEMY_ROCKET); //AGGIUNGERE CASO BOMBA NEMICA SUCCESSIVAMENTE
+    return (item.identifier == ROCKET_UP || item.identifier == ROCKET_DOWN || item.identifier == ENEMY_ROCKET);
 }
 
+// Funzione per la valutazione delle collisioni tra spari e navi.
 // Per un corretto utilizzo, il parametro "a" deve essere quello che "attacca"
 // es: razzo (amico o nemico), nave nemica (collisione con nave giocatore)
 // Il parametro "b" l'oggetto che subisce l'attacco di cui sopra.
@@ -63,6 +65,7 @@ int checkCollision(Object a, Object b){
     return 0;
 }
 
+// Funzione per il reset di un oggetto non più utile al gioco (es. un razzo che ha esaurito il suo ciclo vitale)
 Object resetItem(){
     Object item;
 
@@ -76,37 +79,38 @@ Object resetItem(){
     return item;
 }
 
+// Funzione per il calcolo del tempo, in secondi, impiegato da un razzo a coprire l'intera area di gioco. 
 int timeTravelEnemyRocket(int microSeconds){
     return ((microSeconds * MAX_X) / 1000000);
 }
 
+// Funzione per l'animazione del razzo del giocatore
 void rocketAnimation(int x, int y){
-
     switch(rocketFrame){
-        
         case 1:
-            mvaddch(y,x,'_');
+            mvaddch(y, x, '_');
             rocketFrame++;
             break;
 
         case 2:
-            mvaddch(y,x,'\\');
+            mvaddch(y, x, '\\');
             rocketFrame++;
             break;
 
         case 3:
-            mvaddch(y,x,'/');
-            rocketFrame=1;
+            mvaddch(y, x, '/');
+            rocketFrame = 1;
             break;
     }
 }
 
+//Funzione per la stampa delle vite del giocatore
 void printLives(int lives){
-    int x=0, y=0;
-    mvprintw(y ,x, "Vite: ");
+    int x = 0;
+    int y = 0;
 
+    mvprintw(y ,x, "Vite: ");
     switch(lives){
-        
         case 3:
             attron(COLOR_PAIR(2));
             mvprintw(y,x+7,"<3");

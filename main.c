@@ -1,26 +1,25 @@
 #include "global.h"
-#include <curses.h>
-#include <unistd.h>
 
 int main(){
     pid_t pidPlayerShip;    // Pid processo figlio "nave giocatore" 
     pid_t pidEnemyFleet;    // Pid processo generatore flotta nemica
     int mainPipe[2];        // Pipe generale
 
-    srand(time(NULL));
+    srand(time(NULL));      // Inizializza seed random
 
-    initscr();         // Inizializza schermo di gioco
+    initscr();              // Inizializza schermo di gioco
     start_color();
-    noecho();          // Disabilita visualizzazione tasti premuti
-    keypad(stdscr, 1); // Abilita tasti funzione (frecce)
-    curs_set(0);       // Disabilita visualizzazione cursore
+    noecho();               // Disabilita visualizzazione tasti premuti
+    keypad(stdscr, 1);      // Abilita tasti funzione (frecce)
+    curs_set(0);            // Disabilita visualizzazione cursore
 
-    startGame();
+    startGame();            // Schermata iniziale
 
     // Creazione delle pipe per la comunicazione tra i processi
     if (pipe(mainPipe) < 0) {
         endwin();
-        return 1;
+        printf("Errore creazione pipe\n");
+        return -1;
     }
 
     // Creazione primo processo figlio - Nave giocatore
@@ -29,7 +28,7 @@ int main(){
         case -1:
             endwin();
             printf("Errore creazione processo nave giocatore\n");
-            return 2;
+            return -1;
 
         case 0:
             close(mainPipe[READ]);        // Chiudiamo pipe principale in lettura
@@ -44,7 +43,7 @@ int main(){
                 case -1:
                     endwin();
                     printf("Errore creazione flotta nemica\n");
-                    return 3;
+                    return -1;
 
                 case 0:
                     close(mainPipe[READ]);          // Chiusura pipe in lettura
@@ -54,21 +53,21 @@ int main(){
     }
 
     // Processo principale
-    close(mainPipe[WRITE]);     // Chiudiamo pipe principale in scrittura
+    close(mainPipe[WRITE]);     // Chiusura pipe principale in scrittura
     gameArea(mainPipe[READ]);   // Gestore principale del gioco
 
-    endwin(); // Ripristino del terminale
+    endwin();                   // Ripristino del terminale
 
     // debug terminazione processi
-    pid_t log;
-    log = fork();
-    switch (log){
-        case -1:
-            _exit(1);
+    // pid_t log;
+    // log = fork();
+    // switch (log){
+    //     case -1:
+    //         _exit(1);
         
-        case 0:
-            execl("/bin/ps", "" ,NULL);
-    }
+    //     case 0:
+    //         execl("/bin/ps", "" ,NULL);
+    // }
 
     return 0;
 }
