@@ -157,6 +157,8 @@ void gameOver(int winCondition, int score){
 
     if (winCondition == DEFEAT)
         system("aplay sounds/fail1.wav 2> /dev/null &");
+    else 
+        system("aplay sounds/win.wav 2> /dev/null &");
  
     for(j=countdown; j > 0; j--){
         clear();
@@ -260,5 +262,6 @@ void gameOver(int winCondition, int score){
         refresh();  
         sleep(1);
     }
+    system("killall aplay");
 }
 
