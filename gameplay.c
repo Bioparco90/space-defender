@@ -55,7 +55,10 @@ void gameArea(int mainPipe){
         enemy[i].pid = -1;
     }
 
+    //start audio
+    struct timespec start, end;
     system("aplay sounds/gameplay.wav 2> /dev/null &");
+    clock_gettime(CLOCK_REALTIME, &start);
 
     // Loop di gioco
 	do{
@@ -250,6 +253,13 @@ void gameArea(int mainPipe){
         printLives(player.lives);
         mvprintw(0, MAX_X - 15, "Score: %d", score);
         refresh(); 
+
+        // restart audio
+        clock_gettime(CLOCK_REALTIME, &end);
+        if (end.tv_sec - start.tv_sec >= 23){
+            system("aplay sounds/gameplay.wav 2> /dev/null &");
+            start = end;
+        }
 
         if (!enemyCounter)
             gameResult = WIN;
