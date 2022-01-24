@@ -12,7 +12,7 @@
 void fleetEnlister(int mainPipe){
     Object enemy[ENEMIES];
     pid_t pidEnemyShip[ENEMIES];
-    int posX = MAX_X;
+    int posX = MAX_X - 2;
     int posY = 2;
     int i;
     
