@@ -1,17 +1,23 @@
 #include "global.h"
-#include <sys/types.h>
-#include <unistd.h>
 
 void playerShip(int fdMain){
-    struct Object ship;
+    Object ship;
+    int serial;
+
+    // Test clock
+    struct timespec time, checker;
+
+    clock_gettime(CLOCK_REALTIME, &time);    
     
     // Inizializzazione nave giocatore
     ship.x = 1;
     ship.y = MAX_Y / 2;
     ship.identifier = PLAYER;
-    ship.lives = 3;
     ship.pid = getpid();
     ship.serial = 777;
+
+    // Inizializzazione serial razzi giocatore
+    serial = 0;
 
     write(fdMain, &ship, sizeof(ship)); // Prima scrittura nella mainPipe
 
@@ -29,54 +35,79 @@ void playerShip(int fdMain){
                 break;
 
             case ' ':
-                playerShotInit(fdMain, ship.x, ship.y);
+                clock_gettime(CLOCK_REALTIME, &checker);
+                if (serial == 0){
+                    system("aplay sounds/laser.wav 2> /dev/null &");
+                    playerShotInit(fdMain, ship.x, ship.y, serial);
+                    serial++;
+                    time = checker;
+                }
+                if (checker.tv_sec - time.tv_sec >= 1){
+                    system("aplay sounds/laser.wav 2> /dev/null &");
+                    playerShotInit(fdMain, ship.x, ship.y, serial);
+                    serial++;
+                    time = checker;
+                }
                 break;
         }
+        if(serial >= MAX_ROCKET)
+            serial = 0;
         write(fdMain, &ship, sizeof(ship)); // Scrittura ciclica sulla mainPipe passata al loop di gioco
     }
 }
 
-// Funzione da rivedere. Prossimo compito
-void shot(int mainPipe, int x, int y, int direction){
-    struct Object rocket;
+void playerShotInit(int mainPipe, int x, int y, int serial){
+    pid_t pidRocketUp, pidRocketDown;
 
-	rocket.x = x + 1;
-	rocket.y = y + direction;
-    rocket.identifier = ROCKET;
-    rocket.lives = 1;
-    rocket.pid = getpid();
+    pidRocketUp = fork();
+    switch (pidRocketUp){
+        case -1:
+            _exit(-1);
+            break;
 
-    write(mainPipe, &rocket, sizeof(rocket));
-    while(rocket.x < MAX_X - 1 && (rocket.y >= 2 && rocket.y <= MAX_Y - 1)){
-		rocket.x += 9;
-        rocket.y += direction;
-        write(mainPipe, &rocket, sizeof(rocket));
-		usleep(100000);
+        case 0:
+            shot(mainPipe, x, y, DIR_UP, serial);
+            _exit(0);
+            break;
+
+        default:
+            pidRocketDown = fork();
+            switch (pidRocketDown){
+                case -1:
+                    _exit(-1);
+                    break;
+
+                case 0:
+                    shot(mainPipe, x, y, DIR_DOWN, serial);
+                    _exit(0);
+                    break;
+            }
     }
 }
 
-void playerShotInit(int mainPipe, int x, int y){
-    pid_t pidRocketUp, pidRocketDown;
+// Funzione da rivedere. Prossimo compito
+void shot(int mainPipe, int x, int y, int direction, int serial){
+    Object rocket;
 
-    switch (pidRocketUp = fork()){
-        case -1:
-            _exit(-1);
-            break;
+    if(direction == DIR_UP)
+        rocket.identifier = ROCKET_UP;
+    else
+        rocket.identifier = ROCKET_DOWN;
 
-        case 0:
-            shot(mainPipe, x, y, DIR_UP);
-            _exit(0);
-            break;
-    }
+    rocket.x = x + 2;
+   	rocket.y = y + 1 + direction;
+    rocket.lives = 1;
+    rocket.pid = getpid();
+    rocket.serial = serial;
 
-    switch (pidRocketDown = fork()){
-        case -1:
-            _exit(-1);
-            break;
-
-        case 0:
-            shot(mainPipe, x, y, DIR_DOWN);
-            _exit(0);
-            break;
+    write(mainPipe, &rocket, sizeof(rocket));
+    while(true){
+        if((rocket.y < 2 || rocket.y > MAX_Y)){
+            direction *= -1;
+        }
+        rocket.x += 1;
+        rocket.y += direction;
+        write(mainPipe, &rocket, sizeof(rocket));
+		usleep(ROCKET_DELAY);
     }
 }

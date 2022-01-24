@@ -1,19 +1,21 @@
 #include "global.h"
-#include <stdio.h>
+#include <bits/time.h>
+#include <curses.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 // Funzione per la generazione delle navi.
 // Si occupa della posizione iniziale di spawn e di settare tutti i valori iniziali
 // di ogni singola nave. 
 void fleetEnlister(int mainPipe){
-    struct Object enemy[ENEMIES];
+    Object enemy[ENEMIES];
     pid_t pidEnemyShip[ENEMIES];
-    int posX = MAX_X;
+    int posX = MAX_X - 2;
     int posY = 2;
     int i;
-
+    
     for(i=0; i<ENEMIES; i++){
         pidEnemyShip[i] = fork();
         switch(pidEnemyShip[i]){
@@ -31,22 +33,30 @@ void fleetEnlister(int mainPipe){
                 enemy[i].identifier = ENEMY;
                 enemyShip(mainPipe, enemy[i]);
         }
-        posY += 2;
+        posY += 4;
         if(posY >= MAX_Y -1) {
-            posX += 7;
+            posX -= 8;
             posY = 2;
         }
         
     }
+    for (i=0; i<ENEMIES; i++)
+        waitpid(enemy[i].pid, NULL, 0);
 }
 
-void enemyShip(int mainPipe, struct Object enemy){
-    int direction = 1;      // Direzione nave: 1 -> basso, -1 -> alto
-    int flag = VERTICAL;    // Flag da sfruttare per gestire il movimento verticale senza il fastidioso movimento diagonale       
+void enemyShip(int mainPipe,  Object enemy){
+    int direction = 1;              // Direzione nave: 1 -> basso, -1 -> alto
+    int flag = VERTICAL;            // Flag da sfruttare per gestire il movimento verticale
+    struct timespec start, end;     // Utilizzate per scandire il tempo minimo tra uno sparo e l'altro
+    struct timespec start2, end2;   // Utilizzate come countdown per il cambio di velocità del movimento nemico
+    int timeTravel;
+    int delay = ENEMY_DELAY;
+
+    clock_gettime(CLOCK_REALTIME, &start);
+    clock_gettime(CLOCK_REALTIME, &start2);
 
     write(mainPipe, &enemy, sizeof(enemy));             // Prima scrittura nella mainPipe
     while(true){                                        // Loop movimento nave nemica
-        // read(mainPipe, &enemy, sizeof(enemy));         // Lettura dei dati provenienti dal loop di gioco
         switch (flag){
             case VERTICAL:                              // Movimento verticale
                 enemy.y += direction;                   // Aggiornamento coordinata Y
@@ -61,7 +71,50 @@ void enemyShip(int mainPipe, struct Object enemy){
                 break;
         }
 
+        // ------ sparo nemico ------ 
+        clock_gettime(CLOCK_REALTIME, &end);
+        timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1){
+            if (rand()%ENEMIES == enemy.serial){
+                enemyShot(mainPipe, enemy.x, enemy.y, enemy.serial);
+                start = end;
+            }
+        }
+
+        clock_gettime(CLOCK_REALTIME, &end2);
+        if (end2.tv_sec - start2.tv_sec >= 7){
+            delay *= 0.8; // navi 20% più veloci
+            start2 = end2;
+        }
         write(mainPipe, &enemy, sizeof(enemy));
-        usleep(ENEMY_DELAY);
+        usleep(delay);
+    }
+}
+
+void enemyShot(int mainPipe, int x, int y, int serial){
+    pid_t pidEnemyShot;
+    Object shot;
+
+    pidEnemyShot = fork();
+    switch (pidEnemyShot){
+        case -1:
+            endwin();
+            printf("Errore creazione missile nemico\n");
+            exit(1);
+    
+        case 0:
+            shot.x = x - 2;
+            shot.y = y + 1;
+            shot.identifier = ENEMY_ROCKET;
+            shot.pid = getpid();
+            shot.serial = serial;
+
+            write(mainPipe, &shot, sizeof(shot));
+            while (true){
+                shot.x -= 1;
+                write(mainPipe, &shot, sizeof(shot));
+                usleep(ROCKET_DELAY);
+            }
+            _exit(0);
     }
 }
