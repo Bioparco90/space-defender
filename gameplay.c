@@ -86,7 +86,7 @@ void gameArea(int mainPipe){
                 enemy[id].x = data.x;                                       // Aggiornamento dell'array dei nemici con i valori del nemico attuale (coordinate X)
                 enemy[id].y = data.y;                                       // Aggiornamento dell'array dei nemici con i valori del nemico attuale (coordinate Y)
 
-                if (enemy[id].x <= 1)                                // Controllo raggiungimento colonna giocatore
+                if (enemy[id].x <= 1)                                       // Controllo raggiungimento colonna giocatore
                     player.lives = 0;                                       // Sconfitta del giocatore
                 break;
 
