@@ -153,7 +153,7 @@ void gameOver(int winCondition, int score){
     int countdown=15;
 
     init_pair(1,COLOR_RED,COLOR_BLACK);
-    init_pair(2,COLOR_YELLOW,COLOR_BLACK);
+    init_pair(3,COLOR_YELLOW,COLOR_BLACK);
 
     if (winCondition == DEFEAT)
         system("aplay sounds/fail1.wav 2> /dev/null &");
@@ -171,7 +171,7 @@ void gameOver(int winCondition, int score){
 
         if(winCondition==WIN){
                         
-            attron(COLOR_PAIR(2));
+            attron(COLOR_PAIR(3));
             for(i=0;i<maxStar;i++){
                         
                 randomXL=rand()%(MAX_X/2)+1;
@@ -222,7 +222,7 @@ void gameOver(int winCondition, int score){
             }
 
                 mvprintw(MAX_Y/2,MAX_X/2-10,"V I T T O R I A");
-                attroff(COLOR_PAIR(2));
+                attroff(COLOR_PAIR(3));
                 mvprintw(MAX_Y/2+1,MAX_X/2-10,"Punteggio: %d", score);
                 
 
