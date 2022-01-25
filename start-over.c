@@ -28,13 +28,6 @@ char defender[6][70]={
 };
 
 void countdownPrint(int x, int y, int count){
-    
-    init_pair(1,COLOR_RED,COLOR_BLACK);
-    init_pair(2,COLOR_YELLOW,COLOR_BLACK);
-    init_pair(3,COLOR_GREEN,COLOR_BLACK);
-    init_pair(4,COLOR_CYAN,COLOR_BLACK);
-    init_pair(5, COLOR_MAGENTA,COLOR_BLACK);
-    init_pair(6,COLOR_BLUE, COLOR_BLACK);
 
     init_pair(7,COLOR_BLACK,COLOR_RED);
     init_pair(8,COLOR_BLACK,COLOR_YELLOW);
@@ -84,6 +77,13 @@ void startGame(){
     int countdown=3;
     x = MAX_X/5;
     y = 4;
+
+    init_pair(1,COLOR_RED,COLOR_BLACK);
+    init_pair(2,COLOR_YELLOW,COLOR_BLACK);
+    init_pair(3,COLOR_GREEN,COLOR_BLACK);
+    init_pair(4,COLOR_CYAN,COLOR_BLACK);
+    init_pair(5, COLOR_MAGENTA,COLOR_BLACK);
+    init_pair(6,COLOR_BLUE, COLOR_BLACK);
 
     
     for (i=countdown; i>0; i--){
@@ -152,6 +152,9 @@ void gameOver(int winCondition, int score){
     int randomXL,randomXR, randomYU, randomYD, randomStar, randomXChooser, randomYChooser;
     int countdown=15;
 
+    init_pair(1,COLOR_RED,COLOR_BLACK);
+    init_pair(2,COLOR_YELLOW,COLOR_BLACK);
+
     if (winCondition == DEFEAT)
         system("aplay sounds/fail1.wav 2> /dev/null &");
     else 
@@ -168,7 +171,7 @@ void gameOver(int winCondition, int score){
 
         if(winCondition==WIN){
                         
-            attron(COLOR_PAIR(3));
+            attron(COLOR_PAIR(2));
             for(i=0;i<maxStar;i++){
                         
                 randomXL=rand()%(MAX_X/2)+1;
@@ -219,7 +222,7 @@ void gameOver(int winCondition, int score){
             }
 
                 mvprintw(MAX_Y/2,MAX_X/2-10,"V I T T O R I A");
-                attroff(COLOR_PAIR(3));
+                attroff(COLOR_PAIR(2));
                 mvprintw(MAX_Y/2+1,MAX_X/2-10,"Punteggio: %d", score);
                 
 
