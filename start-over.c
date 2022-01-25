@@ -257,14 +257,11 @@ void gameOver(int winCondition, int score){
                     mvprintw(randomYD,randomXL,"_/\\_ ");
                 else if(randomXChooser > 500 && randomYChooser > 500)
                     mvprintw(randomYD, randomXR,"_/\\_ ");
-                                            
-
             }
         
             mvprintw(MAX_Y/2,MAX_X/2-10,"S E I  M O R T O");
             attroff(COLOR_PAIR(1));
             mvprintw(MAX_Y/2+1,MAX_X/2-10,"Punteggio: %d",score);
-        
         }
         refresh();  
         sleep(1);
