@@ -78,7 +78,7 @@ int checkCollision(Object a, Object b);
 int isRocket(Object item);
 Object resetItem();
 
-// Funzioni avvio e fine gioco
+// Funzioni avvio e fine gioco (start-over.c)
 void startGame();
 void gameOver(int winCondition, int score);
 void countdownPrint(int x, int y, int count);
