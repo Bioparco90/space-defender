@@ -24,6 +24,7 @@ char enemySpriteLv2Damaged[3][3]={
     {" |="}
 };
 
+// Funzione gestore di gioco
 void gameArea(int mainPipe){
     // Variabili salvataggio oggetti
 	Object data, enemy[ENEMIES], player;
