@@ -31,7 +31,6 @@ void fleetEnlister(int mainPipe){
             posX -= 8;          // Prossima colonna di navi
             posY = 2;           // Prima posizione della colonna (nave di testa)
         }
-        
     }
 
     // Ciclo per l'attesa della terminazione di tutti i processi figli (navi)
