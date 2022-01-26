@@ -9,7 +9,7 @@ void playerShip(int mainPipe){
     clock_gettime(CLOCK_REALTIME, &time);   // Rilevazione iniziale del tempo
     
     // Inizializzazione nave giocatore
-    ship.x = 1;
+    ship.x = 2;
     ship.y = MAX_Y / 2;
     ship.identifier = PLAYER;
     ship.pid = getpid();
