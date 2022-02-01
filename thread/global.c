@@ -1,5 +1,13 @@
 #include "global.h"
 
+pthread_mutex_t mutex;
+Object player;
+Object enemy[ENEMIES];
+Object rocketUp[MAX_ROCKET];
+Object rocketDown[MAX_ROCKET];
+Object enemyRocket[ENEMIES];
+int enemyCounter;
+
 int rocketFrame = 1;
 
 // Funzione per la stampa su schermo della sprite
