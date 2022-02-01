@@ -1,9 +1,7 @@
 #include "global.h"
 
 int main(){
-    pid_t pidPlayerShip;    // Pid processo figlio "nave giocatore" 
-    pid_t pidEnemyFleet;    // Pid processo generatore flotta nemica
-    int mainPipe[2];        // Pipe generale
+    pthread_t thPlayerShip;   
 
     srand(time(NULL));      // Inizializza seed random
 
@@ -13,61 +11,24 @@ int main(){
     keypad(stdscr, 1);      // Abilita tasti funzione (frecce)
     curs_set(0);            // Disabilita visualizzazione cursore
 
-    startGame();            // Schermata iniziale
+    // startGame();            // Schermata iniziale
 
-    // Creazione delle pipe per la comunicazione tra i processi
-    if (pipe(mainPipe) < 0) {
+    pthread_mutex_init(&mutex, NULL);
+
+    // Inizializzare vite oggetti globali qui
+    player.lives = 3;
+
+    if (pthread_create(&thPlayerShip, NULL, &playerShip, NULL)){
         endwin();
-        printf("Errore creazione pipe\n");
-        return -1;
+        exit;
     }
 
-    // Creazione primo processo figlio - Nave giocatore
-    pidPlayerShip = fork();
-    switch (pidPlayerShip){
-        case -1:
-            endwin();
-            printf("Errore creazione processo nave giocatore\n");
-            return -1;
 
-        case 0:
-            close(mainPipe[READ]);        // Chiudiamo pipe principale in lettura
-            playerShip(mainPipe[WRITE]);  // Gestore movimento nave giocatore
-            _exit(0);
-
-        default:
-        
-            // Creazione secondo processo figlio "flotta nemica"
-            pidEnemyFleet = fork();
-            switch(pidEnemyFleet){
-                case -1:
-                    endwin();
-                    printf("Errore creazione flotta nemica\n");
-                    return -1;
-
-                case 0:
-                    close(mainPipe[READ]);          // Chiusura pipe in lettura
-                    fleetEnlister(mainPipe[WRITE]); // Generatore flotta
-                    _exit(0);
-            }
-    }
-
-    // Processo principale
-    close(mainPipe[WRITE]);     // Chiusura pipe principale in scrittura
-    gameArea(mainPipe[READ]);   // Gestore principale del gioco
+    gameArea();   // Gestore principale del gioco
 
     endwin();                   // Ripristino del terminale
 
-    // debug terminazione processi
-    // pid_t log;
-    // log = fork();
-    // switch (log){
-    //     case -1:
-    //         _exit(1);
-        
-    //     case 0:
-    //         execl("/bin/ps", "" ,NULL);
-    // }
+    pthread_mutex_destroy(&mutex);
 
     return 0;
 }
