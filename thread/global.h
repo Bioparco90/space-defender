@@ -56,9 +56,10 @@ typedef struct {
 } Object;
 
 // Funzioni libreria player.c
-void playerShip(int mainPipe);
-void playerShotInit(int mainPipe, int x, int y, int serial);
-void shot(int mainPipe, int x, int y, int direction, int serial);
+void* playerShip();
+void playerShotInit(int x, int y, int serial);
+void* shotUp(void* param);
+void* shotDown(void* param);
 
 // Funzioni libreria enemies.c
 void fleetEnlister(int mainPipe);
@@ -66,7 +67,7 @@ void enemyShip(int mainPipe, Object enemy);
 void enemyShot(int mainPipe, int x, int y, int serial);
 
 // Funzioni libreria gameplay.c
-void gameArea(int mainPipe);
+void gameArea();
 
 // Funzioni di utilità globale (global.c)
 void printSprite(int posX, int posY, int dimRow, int dimCol, char sprite[dimRow][dimCol]);
@@ -82,5 +83,24 @@ Object resetItem();
 void startGame();
 void gameOver(int winCondition, int score);
 void countdownPrint(int x, int y, int count);
+
+//----------------thread area------------------
+#include <pthread.h>
+
+extern pthread_mutex_t mutex;
+
+extern Object player;
+extern Object enemy[ENEMIES];
+extern Object rocketUp[MAX_ROCKET];
+extern Object rocketDown[MAX_ROCKET];
+extern Object enemyRocket[ENEMIES];
+extern int enemyCounter;
+
+typedef struct{
+    int x;
+    int y;
+    int dir;
+    int serial;
+} ShotArgs;
 
 #endif /* GLOBAL_H */
