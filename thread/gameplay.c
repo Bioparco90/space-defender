@@ -108,7 +108,7 @@ void gameArea(){
         
         // Area nemici
         for (i=0; i<ENEMIES; i++){
-            if (tmpEnemy[i].y != enemy[i].y || tmpEnemy[i].x != enemy[i].x){
+            if (enemy[i].lives && (tmpEnemy[i].y != enemy[i].y || tmpEnemy[i].x != enemy[i].x)){
                 pthread_mutex_lock(&mutex);
                 deleteSprite(tmpEnemy[i]);
                 pthread_mutex_unlock(&mutex);
