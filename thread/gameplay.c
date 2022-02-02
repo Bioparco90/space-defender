@@ -122,18 +122,19 @@ void gameArea(){
         }
 
         // Area razzi nemici
-        // for (i=0; i<ENEMIES; i++){
-        //     if (tmpEnemyRocket[i].x != enemyRocket[i].x){
-        //         pthread_mutex_lock(&mutex);
-        //         mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ' ');
-        //         pthread_mutex_unlock(&mutex);
+        for (i=0; i<ENEMIES; i++){
+            if (tmpEnemyRocket[i].x != enemyRocket[i].x){
+                pthread_mutex_lock(&mutex);
+                mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ' ');
+                pthread_mutex_unlock(&mutex);
 
-        //         tmpEnemyRocket[i] = enemyRocket[i];
+                tmpEnemyRocket[i] = enemyRocket[i];
 
-        //         pthread_mutex_lock(&mutex);
-        //         mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ROCKET);
-        //     }
-        // }
+                pthread_mutex_lock(&mutex);
+                mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ROCKET);
+                pthread_mutex_unlock(&mutex);
+            }
+        }
 
         printLives(player.lives);
         mvprintw(0, MAX_X - 15, "Score: %d", score);
