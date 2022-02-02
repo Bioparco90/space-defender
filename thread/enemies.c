@@ -41,9 +41,11 @@ void* enemyShip(void* param){
     arg = (Args*) param;
 
     id = arg->serial;
+    pthread_mutex_lock(&mutex);
     enemy[id].x = arg->x;
     enemy[id].y = arg->y;
     enemy[id].serial = arg->serial;
+    pthread_mutex_unlock(&mutex);
 
     // Rilevazioni iniziali del tempo
     clock_gettime(CLOCK_REALTIME, &start);                  // Rilevazione per il tempo degli spari
@@ -53,17 +55,23 @@ void* enemyShip(void* param){
     while(enemy[id].lives){ // Loop movimento nave nemica
         switch (flag){
             case VERTICAL:                                  // Movimento verticale
-                enemy[id].y += direction;                       // Aggiornamento coordinata Y
-                if (enemy[id].y <= 2 || enemy[id].y > MAX_Y - 1)    // Verifica collisione bordi
+                arg->y += direction;                       // Aggiornamento coordinata Y
+                if (arg->y <= 2 || arg->y > MAX_Y - 1)    // Verifica collisione bordi
                     flag = HORIZONTAL;                      // Eventuale modifica del valore flag, che ci manderà al movimento orizzontale
                 break;
 
             case HORIZONTAL:        // Movimento orizzontale
-                enemy[id].x -= 4;   // Aggiornamento coordinata X
+                arg->x -= 4;   // Aggiornamento coordinata X
                 direction *= -1;    // Rimbalzo sul bordo
                 flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
                 break;
         }
+
+        pthread_mutex_lock(&mutex);
+        enemy[id].x = arg->x;
+        enemy[id].y = arg->y;
+        enemy[id].serial = arg->serial;
+        pthread_mutex_unlock(&mutex);
 
         // Sparo nemico 
         clock_gettime(CLOCK_REALTIME, &end);                            // Rilevazione del tempo trascorso dalla precedente rilevazione (spari)
