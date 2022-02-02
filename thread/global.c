@@ -1,7 +1,6 @@
 #include "global.h"
 
 pthread_mutex_t mutex;
-pthread_mutex_t mutexNemici;
 Object player;
 Object enemy[ENEMIES];
 Object rocketUp[MAX_ROCKET];

@@ -109,15 +109,15 @@ void gameArea(){
         // Area nemici
         for (i=0; i<ENEMIES; i++){
             if (tmpEnemy[i].y != enemy[i].y || tmpEnemy[i].x != enemy[i].x){
-                pthread_mutex_lock(&mutexNemici);
+                pthread_mutex_lock(&mutex);
                 deleteSprite(tmpEnemy[i]);
-                pthread_mutex_unlock(&mutexNemici);
+                pthread_mutex_unlock(&mutex);
 
                 tmpEnemy[i] = enemy[i];
 
-                pthread_mutex_lock(&mutexNemici);
+                pthread_mutex_lock(&mutex);
                 printSprite(tmpEnemy[i].x, tmpEnemy[i].y, 3, 3, enemySpriteLv1);
-                pthread_mutex_unlock(&mutexNemici);
+                pthread_mutex_unlock(&mutex);
             }
         }
 
