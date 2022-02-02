@@ -62,9 +62,9 @@ void* shotUp(void* param);
 void* shotDown(void* param);
 
 // Funzioni libreria enemies.c
-void fleetEnlister(int mainPipe);
-void enemyShip(int mainPipe, Object enemy);
-void enemyShot(int mainPipe, int x, int y, int serial);
+void fleetEnlister();
+void* enemyShip(void* param);
+void* enemyShot(void* param);
 
 // Funzioni libreria gameplay.c
 void gameArea();
@@ -101,6 +101,6 @@ typedef struct{
     int y;
     int dir;
     int serial;
-} ShotArgs;
+} Args;
 
 #endif /* GLOBAL_H */
