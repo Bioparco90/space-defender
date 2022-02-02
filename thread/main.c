@@ -15,6 +15,7 @@ int main(){
     // startGame();            // Schermata iniziale
 
     pthread_mutex_init(&mutex, NULL);
+    pthread_mutex_init(&mutexNemici, NULL);
 
     // Inizializzare vite oggetti globali qui
     player.lives = 3;

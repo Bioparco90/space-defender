@@ -88,6 +88,7 @@ void countdownPrint(int x, int y, int count);
 #include <pthread.h>
 
 extern pthread_mutex_t mutex;
+extern pthread_mutex_t mutexNemici;
 
 extern Object player;
 extern Object enemy[ENEMIES];

@@ -41,11 +41,11 @@ void* enemyShip(void* param){
     arg = (Args*) param;
 
     id = arg->serial;
-    pthread_mutex_lock(&mutex);
+    pthread_mutex_lock(&mutexNemici);
     enemy[id].x = arg->x;
     enemy[id].y = arg->y;
     enemy[id].serial = arg->serial;
-    pthread_mutex_unlock(&mutex);
+    pthread_mutex_unlock(&mutexNemici);
 
     // Rilevazioni iniziali del tempo
     clock_gettime(CLOCK_REALTIME, &start);                  // Rilevazione per il tempo degli spari
@@ -67,11 +67,11 @@ void* enemyShip(void* param){
                 break;
         }
 
-        pthread_mutex_lock(&mutex);
+        pthread_mutex_lock(&mutexNemici);
         enemy[id].x = arg->x;
         enemy[id].y = arg->y;
         enemy[id].serial = arg->serial;
-        pthread_mutex_unlock(&mutex);
+        pthread_mutex_unlock(&mutexNemici);
 
         // Sparo nemico 
         clock_gettime(CLOCK_REALTIME, &end);                            // Rilevazione del tempo trascorso dalla precedente rilevazione (spari)
