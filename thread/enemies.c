@@ -101,6 +101,7 @@ void* enemyShot(void* param){
     // Inizializzazione razzo
     enemyRocket[id].x = arg->x - 2;
     enemyRocket[id].y = arg->y + 1;
+    enemyRocket[id].lives = 1;
     enemyRocket[id].serial = arg->serial;
 
     while (enemyRocket[id].lives && enemyRocket[id].x > 0){                               // Loop movimento razzo
