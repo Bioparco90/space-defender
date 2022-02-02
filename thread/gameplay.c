@@ -68,12 +68,14 @@ void gameArea(){
         if (tmpPlayer.y != player.y){
             pthread_mutex_lock(&mutex);
             deleteSprite(tmpPlayer);
+            refresh();
             pthread_mutex_unlock(&mutex);
 
             tmpPlayer = player;
 
             pthread_mutex_lock(&mutex);
             printSprite(tmpPlayer.x, tmpPlayer.y, 3, 3, playerSprite);
+            refresh();
             pthread_mutex_unlock(&mutex);
         }
 
@@ -82,12 +84,14 @@ void gameArea(){
             if (tmpRocketUp[i].x != rocketUp[i].x || tmpRocketUp[i].y != rocketUp[i].y){
                 pthread_mutex_lock(&mutex);
                 mvaddch(tmpRocketUp[i].y, tmpRocketUp[i].x, ' ');
+                refresh();
                 pthread_mutex_unlock(&mutex);
 
                 tmpRocketUp[i] = rocketUp[i];
 
                 pthread_mutex_lock(&mutex);
                 rocketAnimation(tmpRocketUp[i].x, tmpRocketUp[i].y);
+                refresh();
                 pthread_mutex_unlock(&mutex);
             }
         }
@@ -96,12 +100,14 @@ void gameArea(){
             if (tmpRocketDown[i].x != rocketDown[i].x || tmpRocketDown[i].y != rocketDown[i].y){
                 pthread_mutex_lock(&mutex);
                 mvaddch(tmpRocketDown[i].y, tmpRocketDown[i].x, ' ');
+                refresh();
                 pthread_mutex_unlock(&mutex);
 
                 tmpRocketDown[i] = rocketDown[i];
 
                 pthread_mutex_lock(&mutex);
                 rocketAnimation(tmpRocketDown[i].x, tmpRocketDown[i].y);
+                refresh();
                 pthread_mutex_unlock(&mutex);
             }
         }
@@ -111,12 +117,14 @@ void gameArea(){
             if (tmpEnemy[i].y != enemy[i].y || tmpEnemy[i].x != enemy[i].x){
                 pthread_mutex_lock(&mutex);
                 deleteSprite(tmpEnemy[i]);
+                refresh();
                 pthread_mutex_unlock(&mutex);
 
                 tmpEnemy[i] = enemy[i];
 
                 pthread_mutex_lock(&mutex);
                 printSprite(tmpEnemy[i].x, tmpEnemy[i].y, 3, 3, enemySpriteLv1);
+                refresh();
                 pthread_mutex_unlock(&mutex);
             }
         }
