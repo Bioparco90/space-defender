@@ -17,7 +17,7 @@ void* playerShip(){
     serial = 0;                         // Inizializzazione serial razzi giocatore
 
     // Ciclo movimento e sparo
-    while(player.lives && enemyCounter){
+    while(player.lives){
         int c = getch();
 
         switch (c){
@@ -50,33 +50,34 @@ void* playerShip(){
         if(serial >= MAX_ROCKET)            // Verifica se sia stato raggiunto il limite di spari esistenti in uno stesso momento
             serial = 0;                     // L'indicizzazione riparte da 0
     }
+    return NULL;
 }
 
 // Funzione per l'inizializzazione degli spari diagonali
 void playerShotInit(int x, int y, int serial){
     pthread_t thRocketUp[MAX_ROCKET], thRocketDown[MAX_ROCKET];
 
-    ShotArgs argsUp = {x, y, DIR_UP, serial};
-    ShotArgs argsDown = {x, y, DIR_DOWN, serial};
+    Args argsUp = {x, y, DIR_UP, serial};
+    Args argsDown = {x, y, DIR_DOWN, serial};
 
     if (pthread_create(&thRocketUp[serial], NULL, &shotUp, &argsUp)){
         endwin();
-        exit;
+        exit(1);
     }
 
     if (pthread_create(&thRocketDown[serial], NULL, &shotDown, &argsDown)){
         endwin();
-        exit;
+        exit(1);
     }
 }
 
 // Funzione per la gestione del movimento del singolo razzo
 void* shotUp(void* param){
-    ShotArgs* args;
+    Args* args;
     int id;
     int direction;
     
-    args = (ShotArgs*) param;
+    args = (Args*) param;
 
     id = args->serial;
     direction = args->dir;
@@ -96,14 +97,15 @@ void* shotUp(void* param){
 
 		usleep(ROCKET_DELAY);                                   // Delay movimento razzo
     }
+    return NULL;
 }
 
 void* shotDown(void* param){
-    ShotArgs* args;
+    Args* args;
     int id;
     int direction;
     
-    args = (ShotArgs*) param;
+    args = (Args*) param;
 
     id = args->serial;
     direction = args->dir;
@@ -123,4 +125,5 @@ void* shotDown(void* param){
 
 		usleep(ROCKET_DELAY);                                       // Delay movimento razzo
     }
+    return NULL;
 }
