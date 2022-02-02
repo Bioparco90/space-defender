@@ -1,4 +1,5 @@
 #include "global.h"
+#include <pthread.h>
 
  char playerSprite[3][3]={
          {"/\\ "},
@@ -63,6 +64,7 @@ void gameArea(){
 
     do{
         
+        // Area giocatore
         if (tmpPlayer.y != player.y){
             pthread_mutex_lock(&mutex);
             deleteSprite(tmpPlayer);
@@ -75,6 +77,7 @@ void gameArea(){
             pthread_mutex_unlock(&mutex);
         }
 
+        // Area razzi giocatore
         for (i=0; i<MAX_ROCKET; i++){
             if (tmpRocketUp[i].x != rocketUp[i].x || tmpRocketUp[i].y != rocketUp[i].y){
                 pthread_mutex_lock(&mutex);
@@ -100,6 +103,35 @@ void gameArea(){
                 pthread_mutex_lock(&mutex);
                 rocketAnimation(tmpRocketDown[i].x, tmpRocketDown[i].y);
                 pthread_mutex_unlock(&mutex);
+            }
+        }
+        
+        // Area nemici
+        for (i=0; i<ENEMIES; i++){
+            if (tmpEnemy[i].y != enemy[i].y || tmpEnemy[i].x != enemy[i].x){
+                pthread_mutex_lock(&mutex);
+                deleteSprite(tmpEnemy[i]);
+                pthread_mutex_unlock(&mutex);
+
+                tmpEnemy[i] = enemy[i];
+
+                pthread_mutex_lock(&mutex);
+                printSprite(tmpEnemy[i].x, tmpEnemy[i].y, 3, 3, enemySpriteLv1);
+                pthread_mutex_unlock(&mutex);
+            }
+        }
+
+        // Area razzi nemici
+        for (i=0; i<ENEMIES; i++){
+            if (tmpEnemyRocket[i].x != enemyRocket[i].x){
+                pthread_mutex_lock(&mutex);
+                mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ' ');
+                pthread_mutex_unlock(&mutex);
+
+                tmpEnemyRocket[i] = enemyRocket[i];
+
+                pthread_mutex_lock(&mutex);
+                mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ROCKET);
             }
         }
 
