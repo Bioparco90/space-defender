@@ -4,20 +4,20 @@
 // Funzione per l'inizializzazione, la generazione e il posizionamento iniziale delle navi nemiche.
 void fleetEnlister(){
     pthread_t thEnemyShip[ENEMIES];
-    Args arg[ENEMIES];
+    Args arg;
     int posX = MAX_X - 2;
     int posY = 2;
     int i;
 
     for (i=0; i<ENEMIES; i++){
-        arg[i].x = posX;
-        arg[i].y = posY;
-        arg[i].serial = i;
-        if (pthread_create(&thEnemyShip[i], NULL, &enemyShip, &arg[i])){
+        arg.x = posX;
+        arg.y = posY;
+        arg.serial = i;
+        if (pthread_create(&thEnemyShip[i], NULL, &enemyShip, &arg)){
             endwin();
             exit(1);
         }
-        posX += 4;
+        posY += 4;
         if (posY >= MAX_Y - 1){
             posX -= 8;
             posY = 2;
