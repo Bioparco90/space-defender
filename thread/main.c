@@ -20,6 +20,7 @@ int main(){
     player.lives = 3;
     for (i=0; i<ENEMIES; i++){
         enemy[i].lives = 3;
+        enemyRocket[i].lives = 1;
     }
 
     if (pthread_create(&thPlayerShip, NULL, &playerShip, NULL)){

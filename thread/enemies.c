@@ -2,18 +2,18 @@
 #include <curses.h>
 
 // Funzione per l'inizializzazione, la generazione e il posizionamento iniziale delle navi nemiche.
-void fleetEnlister(int mainPipe){
+void fleetEnlister(){
     pthread_t thEnemyShip[ENEMIES];
-    Args arg;
+    Args arg[ENEMIES];
     int posX = MAX_X - 2;
     int posY = 2;
     int i;
 
     for (i=0; i<ENEMIES; i++){
-        arg.x = posX;
-        arg.y = posY;
-        arg.serial = i;
-        if (pthread_create(&thEnemyShip[i], NULL, &enemyShip, &arg)){
+        arg[i].x = posX;
+        arg[i].y = posY;
+        arg[i].serial = i;
+        if (pthread_create(&thEnemyShip[i], NULL, &enemyShip, &arg[i])){
             endwin();
             exit(1);
         }
