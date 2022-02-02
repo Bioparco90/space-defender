@@ -1,7 +1,8 @@
 #include "global.h"
 
 int main(){
-    pthread_t thPlayerShip;   
+    pthread_t thPlayerShip;
+    int i; 
 
     srand(time(NULL));      // Inizializza seed random
 
@@ -17,12 +18,16 @@ int main(){
 
     // Inizializzare vite oggetti globali qui
     player.lives = 3;
+    for (i=0; i<ENEMIES; i++){
+        enemy[i].lives = 3;
+    }
 
     if (pthread_create(&thPlayerShip, NULL, &playerShip, NULL)){
         endwin();
-        exit;
+        exit(1);
     }
 
+    fleetEnlister();
 
     gameArea();   // Gestore principale del gioco
 
