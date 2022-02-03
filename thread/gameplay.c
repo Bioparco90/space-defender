@@ -283,18 +283,18 @@ void gameArea(){
 	} while (!gameResult && player.lives);
 
     // Terminazione processi. Se ci sono altri processi relativi a navi giocatore, nemiche o razzi, essi vengono terminati.  
-    for (i=0; i<ENEMIES; i++){
-        if (enemyRockets[i].pid > 0) pthread_cancel(enemyRockets[i].pid);  // Terminazione processi razzi nemici
-        if (enemy[i].pid > 0) pthread_cancel(enemy[i].pid);                // Terminazione processi navi nemiche (avviene dopo i razzi in modo da non lasciare i processi orfani)
-    }
+    // for (i=0; i<ENEMIES; i++){
+    //     if (enemyRockets[i].pid > 0) pthread_cancel(enemyRockets[i].pid);  // Terminazione processi razzi nemici
+    //     if (enemy[i].pid > 0) pthread_cancel(enemy[i].pid);                // Terminazione processi navi nemiche (avviene dopo i razzi in modo da non lasciare i processi orfani)
+    // }
 
-    // // Terminazione processi razzi giocatore
-    for (i=0; i<MAX_ROCKET; i++){
-        if (rocketUp[i].pid > 0) pthread_cancel(rocketUp[i].pid);
-        if (rocketDown[i].pid > 0) pthread_cancel(rocketDown[i].pid);
-    }
+    // // // Terminazione processi razzi giocatore
+    // for (i=0; i<MAX_ROCKET; i++){
+    //     if (rocketUp[i].pid > 0) pthread_cancel(rocketUp[i].pid);
+    //     if (rocketDown[i].pid > 0) pthread_cancel(rocketDown[i].pid);
+    // }
 
-    if (player.pid > 0) pthread_cancel(player.pid);    // Terminazione processo nave giocatore (avviene dopo i razzi in modo da non lascia processi orfani)
+    // if (player.pid > 0) pthread_cancel(player.pid);    // Terminazione processo nave giocatore (avviene dopo i razzi in modo da non lascia processi orfani)
 
     system("killall aplay");        // Terminazione della riproduzione del sottofondo musicale
     gameOver(gameResult, score);    // Chiamata a gestore della schermata di fine gioco
