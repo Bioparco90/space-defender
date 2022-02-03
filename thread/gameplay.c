@@ -36,7 +36,7 @@ void gameArea(){
     Object enemyRockets[ENEMIES];
 
     // Variabili di gestione gioco
-    enemyCounter = ENEMIES;
+    int enemyCounter = ENEMIES;
 	int gameResult = DEFEAT;
     int score = 0;
     int id;

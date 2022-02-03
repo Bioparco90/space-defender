@@ -103,7 +103,7 @@ extern Object buffer[DIM_BUFFER];
 // extern Object rocketUp[MAX_ROCKET];
 // extern Object rocketDown[MAX_ROCKET];
 // extern Object enemyRocket[ENEMIES];
-extern int enemyCounter;
+// extern int enemyCounter;
 
 typedef struct{
     int x;

@@ -11,7 +11,7 @@ Object buffer[DIM_BUFFER];
 // Object rocketUp[MAX_ROCKET];
 // Object rocketDown[MAX_ROCKET];
 // Object enemyRocket[ENEMIES];
-int enemyCounter;
+// int enemyCounter;
 
 int rocketFrame = 1;
 
