@@ -1,6 +1,11 @@
 #include "global.h"
 
 pthread_mutex_t mutex;
+sem_t empty;
+sem_t full;
+
+Object buffer[DIM_BUFFER];
+
 Object player;
 Object enemy[ENEMIES];
 Object rocketUp[MAX_ROCKET];
@@ -143,4 +148,28 @@ void printLives(int lives){
             mvprintw(y,x+15,"  ");  
             break;
     }
+}
+
+int prod_index = 0;
+void insert(Object item){
+    sem_wait(&empty);
+    pthread_mutex_lock(&mutex);
+    buffer[prod_index] = item;
+    prod_index = (prod_index + 1) % DIM_BUFFER;
+    pthread_mutex_unlock(&mutex);
+    sem_post(&full);
+}
+
+int cons_index = 0;
+Object extract(){
+    Object tmp;
+
+    sem_wait(&full);
+    pthread_mutex_lock(&mutex);
+    tmp = buffer[cons_index];
+    cons_index = (cons_index + 1) % DIM_BUFFER;
+    pthread_mutex_unlock(&mutex);
+    sem_post(&empty);
+
+    return tmp;
 }
