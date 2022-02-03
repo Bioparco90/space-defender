@@ -12,6 +12,7 @@ void* playerShip(){
     ship.x = 2;
     ship.y = MAX_Y / 2;
     ship.identifier = PLAYER;
+    ship.pid = pthread_self();
     ship.serial = 777;
     
     serial = 0;                         // Inizializzazione serial razzi giocatore
@@ -19,7 +20,7 @@ void* playerShip(){
     insert(ship);
 
     // Ciclo movimento e sparo
-    while(player.lives){
+    while(true){
         int c = getch();
 
         switch (c){
@@ -89,12 +90,13 @@ void* shotUp(void* param){
     shot.x = args->x + 2;
    	shot.y = args->y + 1 + args->dir;
     shot.identifier = ROCKET_UP;
+    shot.pid = pthread_self();
     shot.serial = args->serial;
 
     insert(shot);
 
     // Ciclo movimento razzo
-    while(rocketUp[id].lives && shot.x < MAX_X){
+    while(true){
         if((shot.y < 2 || shot.y > MAX_Y)){     // Verifica collisione bordi
             direction *= -1;                                    // Cambio direzione
         }
@@ -121,12 +123,13 @@ void* shotDown(void* param){
     shot.x = args->x + 2;
    	shot.y = args->y + 1 + args->dir;
     shot.identifier = ROCKET_DOWN;
+    shot.pid = pthread_self();
     shot.serial = args->serial;
 
     insert(shot);
 
     // Ciclo movimento razzo
-    while(rocketDown[id].lives && shot.x < MAX_X){
+    while(true){
         if((shot.y < 2 || shot.y > MAX_Y)){     // Verifica collisione bordi
             direction *= -1;                                        // Cambio direzione
         }
