@@ -45,6 +45,7 @@ void* enemyShip(void* param){
     ship.x = arg->x;
     ship.y = arg->y;
     ship.identifier = ENEMY;
+    ship.pid = pthread_self();
     ship.serial = arg->serial;
 
     // Rilevazioni iniziali del tempo
@@ -53,7 +54,7 @@ void* enemyShip(void* param){
     timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);       // Valutazione tempo massimo di percorrenza di uno sparo
 
     insert(ship);
-    while(enemy[id].lives){ // Loop movimento nave nemica
+    while(true){ // Loop movimento nave nemica
         switch (flag){
             case VERTICAL:                                  // Movimento verticale
                 ship.y += direction;                       // Aggiornamento coordinata Y
@@ -108,10 +109,11 @@ void* enemyShot(void* param){
     rocket.y = arg->y + 1;
     rocket.lives = 1;
     rocket.identifier = ENEMY_ROCKET;
+    rocket.pid = pthread_self();
     rocket.serial = arg->serial;
 
     insert(rocket);
-    while (enemyRocket[id].lives && rocket.x > 0){                               // Loop movimento razzo
+    while (true){                               // Loop movimento razzo
         rocket.x -= 1;                            // Movimento orizzontale
         insert(rocket);
         usleep(ROCKET_DELAY);                   // Ritardo movimento

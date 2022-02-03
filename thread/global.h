@@ -98,11 +98,11 @@ extern int cons_index;
 #define DIM_BUFFER 50
 extern Object buffer[DIM_BUFFER];
 
-extern Object player;
-extern Object enemy[ENEMIES];
-extern Object rocketUp[MAX_ROCKET];
-extern Object rocketDown[MAX_ROCKET];
-extern Object enemyRocket[ENEMIES];
+// extern Object player;
+// extern Object enemy[ENEMIES];
+// extern Object rocketUp[MAX_ROCKET];
+// extern Object rocketDown[MAX_ROCKET];
+// extern Object enemyRocket[ENEMIES];
 extern int enemyCounter;
 
 typedef struct{

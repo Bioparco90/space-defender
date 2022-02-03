@@ -6,11 +6,11 @@ sem_t full;
 
 Object buffer[DIM_BUFFER];
 
-Object player;
-Object enemy[ENEMIES];
-Object rocketUp[MAX_ROCKET];
-Object rocketDown[MAX_ROCKET];
-Object enemyRocket[ENEMIES];
+// Object player;
+// Object enemy[ENEMIES];
+// Object rocketUp[MAX_ROCKET];
+// Object rocketDown[MAX_ROCKET];
+// Object enemyRocket[ENEMIES];
 int enemyCounter;
 
 int rocketFrame = 1;
