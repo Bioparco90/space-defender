@@ -40,6 +40,8 @@ int main(){
     endwin();                   // Ripristino del terminale
 
     pthread_mutex_destroy(&mutex);
+    sem_destroy(&empty);
+    sem_destroy(&full);
 
     return 0;
 }
