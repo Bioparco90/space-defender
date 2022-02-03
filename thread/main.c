@@ -33,7 +33,7 @@ int main(){
         exit(1);
     }
 
-    // fleetEnlister();
+    fleetEnlister();
 
     gameArea();   // Gestore principale del gioco
 
