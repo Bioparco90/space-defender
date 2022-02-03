@@ -210,12 +210,12 @@ void gameArea(){
                 break;
 
             case ENEMY_ROCKET:                                              // Caso razzo nemico
-                if (tmpEnemyRocket[id].x > -1)                                
+                // if (tmpEnemyRocket[id].x > -1)                                
                     mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ' ');   
                 
                 tmpEnemyRocket[id] = data;                                    // Aggiornamento array razzi nemici
 
-                if (tmpEnemyRocket[id].x < 0)                               
+                if (tmpEnemyRocket[id].x <= 0)                               
                     enemyRocket[id].lives--;                         // Reset dei valori dell'array alla posizione del razzo appena eliminato
                 break;
         }
