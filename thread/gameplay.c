@@ -246,7 +246,7 @@ void gameArea(){
                     printSprite(data.x, data.y, 3 ,3, enemySpriteLv2);
                     attroff(COLOR_PAIR(4));
                 }
-                else if (enemy[id].lives == 1){
+                else {
                     attron(COLOR_PAIR(4));
                     printSprite(data.x, data.y, 3,3 , enemySpriteLv2Damaged);
                     attroff(COLOR_PAIR(4));
