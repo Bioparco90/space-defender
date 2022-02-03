@@ -294,7 +294,7 @@ void gameArea(){
         if (rocketDown[i].pid > 0) pthread_cancel(rocketDown[i].pid);
     }
 
-    if (player.pid > 0) pthread_cancel(player.pid, 1);    // Terminazione processo nave giocatore (avviene dopo i razzi in modo da non lascia processi orfani)
+    if (player.pid > 0) pthread_cancel(player.pid);    // Terminazione processo nave giocatore (avviene dopo i razzi in modo da non lascia processi orfani)
 
     system("killall aplay");        // Terminazione della riproduzione del sottofondo musicale
     gameOver(gameResult, score);    // Chiamata a gestore della schermata di fine gioco
