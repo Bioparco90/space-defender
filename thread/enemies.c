@@ -106,7 +106,7 @@ void* enemyShot(void* param){
     // Inizializzazione razzo
     rocket.x = arg->x - 2;
     rocket.y = arg->y + 1;
-    rocket.lives = 1;
+    // rocket.lives = 1;
     rocket.identifier = ENEMY_ROCKET;
     rocket.serial = arg->serial;
 
