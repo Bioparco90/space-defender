@@ -86,8 +86,17 @@ void countdownPrint(int x, int y, int count);
 
 //----------------thread area------------------
 #include <pthread.h>
+#include <semaphore.h>
 
 extern pthread_mutex_t mutex;
+
+extern sem_t empty;
+extern sem_t full;
+extern int prod_index;
+extern int cons_index;
+
+#define DIM_BUFFER 50
+extern Object buffer[DIM_BUFFER];
 
 extern Object player;
 extern Object enemy[ENEMIES];
@@ -102,5 +111,8 @@ typedef struct{
     int dir;
     int serial;
 } Args;
+
+void insert(Object item);
+Object extract();
 
 #endif /* GLOBAL_H */
