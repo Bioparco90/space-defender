@@ -177,8 +177,8 @@ void gameArea(){
                         // Controllo delle vite della nave nemica
                         switch (enemy[i].lives){                
                             case 0:                                             // La nave nemica ha finito le vite
-                                // if (enemyRockets[i].pid > 0)                    // Verifica che la nave nemica non abbia processi figli in vita 
-                                //         waitpid(enemyRockets[i].pid, NULL, 0);  // Attende la terminazione degli eventuali processi figli
+                                if (enemyRockets[i].pid > 0)                    // Verifica che la nave nemica non abbia processi figli in vita 
+                                        pthread_join(enemyRockets[i].pid, NULL);  // Attende la terminazione degli eventuali processi figli
                                 pthread_cancel(enemy[i].pid);                          // Terminazione processo nave nemica
                                 deleteSprite(enemy[i]);                         // Eliminazione della sprite della nave dall'area di gioco
                                 mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');   // Eliminazione del razzo dall'area di gioco
@@ -218,8 +218,8 @@ void gameArea(){
                         
                         switch (enemy[i].lives){
                             case 0:
-                                // if (enemyRockets[i].pid > 0)
-                                //         waitpid(enemyRockets[i].pid, NULL, 0);
+                                if (enemyRockets[i].pid > 0)
+                                        pthread_join(enemyRockets[i].pid, NULL);
                                 pthread_cancel(enemy[i].pid);
                                 deleteSprite(enemy[i]);
                                 mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
