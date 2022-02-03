@@ -122,26 +122,39 @@ void gameArea(){
 
         switch (data.identifier){
             case PLAYER:
+                pthread_mutex_lock(&mutex);
                 printSprite(data.x, data.y, 3, 3, playerSprite);
+                pthread_mutex_unlock(&mutex);
                 break;
 
             case ENEMY:
+                pthread_mutex_lock(&mutex);
                 printSprite(data.x, data.y, 3, 3, enemySpriteLv1);
+                pthread_mutex_unlock(&mutex);
                 break;
 
             case ROCKET_UP:
-                if (tmpRocketUp[id].y > -1)
+                if (tmpRocketUp[id].y > -1){
+                    pthread_mutex_lock(&mutex);
                     rocketAnimation(tmpRocketUp[id].x, tmpRocketUp[id].y);
+                    pthread_mutex_unlock(&mutex);
+                }
                 break;
 
             case ROCKET_DOWN:
-                if (tmpRocketDown[id].y > -1)
+                if (tmpRocketDown[id].y > -1){
+                    pthread_mutex_lock(&mutex);
                     rocketAnimation(tmpRocketDown[id].x, tmpRocketDown[id].y);
+                    pthread_mutex_unlock(&mutex);
+                }
                 break;
 
             case ENEMY_ROCKET:
-                if (tmpEnemyRocket[id].x > -1)
+                if (tmpEnemyRocket[id].x > -1){
+                    pthread_mutex_lock(&mutex);
                     mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ENEMY_ROCKET);
+                    pthread_mutex_unlock(&mutex);
+                }
                 break;
 
         }
