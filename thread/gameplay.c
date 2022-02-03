@@ -210,7 +210,7 @@ void gameArea(){
                 break;
 
             case ENEMY_ROCKET:                                              // Caso razzo nemico
-                if (tmpEnemyRocket[id].x > -1)                                
+                // if (tmpEnemyRocket[id].x > -1)                                
                     mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ' ');   
                 
                 tmpEnemyRocket[id] = data;                                    // Aggiornamento array razzi nemici
@@ -258,7 +258,6 @@ void gameArea(){
             case ROCKET_UP:
                 for (i=0; i<ENEMIES; i++){                          // Il ciclo compara il razzo ad ogni nemico presente nell'array
                     if (checkCollision(tmpRocketUp[id], tmpEnemy[i])){    // Controllo collisione del razzo con la nave nemica corrente 
-                        mvaddch(tmpRocketUp[id].y, tmpRocketUp[id].x, ' ');
                         rocketUp[id].lives--;
                         enemy[i].lives--;                           // Il nemico colpito perde una vita
 
@@ -266,7 +265,7 @@ void gameArea(){
                         switch (enemy[i].lives){                
                             case 0:                                             // La nave nemica ha finito le vite
                                 deleteSprite(tmpEnemy[i]);                         // Eliminazione della sprite della nave dall'area di gioco
-                                // mvaddch(tmpRocketUp[id].y, tmpRocketUp[id].x, ' ');   // Eliminazione del razzo dall'area di gioco
+                                mvaddch(tmpRocketUp[id].y, tmpRocketUp[id].x, ' ');   // Eliminazione del razzo dall'area di gioco
                                 score += 300;                                   // Incremento del punteggio del giocatore
                                 enemyCounter--;                                 // Decremento del contatore nemici in vita
                                 break;
@@ -296,14 +295,13 @@ void gameArea(){
             case ROCKET_DOWN:
                 for (i=0; i<ENEMIES; i++){
                     if (checkCollision(tmpRocketDown[id], tmpEnemy[i])){
-                        mvaddch(tmpRocketDown[id].y, tmpRocketDown[id].x, ' ');
                         rocketDown[id].lives--;
                         enemy[i].lives--;
                         
                         switch (enemy[i].lives){
                             case 0:
                                 deleteSprite(tmpEnemy[i]);
-                                // mvaddch(tmpRocketDown[id].y, tmpRocketDown[id].x, ' ');
+                                mvaddch(tmpRocketDown[id].y, tmpRocketDown[id].x, ' ');
                                 score += 300;
                                 enemyCounter--;
                                 break;
@@ -338,7 +336,7 @@ void gameArea(){
                     player.lives--;                                         // Decremento delle vite del giocatore
                     score -= 500;                                           // Decremento del punteggio del giocatore
                 }
-                if (tmpEnemyRocket[id].x > 0)
+                if (tmpEnemyRocket[id].x > -1)
                     mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ENEMY_ROCKET);   // Rappresentazione del razzo nell'area di gioco
                 break;
         }
