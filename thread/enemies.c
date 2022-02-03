@@ -53,7 +53,7 @@ void* enemyShip(void* param){
     timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);       // Valutazione tempo massimo di percorrenza di uno sparo
 
     insert(ship);
-    while(true){ // Loop movimento nave nemica
+    while(enemy[id].lives){ // Loop movimento nave nemica
         switch (flag){
             case VERTICAL:                                  // Movimento verticale
                 ship.y += direction;                       // Aggiornamento coordinata Y
