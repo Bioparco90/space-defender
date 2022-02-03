@@ -62,9 +62,9 @@ void* shotUp(void* param);
 void* shotDown(void* param);
 
 // Funzioni libreria enemies.c
-void fleetEnlister(int mainPipe);
-void enemyShip(int mainPipe, Object enemy);
-void enemyShot(int mainPipe, int x, int y, int serial);
+void fleetEnlister();
+void* enemyShip(void* param);
+void* enemyShot(void* param);
 
 // Funzioni libreria gameplay.c
 void gameArea();
@@ -86,8 +86,17 @@ void countdownPrint(int x, int y, int count);
 
 //----------------thread area------------------
 #include <pthread.h>
+#include <semaphore.h>
 
 extern pthread_mutex_t mutex;
+
+extern sem_t empty;
+extern sem_t full;
+extern int prod_index;
+extern int cons_index;
+
+#define DIM_BUFFER 50
+extern Object buffer[DIM_BUFFER];
 
 extern Object player;
 extern Object enemy[ENEMIES];
@@ -101,6 +110,9 @@ typedef struct{
     int y;
     int dir;
     int serial;
-} ShotArgs;
+} Args;
+
+void insert(Object item);
+Object extract();
 
 #endif /* GLOBAL_H */

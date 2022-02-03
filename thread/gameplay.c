@@ -1,4 +1,5 @@
 #include "global.h"
+#include <pthread.h>
 
  char playerSprite[3][3]={
          {"/\\ "},
@@ -27,6 +28,7 @@ char enemySpriteLv2Damaged[3][3]={
 // Funzione gestore di gioco
 void gameArea(){
     // Variabili d'appoggio salvataggio oggetti
+    Object data;
     Object tmpPlayer;
     Object tmpEnemy[ENEMIES];
     Object tmpRocketUp[MAX_ROCKET];
@@ -62,46 +64,159 @@ void gameArea(){
     // clock_gettime(CLOCK_REALTIME, &start);                  // Rilevazione iniziale tempo (sottofondo)
 
     do{
+        data = extract();
+        id = data.serial;
+
+        switch(data.identifier){
+            case PLAYER:
+                if (tmpPlayer.y >= 2 && tmpPlayer.y <= MAX_Y - 1)
+                    deleteSprite(tmpPlayer);
+                
+                tmpPlayer.x = data.x;
+                tmpPlayer.y = data.y;
+                break;
+
+            case ENEMY:
+                if (tmpEnemy[id].y >= 2 && tmpEnemy[id].y <= MAX_Y)
+                    deleteSprite(tmpEnemy[id]);
+
+                tmpEnemy[id].x = data.x;
+                tmpEnemy[id].y = data.y;
+
+                if (tmpEnemy[id].x <= 2)
+                    player.lives = 0;
+                break;
+
+            case ROCKET_UP:
+                if (tmpRocketUp[id].y >= 1 && tmpRocketUp[id].y <= MAX_Y+1)
+                    mvaddch(tmpRocketUp[id].y, tmpRocketUp[id].x, ' ');
+
+                tmpRocketUp[id] = data;
+
+                if (tmpRocketUp[id].x >= MAX_X)
+                    rocketUp[id].lives--;
+
+                break;
+
+            case ROCKET_DOWN:
+                if (tmpRocketDown[id].y >= 1 && tmpRocketDown[id].y <= MAX_Y+1)
+                    mvaddch(tmpRocketDown[id].y, tmpRocketDown[id].x, ' ');
+
+                tmpRocketDown[id] = data;
+
+                if (tmpRocketDown[id].x >= MAX_X)
+                    tmpRocketDown[id].lives--;
+                    
+                break;
+
+            case ENEMY_ROCKET:
+                if (tmpEnemyRocket[id].x > -1)
+                    mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ' ');
+
+                tmpEnemyRocket[id] = data;
+
+                if (tmpEnemyRocket[id].x <= 0)
+                    tmpEnemyRocket[id] = resetItem();
+                break;
+        }
+
+        switch (data.identifier){
+            case PLAYER:
+                printSprite(data.x, data.y, 3, 3, playerSprite);
+                break;
+
+            case ENEMY:
+                printSprite(data.x, data.y, 3, 3, enemySpriteLv1);
+                break;
+
+            case ROCKET_UP:
+                if (tmpRocketUp[id].y > -1)
+                    rocketAnimation(tmpRocketUp[id].x, tmpRocketUp[id].y);
+                break;
+
+            case ROCKET_DOWN:
+                if (tmpRocketDown[id].y > -1)
+                    rocketAnimation(tmpRocketDown[id].x, tmpRocketDown[id].y);
+                break;
+
+            case ENEMY_ROCKET:
+                if (tmpEnemyRocket[id].x > -1)
+                    mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ENEMY_ROCKET);
+                break;
+
+        }
         
-        if (tmpPlayer.y != player.y){
-            pthread_mutex_lock(&mutex);
-            deleteSprite(tmpPlayer);
-            pthread_mutex_unlock(&mutex);
+        // Area giocatore
+        // if (tmpPlayer.y != player.y){
+        //     pthread_mutex_lock(&mutex);
+        //     deleteSprite(tmpPlayer);
+        //     pthread_mutex_unlock(&mutex);
 
-            tmpPlayer = player;
+        //     tmpPlayer = player;
 
-            pthread_mutex_lock(&mutex);
-            printSprite(tmpPlayer.x, tmpPlayer.y, 3, 3, playerSprite);
-            pthread_mutex_unlock(&mutex);
-        }
+        //     pthread_mutex_lock(&mutex);
+        //     printSprite(tmpPlayer.x, tmpPlayer.y, 3, 3, playerSprite);
+        //     pthread_mutex_unlock(&mutex);
+        // }
 
-        for (i=0; i<MAX_ROCKET; i++){
-            if (tmpRocketUp[i].x != rocketUp[i].x || tmpRocketUp[i].y != rocketUp[i].y){
-                pthread_mutex_lock(&mutex);
-                mvaddch(tmpRocketUp[i].y, tmpRocketUp[i].x, ' ');
-                pthread_mutex_unlock(&mutex);
+        // // Area razzi giocatore
+        // for (i=0; i<MAX_ROCKET; i++){
+        //     if (tmpRocketUp[i].x != rocketUp[i].x || tmpRocketUp[i].y != rocketUp[i].y){
+        //         pthread_mutex_lock(&mutex);
+        //         mvaddch(tmpRocketUp[i].y, tmpRocketUp[i].x, ' ');
+        //         pthread_mutex_unlock(&mutex);
 
-                tmpRocketUp[i] = rocketUp[i];
+        //         tmpRocketUp[i] = rocketUp[i];
 
-                pthread_mutex_lock(&mutex);
-                rocketAnimation(tmpRocketUp[i].x, tmpRocketUp[i].y);
-                pthread_mutex_unlock(&mutex);
-            }
-        }
+        //         pthread_mutex_lock(&mutex);
+        //         rocketAnimation(tmpRocketUp[i].x, tmpRocketUp[i].y);
+        //         pthread_mutex_unlock(&mutex);
+        //     }
+        // }
 
-        for (i=0; i<MAX_ROCKET; i++){
-            if (tmpRocketDown[i].x != rocketDown[i].x || tmpRocketDown[i].y != rocketDown[i].y){
-                pthread_mutex_lock(&mutex);
-                mvaddch(tmpRocketDown[i].y, tmpRocketDown[i].x, ' ');
-                pthread_mutex_unlock(&mutex);
+        // for (i=0; i<MAX_ROCKET; i++){
+        //     if (tmpRocketDown[i].x != rocketDown[i].x || tmpRocketDown[i].y != rocketDown[i].y){
+        //         pthread_mutex_lock(&mutex);
+        //         mvaddch(tmpRocketDown[i].y, tmpRocketDown[i].x, ' ');
+        //         pthread_mutex_unlock(&mutex);
 
-                tmpRocketDown[i] = rocketDown[i];
+        //         tmpRocketDown[i] = rocketDown[i];
 
-                pthread_mutex_lock(&mutex);
-                rocketAnimation(tmpRocketDown[i].x, tmpRocketDown[i].y);
-                pthread_mutex_unlock(&mutex);
-            }
-        }
+        //         pthread_mutex_lock(&mutex);
+        //         rocketAnimation(tmpRocketDown[i].x, tmpRocketDown[i].y);
+        //         pthread_mutex_unlock(&mutex);
+        //     }
+        // }
+        
+        // Area nemici
+        // for (i=0; i<ENEMIES; i++){
+        //     if (enemy[i].lives && (tmpEnemy[i].y != enemy[i].y || tmpEnemy[i].x != enemy[i].x)){
+        //         pthread_mutex_lock(&mutex);
+        //         deleteSprite(tmpEnemy[i]);
+        //         pthread_mutex_unlock(&mutex);
+
+        //         tmpEnemy[i] = enemy[i];
+
+        //         pthread_mutex_lock(&mutex);
+        //         printSprite(tmpEnemy[i].x, tmpEnemy[i].y, 3, 3, enemySpriteLv1);
+        //         pthread_mutex_unlock(&mutex);
+        //     }
+        // }
+
+        // // Area razzi nemici
+        // for (i=0; i<ENEMIES; i++){
+        //     if (enemyRocket[i].lives && (tmpEnemyRocket[i].x != enemyRocket[i].x)){
+        //         pthread_mutex_lock(&mutex);
+        //         mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ' ');
+        //         pthread_mutex_unlock(&mutex);
+
+        //         tmpEnemyRocket[i] = enemyRocket[i];
+
+        //         pthread_mutex_lock(&mutex);
+        //         mvaddch(tmpEnemyRocket[i].y, tmpEnemyRocket[i].x, ROCKET);
+        //         pthread_mutex_unlock(&mutex);
+        //     }
+        // }
 
         printLives(player.lives);
         mvprintw(0, MAX_X - 15, "Score: %d", score);
