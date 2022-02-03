@@ -76,6 +76,17 @@ void gameArea(){
                 tmpPlayer.y = data.y;
                 break;
 
+            case ENEMY:
+                if (tmpEnemy[id].y >= 2 && tmpEnemy[id].y <= MAX_Y)
+                    deleteSprite(tmpEnemy[id]);
+
+                tmpEnemy[id].x = data.x;
+                tmpEnemy[id].y = data.y;
+
+                if (tmpEnemy[id].x <= 2)
+                    player.lives = 0;
+                break;
+
             case ROCKET_UP:
                 if (tmpRocketUp[id].y >= 1 && tmpRocketUp[id].y <= MAX_Y+1)
                     mvaddch(tmpRocketUp[id].y, tmpRocketUp[id].x, ' ');
@@ -97,11 +108,25 @@ void gameArea(){
                     tmpRocketDown[id].lives--;
                     
                 break;
+
+            case ENEMY_ROCKET:
+                if (tmpEnemyRocket[id].x > -1)
+                    mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ' ');
+
+                tmpEnemyRocket[id] = data;
+
+                if (tmpEnemyRocket[id].x <= 0)
+                    tmpEnemyRocket[id] = resetItem();
+                break;
         }
 
         switch (data.identifier){
             case PLAYER:
                 printSprite(data.x, data.y, 3, 3, playerSprite);
+                break;
+
+            case ENEMY:
+                printSprite(data.x, data.y, 3, 3, enemySpriteLv1);
                 break;
 
             case ROCKET_UP:
@@ -112,6 +137,11 @@ void gameArea(){
             case ROCKET_DOWN:
                 if (tmpRocketDown[id].y > -1)
                     rocketAnimation(tmpRocketDown[id].x, tmpRocketDown[id].y);
+                break;
+
+            case ENEMY_ROCKET:
+                if (tmpEnemyRocket[id].x > -1)
+                    mvaddch(tmpEnemyRocket[id].y, tmpEnemyRocket[id].x, ENEMY_ROCKET);
                 break;
 
         }
