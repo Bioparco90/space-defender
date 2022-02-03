@@ -58,7 +58,7 @@ void gameArea(){
     for (i=0; i<ENEMIES; i++){
         enemy[i].lives = 3;
         enemy[i].pid = -1;
-        enemyRockets[i].pid = -1;
+        enemyRockets[i].pid = -1; // BUG QUI
     }
     for (i=0; i<MAX_ROCKET; i++){
         rocketUp[i].pid = -1;
@@ -95,8 +95,8 @@ void gameArea(){
                 enemy[id].x = data.x;                                       // Aggiornamento dell'array dei nemici con i valori del nemico attuale (coordinate X)
                 enemy[id].y = data.y;                                       // Aggiornamento dell'array dei nemici con i valori del nemico attuale (coordinate Y)
 
-                if (enemy[id].x <= 2)                                       // Controllo raggiungimento colonna giocatore
-                    player.lives = 0;                                       // Sconfitta del giocatore
+                // if (enemy[id].x <= 2)                                       // Controllo raggiungimento colonna giocatore
+                //     player.lives = 0;                                       // Sconfitta del giocatore
                 break;
 
             // Area razzi. I controlli sono quasi uguali per tutti i casi
