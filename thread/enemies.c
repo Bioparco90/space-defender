@@ -126,6 +126,6 @@ void* enemyShot(void* param){
         insert(rocket);
         usleep(ROCKET_DELAY);                   // Ritardo movimento
     }
-    system("echo start >> enemyRocketsLogStart");
+    system("echo start >> enemyRocketsLogClose");
     return NULL;
 }
