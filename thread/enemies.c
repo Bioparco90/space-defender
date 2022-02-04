@@ -97,6 +97,8 @@ void* enemyShip(void* param){
 
 // Funzione per la gestione del movimento del razzo nemico
 void* enemyShot(void* param){
+    struct timespec start, end;
+    int timeTravel;
     Object rocket;
     Args* arg;
     int id;
@@ -112,11 +114,18 @@ void* enemyShot(void* param){
     rocket.pid = pthread_self();
     rocket.serial = arg->serial;
 
+    timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
+    clock_gettime(CLOCK_REALTIME, &start);
+
+    system("echo start >> enemyRocketsLogStart");
     insert(rocket);
     while (true){                               // Loop movimento razzo
+        clock_gettime(CLOCK_REALTIME, &end);
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break;
         rocket.x -= 1;                            // Movimento orizzontale
         insert(rocket);
         usleep(ROCKET_DELAY);                   // Ritardo movimento
     }
+    system("echo start >> enemyRocketsLogStart");
     return NULL;
 }

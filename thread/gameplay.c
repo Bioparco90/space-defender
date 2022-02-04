@@ -58,7 +58,7 @@ void gameArea(){
     for (i=0; i<ENEMIES; i++){
         enemy[i].lives = 3;
         enemy[i].pid = -1;
-        enemyRockets[i].pid = -1; // BUG QUI
+        // enemyRockets[i].pid = -1; // BUG QUI
     }
     for (i=0; i<MAX_ROCKET; i++){
         rocketUp[i].pid = -1;
@@ -289,7 +289,7 @@ void gameArea(){
 
     // Terminazione processi. Se ci sono altri processi relativi a navi giocatore, nemiche o razzi, essi vengono terminati.  
     for (i=0; i<ENEMIES; i++){
-        if (enemyRockets[i].pid > 0) pthread_cancel(enemyRockets[i].pid);  // Terminazione processi razzi nemici
+        // if (enemyRockets[i].pid > 0) pthread_cancel(enemyRockets[i].pid);  // Terminazione processi razzi nemici
         if (enemy[i].pid > 0) pthread_cancel(enemy[i].pid);                // Terminazione processi navi nemiche (avviene dopo i razzi in modo da non lasciare i processi orfani)
     }
 
