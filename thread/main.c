@@ -18,16 +18,6 @@ int main(){
     sem_init(&empty, 0, DIM_BUFFER);
     sem_init(&full, 0, 0);
 
-    // Inizializzare vite oggetti globali qui
-    // player.lives = 3;
-    // for (i=0; i<MAX_ROCKET; i++){
-    //     rocketUp[i].lives = rocketDown[i].lives = 1;
-    // }
-    // for (i=0; i<ENEMIES; i++){
-    //     enemy[i].lives = 3;
-    //     enemyRocket[i].lives = 1;
-    // }
-
     if (pthread_create(&thPlayerShip, NULL, &playerShip, NULL)){
         endwin();
         exit(1);
