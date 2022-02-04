@@ -60,10 +60,10 @@ void gameArea(){
         enemy[i].pid = -1;
         // enemyRockets[i].pid = -1; // BUG QUI
     }
-    for (i=0; i<MAX_ROCKET; i++){
-        rocketUp[i].pid = -1;
-        rocketDown[i].pid = -1;
-    }
+    // for (i=0; i<MAX_ROCKET; i++){
+    //     rocketUp[i].pid = -1;
+    //     rocketDown[i].pid = -1;
+    // }
         
     system("aplay sounds/gameplay.wav 2> /dev/null &");     // Prima riproduzione sottofondo musicale
     clock_gettime(CLOCK_REALTIME, &start);                  // Rilevazione iniziale tempo (sottofondo)
@@ -294,10 +294,10 @@ void gameArea(){
     }
 
     // // Terminazione processi razzi giocatore
-    for (i=0; i<MAX_ROCKET; i++){
-        if (rocketUp[i].pid > 0) pthread_cancel(rocketUp[i].pid);
-        if (rocketDown[i].pid > 0) pthread_cancel(rocketDown[i].pid);
-    }
+    // for (i=0; i<MAX_ROCKET; i++){
+    //     if (rocketUp[i].pid > 0) pthread_cancel(rocketUp[i].pid);
+    //     if (rocketDown[i].pid > 0) pthread_cancel(rocketDown[i].pid);
+    // }
 
     if (player.pid > 0) pthread_cancel(player.pid);    // Terminazione processo nave giocatore (avviene dopo i razzi in modo da non lascia processi orfani)
 
