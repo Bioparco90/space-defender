@@ -77,6 +77,8 @@ void playerShotInit(int x, int y, int serial){
 
 // Funzione per la gestione del movimento del singolo razzo
 void* shotUp(void* param){
+    struct timespec start, end;
+    int timeTravel;
     Object shot;
     Args* args;
     int id;
@@ -93,10 +95,15 @@ void* shotUp(void* param){
     shot.pid = pthread_self();
     shot.serial = args->serial;
 
+    timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
+    clock_gettime(CLOCK_REALTIME, &start);
+
     insert(shot);
 
     // Ciclo movimento razzo
     while(true){
+        clock_gettime(CLOCK_REALTIME, &end);
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break;
         if((shot.y < 2 || shot.y > MAX_Y)){     // Verifica collisione bordi
             direction *= -1;                                    // Cambio direzione
         }
@@ -110,6 +117,8 @@ void* shotUp(void* param){
 }
 
 void* shotDown(void* param){
+    struct timespec start, end;
+    int timeTravel;
     Object shot;
     Args* args;
     int id;
@@ -126,10 +135,16 @@ void* shotDown(void* param){
     shot.pid = pthread_self();
     shot.serial = args->serial;
 
+    timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
+    clock_gettime(CLOCK_REALTIME, &start);
+
     insert(shot);
 
     // Ciclo movimento razzo
     while(true){
+        clock_gettime(CLOCK_REALTIME, &end);
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break;
+
         if((shot.y < 2 || shot.y > MAX_Y)){     // Verifica collisione bordi
             direction *= -1;                                        // Cambio direzione
         }
