@@ -1,17 +1,12 @@
 #include "global.h"
 
+// Semafori e mutex
 pthread_mutex_t mutex;
 sem_t empty;
 sem_t full;
 
+// Buffer
 Object buffer[DIM_BUFFER];
-
-// Object player;
-// Object enemy[ENEMIES];
-// Object rocketUp[MAX_ROCKET];
-// Object rocketDown[MAX_ROCKET];
-// Object enemyRocket[ENEMIES];
-// int enemyCounter;
 
 int rocketFrame = 1;
 
@@ -150,26 +145,29 @@ void printLives(int lives){
     }
 }
 
+// Funzione produttore
 int prod_index = 0;
 void insert(Object item){
-    sem_wait(&empty);
-    pthread_mutex_lock(&mutex);
-    buffer[prod_index] = item;
-    prod_index = (prod_index + 1) % DIM_BUFFER;
-    pthread_mutex_unlock(&mutex);
-    sem_post(&full);
+    sem_wait(&empty);                           // Verifica che il buffer non sia pieno
+    pthread_mutex_lock(&mutex);                 // Accesso esclusivo alla risorsa
+    buffer[prod_index] = item;                  // Inserisce nuovo oggetto nel buffer
+    prod_index = (prod_index + 1) % DIM_BUFFER; // Imposta il prossimo spazio disponibile nel buffer in scrittura
+    pthread_mutex_unlock(&mutex);               // Rende nuovamente disponibile la risorsa
+    sem_post(&full);                            // Segnala l'aggiunta di un oggetto nel buffer
 }
 
+
+// Funzione consumatore
 int cons_index = 0;
 Object extract(){
     Object tmp;
 
-    sem_wait(&full);
-    pthread_mutex_lock(&mutex);
-    tmp = buffer[cons_index];
-    cons_index = (cons_index + 1) % DIM_BUFFER;
+    sem_wait(&full);                            // Verifica che il buffer non sia vuoto
+    pthread_mutex_lock(&mutex);                 
+    tmp = buffer[cons_index];                   // Legge un oggetto dal buffer
+    cons_index = (cons_index + 1) % DIM_BUFFER; // Imposta il prossimo spazio disponibile nel buffer in lettura
     pthread_mutex_unlock(&mutex);
-    sem_post(&empty);
+    sem_post(&empty);                           // Segnala la rimozione di un oggetto dal buffer
 
-    return tmp;
+    return tmp;                                 // Consuma l'oggetto
 }

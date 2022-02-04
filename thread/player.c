@@ -15,9 +15,9 @@ void* playerShip(){
     ship.pid = pthread_self();
     ship.serial = 777;
     
-    serial = 0;                         // Inizializzazione serial razzi giocatore
+    serial = 0;     // Inizializzazione serial razzi giocatore
 
-    insert(ship);
+    insert(ship);   // Prima scrittura nel buffer
 
     // Ciclo movimento e sparo
     while(true){
@@ -38,13 +38,13 @@ void* playerShip(){
                 clock_gettime(CLOCK_REALTIME, &checker);                // Rilevazione del tempo trascorso dalla precedente rilevazione
                 if (serial == 0){                                       // Primo sparo della partita
                     system("aplay sounds/laser.wav 2> /dev/null &");    // Riproduce suono sparo
-                    playerShotInit(ship.x, ship.y, serial);     // Generazione sparo
+                    playerShotInit(ship.x, ship.y, serial);             // Generazione sparo
                     serial++;                                           // Incremento del serial (verrà utilizzato come indice nella funzione gestore di gioco)
                     time = checker;                                     // Il valore dell'ultima rilevazione viene salvato come "rilevazione precedente"
                 }
                 if (checker.tv_sec - time.tv_sec >= 1){                 // Spari successivi al primo. Valuta se sia passato ALMENO un secondo dallo sparo precedente
                     system("aplay sounds/laser.wav 2> /dev/null &");    // Riproduce suono sparo
-                    playerShotInit(ship.x, ship.y, serial);     // Generazione sparo
+                    playerShotInit(ship.x, ship.y, serial);             // Generazione sparo
                     serial++;                                           // Incremento del serial (verrà utilizzato come indice nel gameLoop)
                     time = checker;                                     // Il valore dell'ultima rilevazione viene salvato come "rilevazione precedente"
                 }
@@ -52,7 +52,7 @@ void* playerShip(){
         }
         if(serial >= MAX_ROCKET)            // Verifica se sia stato raggiunto il limite di spari esistenti in uno stesso momento
             serial = 0;                     // L'indicizzazione riparte da 0
-        insert(ship);
+        insert(ship);                       // Scrittura ciclica nel buffer
     }
     return NULL;
 }
@@ -61,9 +61,11 @@ void* playerShip(){
 void playerShotInit(int x, int y, int serial){
     pthread_t thRocketUp[MAX_ROCKET], thRocketDown[MAX_ROCKET];
 
+    // Parametri da passare ai thread
     Args argsUp = {x, y, DIR_UP, serial};
     Args argsDown = {x, y, DIR_DOWN, serial};
 
+    // Creazione thread spari
     if (pthread_create(&thRocketUp[serial], NULL, &shotUp, &argsUp)){
         endwin();
         exit(1);
@@ -95,23 +97,24 @@ void* shotUp(void* param){
     shot.pid = pthread_self();
     shot.serial = args->serial;
 
+    // La terminazione del thread avviene grazie alla rilevazione del tempo massimo di vita dello sparo
     timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
     clock_gettime(CLOCK_REALTIME, &start);
 
-    insert(shot);
+    insert(shot);   // Prima scrittura nel buffer
 
     // Ciclo movimento razzo
     while(true){
-        clock_gettime(CLOCK_REALTIME, &end);
-        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break;
-        if((shot.y < 2 || shot.y > MAX_Y)){     // Verifica collisione bordi
+        clock_gettime(CLOCK_REALTIME, &end);                    // Verifica tempo trascorso
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break; // Esci dal loop e concludi l'esecuzione del thread
+        if((shot.y < 2 || shot.y > MAX_Y)){                     // Verifica collisione bordi
             direction *= -1;                                    // Cambio direzione
         }
-        shot.x += 1;                                    // Spostamento orizzontale
-        shot.y += direction;                            // Spostamento verticale, direzione dipendente dal valore di "direction"
+        shot.x += 1;            // Spostamento orizzontale
+        shot.y += direction;    // Spostamento verticale, direzione dipendente dal valore di "direction"
 
-        insert(shot);
-		usleep(ROCKET_DELAY);                                   // Delay movimento razzo
+        insert(shot);           // Scrittura ciclica nel buffer
+		usleep(ROCKET_DELAY);   // Delay movimento razzo
     }
     return NULL;
 }
@@ -135,24 +138,25 @@ void* shotDown(void* param){
     shot.pid = pthread_self();
     shot.serial = args->serial;
 
+    // La terminazione del thread avviene grazie alla rilevazione del tempo massimo di vita dello sparo
     timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
     clock_gettime(CLOCK_REALTIME, &start);
 
-    insert(shot);
+    insert(shot);   // Prima scrittura nel buffer
 
     // Ciclo movimento razzo
     while(true){
-        clock_gettime(CLOCK_REALTIME, &end);
-        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break;
+        clock_gettime(CLOCK_REALTIME, &end);                    // Verifica tempo trascorso
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break; // Esci dal loop e concludi l'esecuzione del thread
 
         if((shot.y < 2 || shot.y > MAX_Y)){     // Verifica collisione bordi
-            direction *= -1;                                        // Cambio direzione
+            direction *= -1;                    // Cambio direzione
         }
-        shot.x += 1;                                      // Spostamento orizzontale
-        shot.y += direction;                              // Spostamento verticale, direzione dipendente dal valore di "direction"
+        shot.x += 1;            // Spostamento orizzontale
+        shot.y += direction;    // Spostamento verticale, direzione dipendente dal valore di "direction"
 
-        insert(shot);
-		usleep(ROCKET_DELAY);                                       // Delay movimento razzo
+        insert(shot);           // Scrittura ciclica nel buffer
+		usleep(ROCKET_DELAY);   // Delay movimento razzo
     }
     return NULL;
 }

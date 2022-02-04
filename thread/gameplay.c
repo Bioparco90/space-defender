@@ -1,5 +1,4 @@
 #include "global.h"
-#include <pthread.h>
 
 char playerSprite[3][3]={
          {"/\\ "},
@@ -58,22 +57,17 @@ void gameArea(){
     for (i=0; i<ENEMIES; i++){
         enemy[i].lives = 3;
         enemy[i].pid = -1;
-        // enemyRockets[i].pid = -1; // BUG QUI
     }
-    // for (i=0; i<MAX_ROCKET; i++){
-    //     rocketUp[i].pid = -1;
-    //     rocketDown[i].pid = -1;
-    // }
         
     system("aplay sounds/gameplay.wav 2> /dev/null &");     // Prima riproduzione sottofondo musicale
     clock_gettime(CLOCK_REALTIME, &start);                  // Rilevazione iniziale tempo (sottofondo)
 
     // Loop di gioco
 	do{
-        data = extract();    // Lettura ciclica del dato dalla mainPipe
-        id = data.serial;                       // Assegno il serial ad una variabile d'appoggio
+        data = extract();       // Lettura ciclica del dato dal buffer
+        id = data.serial;       // Assegno il serial ad una variabile d'appoggio
 
-        switch(data.identifier){                                            // Valutazione del dato estratto dalla pipe
+        switch(data.identifier){                                            // Valutazione del dato estratto dal buffer
             case PLAYER:                                                    // Caso nave giocatore
                 if (player.y >= 2 && player.y <= MAX_Y - 1)                 // Controllo posizione
                    deleteSprite(player);                                    // Eliminazione sprite dallo schermo
@@ -95,8 +89,8 @@ void gameArea(){
                 enemy[id].x = data.x;                                       // Aggiornamento dell'array dei nemici con i valori del nemico attuale (coordinate X)
                 enemy[id].y = data.y;                                       // Aggiornamento dell'array dei nemici con i valori del nemico attuale (coordinate Y)
 
-                // if (enemy[id].x <= 2)                                       // Controllo raggiungimento colonna giocatore
-                //     player.lives = 0;                                       // Sconfitta del giocatore
+                if (enemy[id].x <= 2)                                       // Controllo raggiungimento colonna giocatore
+                    player.lives = 0;                                       // Sconfitta del giocatore
                 break;
 
             // Area razzi. I controlli sono quasi uguali per tutti i casi
@@ -107,7 +101,7 @@ void gameArea(){
                 rocketUp[id] = data;                                        // Aggiornamento array razzi diagonali superiori
 
                 if(rocketUp[id].x >= MAX_X){                                // Verifica che il razzo non sia uscito dall'area di gioco 
-                    pthread_cancel(rocketUp[id].pid);                       // Terminazione del processo del razzo
+                    pthread_cancel(rocketUp[id].pid);                       // Terminazione del thread del razzo
                     rocketUp[id] = resetItem();                             // Reset dei valori dell'array alla posizione del razzo appena eliminato
                 }
                 break;
@@ -175,16 +169,14 @@ void gameArea(){
             case ROCKET_UP:
                 for (i=0; i<ENEMIES; i++){                          // Il ciclo compara il razzo ad ogni nemico presente nell'array
                     if (checkCollision(rocketUp[id], enemy[i])){    // Controllo collisione del razzo con la nave nemica corrente 
-                        pthread_cancel(rocketUp[id].pid);                  // Terminazione processo razzo
+                        pthread_cancel(rocketUp[id].pid);           // Terminazione thread razzo
                         rocketUp[id] = resetItem();                 // Reset dei valori dell'array alla posizione del razzo appena eliminato
                         enemy[i].lives--;                           // Il nemico colpito perde una vita
 
                         // Controllo delle vite della nave nemica
                         switch (enemy[i].lives){                
                             case 0:                                             // La nave nemica ha finito le vite
-                                // if (enemyRockets[i].pid > 0)                    // Verifica che la nave nemica non abbia processi figli in vita 
-                                //         pthread_join(enemyRockets[i].pid, NULL);  // Attende la terminazione degli eventuali processi figli
-                                pthread_cancel(enemy[i].pid);                          // Terminazione processo nave nemica
+                                pthread_cancel(enemy[i].pid);                   // Terminazione thread nave nemica
                                 deleteSprite(enemy[i]);                         // Eliminazione della sprite della nave dall'area di gioco
                                 mvaddch(rocketUp[id].y, rocketUp[id].x, ' ');   // Eliminazione del razzo dall'area di gioco
                                 enemy[i] = resetItem();                         // Reset dei valori dell'array alla posizione del nemico appena eliminato
@@ -223,8 +215,6 @@ void gameArea(){
                         
                         switch (enemy[i].lives){
                             case 0:
-                                // if (enemyRockets[i].pid > 0)
-                                //         pthread_join(enemyRockets[i].pid, NULL);
                                 pthread_cancel(enemy[i].pid);
                                 deleteSprite(enemy[i]);
                                 mvaddch(rocketDown[id].y, rocketDown[id].x, ' ');
@@ -258,7 +248,7 @@ void gameArea(){
             // Razzi nemici
             case ENEMY_ROCKET:  
                 if (checkCollision(enemyRockets[id], player)){              // Verifica collisione razzo nemico - nave giocatore
-                    pthread_cancel(enemyRockets[id].pid);                          // Terminazione processo razzo
+                    pthread_cancel(enemyRockets[id].pid);                   // Terminazione processo razzo
                     mvaddch(enemyRockets[id].y, enemyRockets[id].x, ' ');   // Cancellazione carattere razzo
                     enemyRockets[id] = resetItem();                         // Reset dei valori dell'array alla posizione del razzo appena eliminato
                     player.lives--;                                         // Decremento delle vite del giocatore
@@ -287,19 +277,11 @@ void gameArea(){
             gameResult = WIN;
 	} while (!gameResult && player.lives);
 
-    // Terminazione processi. Se ci sono altri processi relativi a navi giocatore, nemiche o razzi, essi vengono terminati.  
-    for (i=0; i<ENEMIES; i++){
-        // if (enemyRockets[i].pid > 0) pthread_cancel(enemyRockets[i].pid);  // Terminazione processi razzi nemici
-        if (enemy[i].pid > 0) pthread_cancel(enemy[i].pid);                // Terminazione processi navi nemiche (avviene dopo i razzi in modo da non lasciare i processi orfani)
-    }
+    // Terminazione thread.
+    for (i=0; i<ENEMIES; i++)
+        if (enemy[i].pid > 0) pthread_cancel(enemy[i].pid); // Terminazione thread navi nemiche
 
-    // // Terminazione processi razzi giocatore
-    // for (i=0; i<MAX_ROCKET; i++){
-    //     if (rocketUp[i].pid > 0) pthread_cancel(rocketUp[i].pid);
-    //     if (rocketDown[i].pid > 0) pthread_cancel(rocketDown[i].pid);
-    // }
-
-    if (player.pid > 0) pthread_cancel(player.pid);    // Terminazione processo nave giocatore (avviene dopo i razzi in modo da non lascia processi orfani)
+    if (player.pid > 0) pthread_cancel(player.pid);         // Terminazione processo nave giocatore
 
     system("killall aplay");        // Terminazione della riproduzione del sottofondo musicale
     gameOver(gameResult, score);    // Chiamata a gestore della schermata di fine gioco

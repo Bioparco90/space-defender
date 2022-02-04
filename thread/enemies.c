@@ -1,5 +1,4 @@
 #include "global.h"
-#include <curses.h>
 
 // Funzione per l'inizializzazione, la generazione e il posizionamento iniziale delle navi nemiche.
 void fleetEnlister(){
@@ -53,26 +52,26 @@ void* enemyShip(void* param){
     clock_gettime(CLOCK_REALTIME, &start2);                 // Rilevazione per l'incremento della velocità delle navi
     timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);       // Valutazione tempo massimo di percorrenza di uno sparo
 
-    insert(ship);
+    insert(ship);                                           // Prima scrittura nel buffer
     while(true){ // Loop movimento nave nemica
         switch (flag){
             case VERTICAL:                                  // Movimento verticale
-                ship.y += direction;                       // Aggiornamento coordinata Y
-                if (ship.y <= 2 || ship.y > MAX_Y - 1)    // Verifica collisione bordi
+                ship.y += direction;                        // Aggiornamento coordinata Y
+                if (ship.y <= 2 || ship.y > MAX_Y - 1)      // Verifica collisione bordi
                     flag = HORIZONTAL;                      // Eventuale modifica del valore flag, che ci manderà al movimento orizzontale
                 break;
 
             case HORIZONTAL:        // Movimento orizzontale
-                ship.x -= 4;   // Aggiornamento coordinata X
+                ship.x -= 4;        // Aggiornamento coordinata X
                 direction *= -1;    // Rimbalzo sul bordo
                 flag = VERTICAL;    // Settiamo la flag per tornare al movimento verticale
                 break;
         }
 
         // Sparo nemico 
-        clock_gettime(CLOCK_REALTIME, &end);                            // Rilevazione del tempo trascorso dalla precedente rilevazione (spari)
-        if (end.tv_sec - start.tv_sec >= timeTravel + 1){               // Controllo sul tempo trascorso dall'ultimo sparo
-            if (rand()%ENEMIES == ship.serial){                        // Generazione numero casuale. Se uguale al serial della nave, può sparare
+        clock_gettime(CLOCK_REALTIME, &end);                // Rilevazione del tempo trascorso dalla precedente rilevazione (spari)
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1){   // Controllo sul tempo trascorso dall'ultimo sparo
+            if (rand()%ENEMIES == ship.serial){             // Generazione numero casuale. Se uguale al serial della nave, può sparare
                 shotArg.x = ship.x;
                 shotArg.y = ship.y;
                 shotArg.serial = ship.serial;
@@ -80,7 +79,7 @@ void* enemyShip(void* param){
                     endwin();
                     exit(1);
                 }
-                start = end;                                            // Il valore dell'ultima rilevazione viene salvato come "rilevazione precedente"
+                start = end;    // Il valore dell'ultima rilevazione viene salvato come "rilevazione precedente"
             }
         }
 
@@ -89,7 +88,7 @@ void* enemyShip(void* param){
             delay *= 0.8;                           // Incremento della velocità di movimento: 20%
             start2 = end2;                          // Il valore dell'ultima rilevazione viene salvato come "rilevazione precedente"
         }
-        insert(ship);
+        insert(ship);                               // Scrittura ciclica nel buffer
         usleep(delay);                              // Ritardo movimento navi
     }
     return NULL;
@@ -114,16 +113,17 @@ void* enemyShot(void* param){
     rocket.pid = pthread_self();
     rocket.serial = arg->serial;
 
+    // La terminazione del thread avviene grazie alla rilevazione del tempo massimo di vita dello sparo
     timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
     clock_gettime(CLOCK_REALTIME, &start);
 
-    insert(rocket);
-    while (true){                               // Loop movimento razzo
-        clock_gettime(CLOCK_REALTIME, &end);
-        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break;
-        rocket.x -= 1;                            // Movimento orizzontale
-        insert(rocket);
-        usleep(ROCKET_DELAY);                   // Ritardo movimento
+    insert(rocket);                                             // Prima scrittura nel buffer
+    while (true){                                               // Loop movimento razzo
+        clock_gettime(CLOCK_REALTIME, &end);                    // Verifica tempo trascorso
+        if (end.tv_sec - start.tv_sec >= timeTravel + 1) break; // Esci dal loop e concludi l'esecuzione del thread
+        rocket.x -= 1;                                          // Movimento orizzontale
+        insert(rocket);                                         // Scrittura ciclica nel buffer
+        usleep(ROCKET_DELAY);                                   // Ritardo movimento
     }
     return NULL;
 }

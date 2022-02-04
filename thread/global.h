@@ -9,14 +9,13 @@
 #include <time.h>
 #include <bits/time.h>
 #include <string.h>
+#include <pthread.h>
+#include <semaphore.h>
 
+#define DIM_BUFFER 50
 #define ENEMIES 25
 #define MAX_X 80
 #define MAX_Y 20
-
-// Macro gestione pipe
-#define READ 0
-#define WRITE 1
 
 // Macro per la direzione degli spari diagonali
 #define DIR_UP 1
@@ -51,9 +50,23 @@ typedef struct {
     int x;              // Posizione dell'oggetto nell'asse x
     int y;              // Posizione dell'oggetto nell'asse y
     int lives;          // Numero di vite disponibii dell'oggetto
-    pid_t pid;          // Pid del processo di riferimento dell'oggetto
+    pid_t pid;          // Pid del thread di riferimento dell'oggetto
     int serial;         // Numero univoco della nave
 } Object;
+
+typedef struct{
+    int x;
+    int y;
+    int dir;
+    int serial;
+} Args;
+
+extern Object buffer[DIM_BUFFER];
+extern pthread_mutex_t mutex;
+extern sem_t empty;
+extern sem_t full;
+extern int prod_index;
+extern int cons_index;
 
 // Funzioni libreria player.c
 void* playerShip();
@@ -78,41 +91,12 @@ int timeTravelEnemyRocket(int microSeconds);
 int checkCollision(Object a, Object b);
 int isRocket(Object item);
 Object resetItem();
+void insert(Object item);
+Object extract();
 
 // Funzioni avvio e fine gioco (start-over.c)
 void startGame();
 void gameOver(int winCondition, int score);
 void countdownPrint(int x, int y, int count);
-
-//----------------thread area------------------
-#include <pthread.h>
-#include <semaphore.h>
-
-extern pthread_mutex_t mutex;
-
-extern sem_t empty;
-extern sem_t full;
-extern int prod_index;
-extern int cons_index;
-
-#define DIM_BUFFER 50
-extern Object buffer[DIM_BUFFER];
-
-// extern Object player;
-// extern Object enemy[ENEMIES];
-// extern Object rocketUp[MAX_ROCKET];
-// extern Object rocketDown[MAX_ROCKET];
-// extern Object enemyRocket[ENEMIES];
-// extern int enemyCounter;
-
-typedef struct{
-    int x;
-    int y;
-    int dir;
-    int serial;
-} Args;
-
-void insert(Object item);
-Object extract();
 
 #endif /* GLOBAL_H */

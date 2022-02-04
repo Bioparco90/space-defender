@@ -2,7 +2,6 @@
 
 int main(){
     pthread_t thPlayerShip;
-    int i; 
 
     srand(time(NULL));      // Inizializza seed random
 
@@ -12,23 +11,26 @@ int main(){
     keypad(stdscr, 1);      // Abilita tasti funzione (frecce)
     curs_set(0);            // Disabilita visualizzazione cursore
 
-    // startGame();            // Schermata iniziale
+    startGame();            // Schermata iniziale
 
+    // inizializzazione mutex e semafori
     pthread_mutex_init(&mutex, NULL);
     sem_init(&empty, 0, DIM_BUFFER);
     sem_init(&full, 0, 0);
 
+    // Creazione thread nave giocatore
     if (pthread_create(&thPlayerShip, NULL, &playerShip, NULL)){
         endwin();
         exit(1);
     }
 
-    fleetEnlister();
+    fleetEnlister();    // Generatore flotta nemica
 
-    gameArea();   // Gestore principale del gioco
+    gameArea();         // Gestore principale del gioco
 
-    endwin();                   // Ripristino del terminale
+    endwin();           // Ripristino del terminale
 
+    // Distruzione mutex e semafori
     pthread_mutex_destroy(&mutex);
     sem_destroy(&empty);
     sem_destroy(&full);
