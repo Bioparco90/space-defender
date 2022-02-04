@@ -117,7 +117,6 @@ void* enemyShot(void* param){
     timeTravel = timeTravelEnemyRocket(ROCKET_DELAY);
     clock_gettime(CLOCK_REALTIME, &start);
 
-    system("echo start >> enemyRocketsLogStart");
     insert(rocket);
     while (true){                               // Loop movimento razzo
         clock_gettime(CLOCK_REALTIME, &end);
@@ -126,6 +125,5 @@ void* enemyShot(void* param){
         insert(rocket);
         usleep(ROCKET_DELAY);                   // Ritardo movimento
     }
-    system("echo start >> enemyRocketsLogClose");
     return NULL;
 }
